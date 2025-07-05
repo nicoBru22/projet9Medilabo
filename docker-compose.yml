@@ -1,0 +1,121 @@
+services:
+  api-utilisateur:
+    build:
+      context: ./Back/microService-utilisateur
+    container_name: api-utilisateur
+    ports:
+      - "8083:8081"
+    networks:
+      - medilabo-net
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  api-patient:
+    build:
+      context: ./Back/microService-patient
+    container_name: api-patient
+    ports:
+      - "8081:8081"
+    networks:
+      - medilabo-net
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  api-transmissions:
+    build:
+      context: ./Back/microService-transmission
+    container_name: api-transmissions
+    ports:
+      - "8082:8081"
+    networks:
+      - medilabo-net
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+      
+  api-anticipation:
+    build:
+      context: ./Back/microService-anticipation
+    container_name: api-anticipation
+    ports:
+      - "8084:8081"
+    networks:
+      - medilabo-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  gateway:
+    build:
+      context: ./gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      api-patient:
+        condition: service_healthy
+      api-anticipation:
+        condition: service_healthy
+      api-transmissions:
+        condition: service_healthy
+      api-utilisateur:
+        condition: service_healthy
+    networks:
+      - medilabo-net
+
+  frontend:
+    build:
+      context: ./Front/medilabo
+    container_name: medilabo-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - medilabo-net
+    depends_on:
+      gateway:
+        condition: service_started
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27018:27017"
+    networks:
+      - medilabo-net
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  medilabo-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
