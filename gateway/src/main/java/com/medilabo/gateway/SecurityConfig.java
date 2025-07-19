@@ -28,6 +28,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/utilisateur/login").permitAll()
+                .pathMatchers("/utilisateur/add").permitAll()
                 .anyExchange().authenticated()
             )
             .addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)

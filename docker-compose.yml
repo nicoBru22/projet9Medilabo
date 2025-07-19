@@ -7,9 +7,6 @@ services:
       - "8083:8081"
     networks:
       - medilabo-net
-    depends_on:
-      mongo:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s
@@ -25,9 +22,6 @@ services:
       - "8081:8081"
     networks:
       - medilabo-net
-    depends_on:
-      mongo:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s
@@ -43,9 +37,6 @@ services:
       - "8082:8081"
     networks:
       - medilabo-net
-    depends_on:
-      mongo:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s
@@ -98,24 +89,7 @@ services:
       gateway:
         condition: service_started
 
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    ports:
-      - "27018:27017"
-    networks:
-      - medilabo-net
-    volumes:
-      - mongo-data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
 networks:
   medilabo-net:
     driver: bridge
 
-volumes:
-  mongo-data:
