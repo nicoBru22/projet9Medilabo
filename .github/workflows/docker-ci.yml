@@ -17,11 +17,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build & Run avec Docker Compose
-      run: |
-        docker-compose -f docker-compose.yml up --build -d
-        sleep 15 # attendre un peu que les services soient prêts
-        docker ps
+	  - name: Build & Run avec Docker Compose
+	    run: |
+	      docker compose -f docker-compose.yml up --build -d
+	      sleep 15
+	      docker ps
+
 
     - name: Vérifier que les services tournent
       run: docker-compose ps
