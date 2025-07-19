@@ -38,6 +38,10 @@ jobs:
       run: |
         cd Back/microService-anticipation && ./mvnw package -DskipTests
 
+    - name: Build du microservice gateway
+      run: |
+        cd gateway && ./mvnw package -DskipTests
+
     - name: Vérifier le contenu du dossier utilisateur
       run: |
         echo "Contenu de Back/microService-utilisateur/target :"
@@ -57,6 +61,11 @@ jobs:
       run: |
         echo "Contenu de Back/microService-anticipation/target :"
         ls -l Back/microService-anticipation/target
+
+    - name: Vérifier le contenu du dossier gateway
+      run: |
+        echo "Contenu de la gateway :"
+        ls -l gateway/target
 
     - name: Build & Run avec Docker Compose
       run: |
