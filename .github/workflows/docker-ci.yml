@@ -16,19 +16,26 @@ jobs:
     - name: Checkout du code
       uses: actions/checkout@v3
 
+    - name: Build des microservices Java
+      run: |
+        cd Back/microService-utilisateur && ./mvnw package -DskipTests && cd -
+        cd Back/microService-patient && ./mvnw package -DskipTests && cd -
+        cd Back/microService-transmission && ./mvnw package -DskipTests && cd -
+        cd Back/microService-anticipation && ./mvnw package -DskipTests && cd -
+
     - name: Vérifier les dossiers Back et leur contenu
       run: |
         echo "Contenu de Back/microService-utilisateur :"
-        ls -l Back/microService-utilisateur
+        ls -l Back/microService-utilisateur/target
 
         echo "Contenu de Back/microService-patient :"
-        ls -l Back/microService-patient
+        ls -l Back/microService-patient/target
 
         echo "Contenu de Back/microService-transmission :"
-        ls -l Back/microService-transmission
+        ls -l Back/microService-transmission/target
 
         echo "Contenu de Back/microService-anticipation :"
-        ls -l Back/microService-anticipation
+        ls -l Back/microService-anticipation/target
 
     - name: Build & Run avec Docker Compose
       run: |
