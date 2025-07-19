@@ -1,0 +1,11 @@
+.menu {
+  display: flex;
+  justify-content: end;
+  padding: 10px;
+  font-size: 20px;
+  background-color: wheat;
+}
+
+.linkNav {
+  margin-left: 15px;
+}

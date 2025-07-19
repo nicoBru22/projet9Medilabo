@@ -1,0 +1,28 @@
+.containerInfosPatientPage {
+  padding: 20px;
+}
+
+.infoPatient-medecinRef {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.transmissionList {
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.infosTransmission {
+    margin-right: 50px;
+  width: 300px;
+}
+
+.containerNomPrenomMedecin {
+  display: flex;
+  flex-direction: row;
+}
+
+.transmissionEcrite {
+  width: 600px;
+}
