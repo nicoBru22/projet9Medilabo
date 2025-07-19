@@ -16,26 +16,20 @@ jobs:
     - name: Checkout du code
       uses: actions/checkout@v3
 
-    - name: Build des microservices Java
-      run: |
-        cd Back/microService-utilisateur && ./mvnw package -DskipTests && cd -
-        cd Back/microService-patient && ./mvnw package -DskipTests && cd -
-        cd Back/microService-transmission && ./mvnw package -DskipTests && cd -
-        cd Back/microService-anticipation && ./mvnw package -DskipTests && cd -
+    - name: Setup Java 21
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '21'
 
-    - name: Vérifier les dossiers Back et leur contenu
+    - name: Build du microservice utilisateur
       run: |
-        echo "Contenu de Back/microService-utilisateur :"
+        cd Back/microService-utilisateur && ./mvnw package -DskipTests
+
+    - name: Vérifier le contenu du dossier utilisateur
+      run: |
+        echo "Contenu de Back/microService-utilisateur/target :"
         ls -l Back/microService-utilisateur/target
-
-        echo "Contenu de Back/microService-patient :"
-        ls -l Back/microService-patient/target
-
-        echo "Contenu de Back/microService-transmission :"
-        ls -l Back/microService-transmission/target
-
-        echo "Contenu de Back/microService-anticipation :"
-        ls -l Back/microService-anticipation/target
 
     - name: Build & Run avec Docker Compose
       run: |
