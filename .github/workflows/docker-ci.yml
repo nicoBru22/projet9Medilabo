@@ -26,10 +26,37 @@ jobs:
       run: |
         cd Back/microService-utilisateur && ./mvnw package -DskipTests
 
+    - name: Build du microservice patient
+      run: |
+        cd Back/microService-patient && ./mvnw package -DskipTests
+
+    - name: Build du microservice transmission
+      run: |
+        cd Back/microService-transmission && ./mvnw package -DskipTests
+
+    - name: Build du microservice anticipation
+      run: |
+        cd Back/microService-anticipation && ./mvnw package -DskipTests
+
     - name: Vérifier le contenu du dossier utilisateur
       run: |
         echo "Contenu de Back/microService-utilisateur/target :"
         ls -l Back/microService-utilisateur/target
+
+    - name: Vérifier le contenu du dossier patient
+      run: |
+        echo "Contenu de Back/microService-patient/target :"
+        ls -l Back/microService-patient/target
+
+    - name: Vérifier le contenu du dossier transmission
+      run: |
+        echo "Contenu de Back/microService-transmission/target :"
+        ls -l Back/microService-transmission/target
+
+    - name: Vérifier le contenu du dossier anticipation
+      run: |
+        echo "Contenu de Back/microService-anticipation/target :"
+        ls -l Back/microService-anticipation/target
 
     - name: Build & Run avec Docker Compose
       run: |
