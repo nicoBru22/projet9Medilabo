@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Ajout patient</title>
+	</head>
+	<body>
+	
+	    <h1>Ajouter un nouveau patient</h1>
+	    
+        <a href="/patient/liste">revenir à la liste des patients</a>
+	    
+	    
+<form th:action="@{/patient/add/validate}" th:object="${patient}" method="post">
+    <label>Nom</label>
+    <input type="text" th:field="*{nom}" required />
+
+    <label>Prénom</label>
+    <input type="text" th:field="*{prenom}" required />
+
+    <label>Date de naissance</label>
+    <input type="date" th:field="*{dateNaissance}" required />
+
+    <label>Genre</label>
+	<select th:field="*{genre}">
+	    <option value="">-- Sélectionner --</option>
+	    <option value="Masculin">Masculin</option>
+	    <option value="Féminin">Féminin</option>
+	</select>
+
+    <label>Adresse</label>
+    <input type="text" th:field="*{adresse}" />
+
+    <label>Téléphone</label>
+    <input type="text" th:field="*{telephone}" />
+
+    <div th:if="${#fields.hasErrors('*')}">
+        <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+    </div>
+
+    <button type="submit">Ajouter</button>
+</form>
+
+	
+	</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mise à jour Patient</title>
+</head>
+<body>
+    <h1>Page de mise à jour du patient</h1>
+        <a href="/patient/liste">revenir à la liste des patients</a>
+
+		<form th:action="@{/patient/update/validate}" th:object="${patient}" method="post">
+    <input type="hidden" th:field="*{id}" />
+        
+        <label>Nom</label>
+        <input type="text" th:field="*{nom}" />
+
+        <label>Prénom</label>
+        <input type="text" th:field="*{prenom}" />
+
+        <label>Date de Naissance</label>
+        <input type="date" th:field="*{dateNaissance}" />
+
+        <label>Genre</label>
+        <select th:field="*{genre}">
+		    <option value="">-- Sélectionner --</option>
+		    <option value="Masculin">Masculin</option>
+		    <option value="Féminin">Féminin</option>
+		</select>
+
+        <label>Adresse</label>
+        <input type="text" th:field="*{adresse}" />
+
+        <label>Téléphone</label>
+        <input type="text" th:field="*{telephone}" />
+
+        <button type="submit">Mettre à jour</button>
+    </form>
+</body>
+</html>

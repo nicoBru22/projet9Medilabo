@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Liste des patients</title>
+	</head>
+	<body>
+	
+	    <h1>Liste des patients</h1>
+	    <a href="/patient/add">Ajouter un nouveau patient</a>
+	    <p th:text="${info}"></p>
+	<table>
+		<thead>
+			<tr>
+				<th>Nom</th>
+				<th>Prénom</th>
+				<th>Date de Naissance</th>
+				<th>Genre</th>
+				<th>Adresse</th>
+				<th>Téléphone</th>
+				<th>Date de création</th>
+				<th>Date modification</th>
+				
+				
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="patient : ${patients}">
+				<td th:text="${patient.nom}"></td>
+				<td th:text="${patient.prenom}"></td>
+				<td th:text="${patient.dateNaissance}"></td>
+				<td th:text="${patient.genre}"></td>
+				<td th:text="${patient.adresse}"></td>
+				<td th:text="${patient.telephone}"></td>
+				<td th:text="${patient.dateCreation}"></td>
+				<td th:text="${patient.dateModification}"></td>
+	            <td>
+					<form th:action="@{/patient/delete/{id}(id=${patient.id})}" method="post">
+					    <button type="submit">Supprimer</button>
+					</form>
+					<form th:action="@{/patient/update/{id}(id=${patient.id})}" method="get">
+					    <button type="submit">Modifier</button>
+					</form>
+					<form th:action="@{/patient/infos/{id}(id=${patient.id})}" method="get">
+					    <button type="submit">Informations</button>
+					</form>
+	            </td>
+			</tr>
+			
+		
+		</tbody>
+	
+	
+	
+	</table>
+	
+	</body>
+</html>

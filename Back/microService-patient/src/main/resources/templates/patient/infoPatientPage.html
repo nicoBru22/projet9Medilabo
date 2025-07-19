@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Informations du patient</title>
+</head>
+<body>
+    <h1>Informations du patient</h1>
+    
+    <a href="/patient/liste">revenir à la liste des patients</a>
+
+    <div>Nom :</div>
+    <div th:text="${patient.nom}">Nom ici</div>
+
+    <div>Prénom :</div>
+    <div th:text="${patient.prenom}">Prénom ici</div>
+
+    <div>Date de naissance :</div>
+    <div th:text="${patient.dateNaissance}">Date ici</div>
+
+    <div>Genre :</div>
+    <div th:text="${patient.genre}">Genre ici</div>
+
+    <div>Adresse :</div>
+    <div th:text="${patient.adresse}">Adresse ici</div>
+
+    <div>Téléphone :</div>
+    <div th:text="${patient.telephone}">Téléphone ici</div>
+</body>
+</html>
