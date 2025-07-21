@@ -6,22 +6,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
 import com.medilabo.repository.IPatientRepository;
 
-@Disabled
+@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PatientControllerTest {
@@ -31,6 +34,9 @@ public class PatientControllerTest {
 	
 	@Autowired
 	private IPatientRepository patientRepository;
+	
+	@Value("${jwt.secret}")
+	private String jwtSecret;
 	
     private Patient p3;
 	
@@ -45,6 +51,15 @@ public class PatientControllerTest {
 	    patientRepository.save(p2);
 	    
 	}
+	
+
+
+	@Test
+	public void testJwtSecretValue() {
+	    System.out.println("jwt.secret = " + jwtSecret);
+	    assertNotNull(jwtSecret);
+	}
+
 	
 
 	@Test

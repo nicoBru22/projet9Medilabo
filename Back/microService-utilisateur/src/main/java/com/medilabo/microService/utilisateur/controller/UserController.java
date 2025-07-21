@@ -61,7 +61,6 @@ public class UserController {
 	@PostMapping("/add")
 	public ResponseEntity<User> addUser(@RequestBody @Valid User newUser) {
 		logger.info("Requête reçu sur le controller addUser()");
-
 		User userAdded = userService.addUser(newUser);		
 		return ResponseEntity.status(HttpStatus.CREATED).body(userAdded);
 	}
@@ -86,6 +85,7 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpServletRequest httpRequest) {
+		logger.info("Requête reçu sur le controller login()");
 	    try {
 	        Authentication authentication = authenticationManager.authenticate(
 	            new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())
