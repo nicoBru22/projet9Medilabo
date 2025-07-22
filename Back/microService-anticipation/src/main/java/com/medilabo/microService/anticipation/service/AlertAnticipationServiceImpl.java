@@ -15,7 +15,12 @@ import com.medilabo.microService.anticipation.model.Transmission;
 @Service
 public class AlertAnticipationServiceImpl implements IAlertAnticipationService {
 
-	// La liste des termes déclencheurs à rechercher dans les notes du prestataire de santé.
+	/** La liste des declencheurs
+	 * <p>
+	 * La liste des termes déclencheurs à rechercher dans les notes du prestataire de santé.
+	 * </p>
+	 * 
+	 */
 	private List<String> listMotCle = List.of(
 		    "HbA1C", "Microalbumine", "Taille", "Poids", "Fumeur", "Fumer",
 		    "Fumeuse", "Anormal", "Cholestérol", "Vertiges", "Rechute", "Réaction", "Anticorps"
@@ -145,6 +150,9 @@ public class AlertAnticipationServiceImpl implements IAlertAnticipationService {
      * @return true si le risque est Early Onset, false sinon.
      */
     public boolean isEarlyOnset(long occurence, int age, String genre) {
+    	logger.info("Tentative de calcul si la personne est : isEarlyOnSet");
+    	logger.debug("le nombre d occurence : {}, l age : {}, le genre : {} ",occurence, age, genre);
+    	
 		// Homme < 30 ans : >= 5 déclencheurs
 		if (age < 30 && "masculin".equalsIgnoreCase(genre) && occurence >= 5) {
 			return true;
