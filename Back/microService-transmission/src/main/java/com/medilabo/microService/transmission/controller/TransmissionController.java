@@ -28,34 +28,23 @@ public class TransmissionController {
 	private ITransmissionService transmissionService;
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addTransmission(@Valid @RequestBody Transmission newTransmission) {
-		logger.info("Requête reçue pour ajouter une transmission : {}", newTransmission);
-
-		try {
-			Transmission transmission = transmissionService.addTransmission(newTransmission);
-			logger.info("Transmission ajoutée avec succès : {}", transmission);
-			return ResponseEntity.status(HttpStatus.CREATED).body(transmission);
-		} catch (Exception e) {
-			logger.error("Erreur lors de l'ajout de la transmission", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	public ResponseEntity<Transmission> addTransmission(@Valid @RequestBody Transmission newTransmission) {
+	    logger.info("Requête reçue pour ajouter une transmission : {}", newTransmission);
+	    Transmission transmission = transmissionService.addTransmission(newTransmission);
+	    logger.info("Transmission ajoutée avec succès : {}", transmission);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(transmission);
 	}
 
 	@GetMapping("/getTransmissionsOfPatient")
 	public ResponseEntity<List<Transmission>> getAllTransmissionOfPatient(@RequestParam String patientId) {
-		logger.info("Requête reçue pour récupérer les transmissions du patient avec l'ID : {}", patientId);
-
-		try {
-			List<Transmission> transmissionList = transmissionService.getAllTransmissionsByPatientId(patientId);
-			if (transmissionList.isEmpty()) {
-				logger.warn("Aucune transmission trouvée pour le patient avec l'ID : {}", patientId);
-			} else {
-				logger.info("{} transmissions trouvées pour le patient {}", transmissionList.size(), patientId);
-			}
-			return ResponseEntity.status(HttpStatus.OK).body(transmissionList);
-		} catch (Exception e) {
-			logger.error("Erreur lors de la récupération des transmissions du patient : {}", patientId, e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	    logger.info("Requête reçue pour récupérer les transmissions du patient avec l'ID : {}", patientId);
+	    List<Transmission> transmissionList = transmissionService.getAllTransmissionsByPatientId(patientId);
+	    if (transmissionList.isEmpty()) {
+	        logger.warn("Aucune transmission trouvée pour le patient avec l'ID : {}", patientId);
+	    } else {
+	        logger.info("{} transmissions trouvées pour le patient {}", transmissionList.size(), patientId);
+	    }
+	    return ResponseEntity.status(HttpStatus.OK).body(transmissionList);
 	}
+
 }
