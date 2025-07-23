@@ -48,7 +48,6 @@ public class UserController {
 	
 	@Autowired
 	public JwtUtil jwtUtil;
-
 	
 	@GetMapping("/list")
 	public ResponseEntity<List<User>> getListUsers() {

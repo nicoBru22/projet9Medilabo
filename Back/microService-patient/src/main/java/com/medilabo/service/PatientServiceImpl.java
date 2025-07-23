@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
-
 import com.medilabo.model.Patient;
 import com.medilabo.repository.IPatientRepository;
 
@@ -20,7 +19,6 @@ import com.medilabo.repository.IPatientRepository;
 public class PatientServiceImpl implements IPatientService{
 	
 	private Logger logger = LogManager.getLogger();
-
 	
 	@Autowired
 	private IPatientRepository patientRepository;
