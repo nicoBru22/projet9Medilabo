@@ -2,6 +2,7 @@ package com.medilabo.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -115,12 +116,18 @@ public class PatientController {
 	        return ResponseEntity.badRequest().body(result.getAllErrors());
 	    }
 
-	    Patient updatedPatient = patientService.updatePatient(patient).get();
+	    Optional<Patient> updatedPatientOpt = patientService.updatePatient(patient);
 
-	    logger.info("Mise à jour réussie du patient avec id {}", id);
-
-	    return ResponseEntity.ok(updatedPatient); // Renvoie le patient mis à jour en JSON
+	    if (updatedPatientOpt.isPresent()) {
+	        logger.info("Mise à jour réussie du patient avec id {}", id);
+	        return ResponseEntity.ok(updatedPatientOpt.get());
+	    } else {
+	        logger.warn("Patient non trouvé avec id {}", id);
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body("Patient non trouvé avec id " + id);
+	    }
 	}
+
 
 
 }

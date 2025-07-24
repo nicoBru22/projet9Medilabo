@@ -11,4 +11,5 @@ public interface ITransmissionService {
 	public void deleteTransmission(String id);
 	Transmission updateTransmission(String id, Transmission updatedTransmission);
 	List<Transmission> getAllTransmissionsByPatientId(String patientId);
+	String riskEvaluation(List<Transmission> transmissions, String patientId);
 }

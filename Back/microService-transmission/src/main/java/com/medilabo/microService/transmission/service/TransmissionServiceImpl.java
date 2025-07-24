@@ -112,7 +112,6 @@ public class TransmissionServiceImpl implements ITransmissionService {
 	    
 	    logger.debug("La transmission existante : {}", existing);
 
-	    updatedTransmission.setId(id);
 	    updatedTransmission.setDateTransmission(LocalDateTime.now());
 
 	    Transmission saved = transmissionRepository.save(updatedTransmission);
