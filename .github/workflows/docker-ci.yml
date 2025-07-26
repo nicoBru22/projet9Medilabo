@@ -66,6 +66,25 @@ jobs:
       run: |
         echo "Contenu de la gateway :"
         ls -l gateway/target
+        
+    - name: Lancer les tests des microservices
+      run: |
+        echo "Tests microservice utilisateur"
+        cd Back/microService-utilisateur && ./mvnw test && cd -
+
+        echo "Tests microservice patient"
+        cd Back/microService-patient && ./mvnw test && cd -
+
+        echo "Tests microservice transmission"
+        cd Back/microService-transmission && ./mvnw test && cd -
+
+        echo "Tests microservice anticipation"
+        cd Back/microService-anticipation && ./mvnw test && cd -
+
+        echo "Tests gateway"
+        cd gateway && ./mvnw test && cd -
+
+
 
     - name: Build & Run avec Docker Compose
       run: |
