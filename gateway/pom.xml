@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.3</version>
+		<version>3.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.medilabo.gateway</groupId>
@@ -96,9 +96,10 @@
 		</dependency>
 		<dependency>
 		  <groupId>org.springdoc</groupId>
-		  <artifactId>springdoc-openapi-webflux-ui</artifactId>
-		  <version>1.8.0</version>
+		  <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+		  <version>2.5.0</version> <!-- dernière version stable à ce jour -->
 		</dependency>
+
 
 
 

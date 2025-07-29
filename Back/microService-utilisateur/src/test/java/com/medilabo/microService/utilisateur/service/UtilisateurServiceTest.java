@@ -2,7 +2,6 @@ package com.medilabo.microService.utilisateur.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,8 +57,8 @@ public class UtilisateurServiceTest {
         List<User> listUser = userService.getAllUser();
 
         verify(userRepository, times(1)).findAll();
-        assertEquals(2, listUser.size());
-        assertEquals(listUserMocked, listUser);
+        assertThat(2).isEqualTo(listUser.size());
+        assertThat(listUserMocked).isEqualTo(listUser);
     }
 	
 	@Test

@@ -23,7 +23,7 @@ function UpdatePatientPage() {
     const fetchPatient = async () => {
       try {
         
-        const response = await fetch(`http://localhost:8080/patient/${id}`, {
+        const response = await fetch(`http://localhost:8080/patient/infos/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`,
           },

@@ -25,21 +25,46 @@ public class SecurityConfig {
 
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+
         http
             .csrf(csrf -> csrf.disable())
             .authorizeExchange(exchanges -> exchanges
-                .pathMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()                .pathMatchers("/utilisateur/login").permitAll()
-                .pathMatchers("/utilisateur/add").permitAll()
+                // 1. Autoriser l'accès à l'interface Swagger UI SERVIE PAR LA GATEWAY
+                // Ceci inclut la page HTML, les CSS, les JS, etc.
+                .pathMatchers(
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",      // Ressources statiques de Swagger UI
+                    "/v3/api-docs/**",     // Les définitions OpenAPI (y compris celle de la gateway elle-même)
+                    "/webjars/**"          // Dépendances web de Swagger UI
+                ).permitAll()
+
+                // 2. Autoriser l'accès aux chemins des api-docs des microservices
+                // C'est redondant avec "/v3/api-docs/**" mais plus explicite.
+                // La gateway va intercepter ces appels et les router vers les services.
+                .pathMatchers(
+                    "/patient/v3/api-docs",
+                    "/utilisateur/v3/api-docs",
+                    "/transmission/v3/api-docs",
+                    "/alertes/v3/api-docs"
+                ).permitAll()
+
+                // 3. Vos autres chemins publics
+                .pathMatchers("/utilisateur/login", "/utilisateur/add").permitAll()
+
+                // 4. Sécuriser tout le reste
                 .anyExchange().authenticated()
             )
+            // Assurez-vous que votre filtre est ajouté correctement
             .addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-        System.out.println("Config Security initialisée");
+
+        System.out.println("Configuration de sécurité de la Gateway initialisée.");
 
         return http.build();
     }
+
 
 
     @Bean
