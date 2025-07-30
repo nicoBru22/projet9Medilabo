@@ -36,7 +36,6 @@ function AddPatientPage() {
       const response = await fetch("http://localhost:8080/patient/add", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         credentials: "include",

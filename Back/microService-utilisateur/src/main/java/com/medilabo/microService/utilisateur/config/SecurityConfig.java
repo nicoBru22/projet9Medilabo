@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/utilisateur/login").permitAll()
                         .requestMatchers("/utilisateur/add").permitAll() /* a supprimer en prod*/
                         .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                                 .maximumSessions(1)
