@@ -42,12 +42,18 @@ function ListPatientPage() {
     if (!window.confirm("Voulez-vous vraiment supprimer ce patient ?")) return;
 
     try {
+      const token = localStorage.getItem('jwtToken');
+      
       const response = await fetch(`http://localhost:8080/patient/delete/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
+      credentials: "include",
       });
 
       if (response.ok) {
-        // Supprimer le patient de la liste sans recharger
         setPatients(patients.filter((patient) => patient.id !== id));
       } else {
         alert("Erreur lors de la suppression.");

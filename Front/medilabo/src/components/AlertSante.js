@@ -12,7 +12,7 @@ function AlertSante({ patientId }) {
     const fetchRiskLevel = async () => {
       try {
 
-        const response = await fetch(`http://localhost:8080/alertes/detecte?patientId=${patientId}`, {
+        const response = await fetch(`http://localhost:8080/patient/diabete?patientId=${patientId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -62,7 +62,7 @@ function AlertSante({ patientId }) {
 
   // Si tout s'est bien passé, afficher le niveau de risque
   let displayStyle = {};
-  let message = `Le niveau de risque du patient ${patientId} est : `;
+  let message = `Risque de diabète : `;
 
   // Personnalisation de l'affichage en fonction du niveau de risque
   switch (riskLevel) {
@@ -76,7 +76,7 @@ function AlertSante({ patientId }) {
       break;
     case 'Early Onset':
       displayStyle = { color: '#8b0000', fontWeight: 'bold' }; // Rouge foncé
-      message += "TRÈS URGENT : Début précoce de pathologie détecté !";
+      message += "TRÈS URGENT : Début précoce de pathologie détectée !";
       break;
     case 'none':
       displayStyle = { color: '#28a745' }; // Vert
