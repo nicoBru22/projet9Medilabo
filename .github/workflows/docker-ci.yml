@@ -47,38 +47,6 @@ jobs:
         docker compose -f docker-compose.yml up --build -d
         echo "Conteneurs démarrés, attente pour la disponibilité des services..."
     
-    # --- DÉBUT DES MODIFICATIONS ---
-    - name: Attendre que les services soient prêts (Health Checks)
-      run: |
-        echo "Vérification de la disponibilité des services..."
-
-        # 1. Attente pour la gateway elle-même
-        # C'est la première étape, car c'est le point d'entrée
-        until curl --fail http://localhost:8080/actuator/health; do
-          echo 'Attente de la disponibilité de la gateway...'
-          sleep 5
-        done
-        echo 'Gateway est disponible.'
-        
-        # 3. Attente pour api-utilisateur (via la Gateway)
-        # La Gateway est prête à router
-        until curl --fail http://localhost:8080/utilisateur/actuator/health; do
-          echo 'Attente de la disponibilité de api-utilisateur via la Gateway...'
-          sleep 5
-        done
-        echo 'api-utilisateur est disponible.'
-        
-        # 2. Attente pour api-patient (via la Gateway)
-        # La Gateway est maintenant prête à router
-        until curl --fail http://localhost:8080/patient/actuator/health; do
-          echo 'Attente de la disponibilité de api-patient via la Gateway...'
-          sleep 5
-        done
-        echo 'api-patient est disponible.'
-
-        echo "Tous les services nécessaires sont démarrés et prêts."
-    # --- FIN DES MODIFICATIONS ---
-
     - name: Vérifier l'état des conteneurs Docker
       run: docker compose ps
 
