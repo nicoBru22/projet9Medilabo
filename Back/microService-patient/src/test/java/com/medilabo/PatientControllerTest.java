@@ -31,6 +31,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
+import com.medilabo.model.Transmission;
 import com.medilabo.service.IPatientService;
 
 @ActiveProfiles("test")
@@ -46,9 +47,29 @@ public class PatientControllerTest {
 	
 	private static Patient patientTest1;
 	private static Patient patientTest2;
+	private static Transmission transmissionTest1;
+	private static Transmission transmissionTest2;
+	private static List<Transmission> listTransmissionTest;
 
 	@BeforeAll
 	public static void setup() {
+		transmissionTest1 = new Transmission(
+				"1",
+				"1",
+				LocalDateTime.now(),
+				"docteur",
+				"Brunet",
+				"Nicolas",
+				"une transmission sans probleme");
+		transmissionTest2 = new Transmission(
+				"2",
+				"1",
+				LocalDateTime.now(),
+				"docteur",
+				"Piet",
+				"Sarah",
+				"une transmission avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal");
+		listTransmissionTest = List.of(transmissionTest1, transmissionTest2);
         patientTest1 = new Patient(
                 "1",
                 "Nicolas",
@@ -58,7 +79,8 @@ public class PatientControllerTest {
                 "10 rue des Lilas",
                 "0123456789",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                listTransmissionTest
             );
         patientTest2 = new Patient(
                 "2",
@@ -69,7 +91,8 @@ public class PatientControllerTest {
                 "10 rue des Lilas",
                 "0123456789",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                listTransmissionTest
             );
 	}
 

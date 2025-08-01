@@ -6,20 +6,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import static org.mockito.ArgumentMatchers.any;
 
-
 import com.medilabo.model.Patient;
+import com.medilabo.model.Transmission;
 import com.medilabo.repository.IPatientRepository;
 import com.medilabo.service.IPatientService;
 
@@ -33,10 +33,31 @@ public class PatientServiceTest {
 	@MockBean
 	private IPatientRepository patientRepository;
 	
+	private static Transmission transmissionTest1;
+	private static Transmission transmissionTest2;
+	private static List<Transmission> listTransmissionTest;
+	
 	@Test
 	public void getAllPatientTest() {
-        Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
-        Patient p2 = new Patient("2", "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null);
+		transmissionTest1 = new Transmission(
+				"1",
+				"1",
+				LocalDateTime.now(),
+				"docteur",
+				"Brunet",
+				"Nicolas",
+				"une transmission sans probleme");
+		transmissionTest2 = new Transmission(
+				"2",
+				"1",
+				LocalDateTime.now(),
+				"docteur",
+				"Piet",
+				"Sarah",
+				"une transmission avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal");
+		listTransmissionTest = List.of(transmissionTest1, transmissionTest2);
+        Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest);
+        Patient p2 = new Patient("2", "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionTest);
 
         List<Patient> mockList = Arrays.asList(p1, p2);
         
@@ -52,7 +73,7 @@ public class PatientServiceTest {
 	
 	@Test
 	public void getPatientByIdTest() {
-        Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
+        Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest);
         
         when(patientRepository.findById("1")).thenReturn(Optional.of(p1));
         
@@ -65,7 +86,7 @@ public class PatientServiceTest {
 	
 	@Test
 	public void addPatientTest() {
-        Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
+        Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest);
         
         when(patientRepository.save(p1)).thenAnswer(invocation -> invocation.getArgument(0));
         
@@ -81,8 +102,8 @@ public class PatientServiceTest {
 	
 	@Test
 	public void updatePatientTest() {
-	    Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
-	    Patient p2 = new Patient("1", "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null);
+	    Patient p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest);
+	    Patient p2 = new Patient("1", "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionTest);
 
 	    when(patientRepository.findById("1")).thenReturn(Optional.of(p1));
 	    when(patientRepository.save(any(Patient.class))).thenAnswer(invocation -> invocation.getArgument(0));

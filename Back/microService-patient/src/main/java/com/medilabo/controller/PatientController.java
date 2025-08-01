@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.medilabo.model.Patient;
+import com.medilabo.model.Transmission;
 import com.medilabo.service.IPatientService;
 
 import jakarta.validation.Valid;
@@ -126,6 +128,24 @@ public class PatientController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
 	                .body("Patient non trouvé avec id " + id);
 	    }
+	}
+	
+	@PostMapping("/transmission/add")
+	public ResponseEntity<Transmission> addTransmission(@Valid @RequestBody Transmission newTransmission, 
+																@RequestParam String patientId) {
+	    logger.info("Requête reçue pour ajouter une transmission : {}", newTransmission);
+	    Transmission transmission = patientService.addTransmission(newTransmission, patientId);
+	    logger.info("Transmission ajoutée avec succès : {}", transmission);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(transmission);
+	}
+	
+	@GetMapping("/transmission/liste")
+	public ResponseEntity<List<Transmission>> getAllTransmissionOfPatient(@RequestParam String patientId) {
+	    logger.info("Requête reçue pour récupérer la liste des transmissions du patient avec l'Id : {}", patientId);
+	    List<Transmission> transmissionList = patientService.getAllTransmissionOfPatient(patientId);
+	    logger.info("la liste de transmission récupérée : {}", transmissionList);
+	    logger.info("Liste de transmission récupérée avec succès.");
+	    return ResponseEntity.ok(transmissionList);
 	}
 
 

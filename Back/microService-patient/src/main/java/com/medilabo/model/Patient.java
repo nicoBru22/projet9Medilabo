@@ -2,6 +2,8 @@ package com.medilabo.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,5 +40,7 @@ public class Patient {
 	String telephone;
 	LocalDateTime dateCreation;
 	LocalDateTime dateModification;
+	
+	List<Transmission> transmissionsList = new ArrayList<>();
 
 }

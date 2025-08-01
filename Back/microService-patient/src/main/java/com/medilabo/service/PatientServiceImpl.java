@@ -3,8 +3,10 @@ package com.medilabo.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 import com.medilabo.model.Patient;
+import com.medilabo.model.Transmission;
 import com.medilabo.repository.IPatientRepository;
 
 @Service
@@ -130,5 +133,67 @@ public class PatientServiceImpl implements IPatientService{
         int age = period.getYears();
         logger.debug("Calcul de l'âge : dateNaissance = {}, age = {}", dateNaissance, age);
         return age;
+    }
+    
+    public Transmission addTransmission(Transmission newTransmission, String patientid) {
+	    logger.info("Tentative d'ajout d'une nouvelle transmission.");
+	    if (newTransmission == null) {
+	        logger.error("La transmission à ajouter ne peut pas être null.");
+	        throw new IllegalArgumentException("La transmission à ajouter ne peut pas être null.");
+	    }
+
+	    if (newTransmission.getNomMedecin() == null || newTransmission.getNomMedecin().isBlank()
+	            || newTransmission.getPrenomMedecin() == null || newTransmission.getPrenomMedecin().isBlank()
+	            || newTransmission.getTransmission() == null || newTransmission.getTransmission().isBlank()) {
+	        logger.error("Le nom et prénom du médecin ainsi que la transmission écrite sont obligatoires. La transmission : {}", newTransmission);
+	        throw new IllegalArgumentException("Le nom et prénom du médecin ainsi que la transmission écrite sont obligatoires.");
+	    }
+	    
+	    if (patientid == null || patientid.isBlank()) {
+	        logger.error("L'id ne peut pas être null ou vide : {}", patientid);
+	        throw new IllegalArgumentException("L'id ne peut pas être null ou vide");
+	    }
+	    
+	    if (!patientRepository.existsById(patientid)) {
+	        logger.warn("Suppression impossible : patient non trouvé avec l'id : {}", patientid);
+	        throw new NoSuchElementException("Patient non trouvé avec l'id : " + patientid);
+	    }
+	    
+    	Patient patient = patientRepository.findById(patientid).get();
+    	List<Transmission> transmissionsList = patient.getTransmissionsList();
+
+	    Transmission transmission = new Transmission();
+	    transmission.setId(UUID.randomUUID().toString());
+	    transmission.setDateTransmission(LocalDateTime.now());
+	    transmission.setNomMedecin(newTransmission.getNomMedecin());
+	    transmission.setPrenomMedecin(newTransmission.getPrenomMedecin());
+	    transmission.setPatientId(patientid);
+	    transmission.setTransmission(newTransmission.getTransmission());
+	    
+    	transmissionsList.add(transmission);
+    	patientRepository.save(patient);
+
+		return transmission;
+    	
+    }
+    
+    public List<Transmission> getAllTransmissionOfPatient(String patientId) {
+	    if (patientId == null || patientId.isBlank()) {
+	        logger.error("L'id ne peut pas être null ou vide : {}", patientId);
+	        throw new IllegalArgumentException("L'id ne peut pas être null ou vide");
+	    }
+	    
+	    if (!patientRepository.existsById(patientId)) {
+	        logger.warn("Suppression impossible : patient non trouvé avec l'id : {}", patientId);
+	        throw new NoSuchElementException("Patient non trouvé avec l'id : " + patientId);
+	    }
+    	Patient patient = patientRepository.findById(patientId).get();
+    	List<Transmission> transmissionList = patient.getTransmissionsList();
+    	if(transmissionList.isEmpty()) {
+    		return new ArrayList<>();
+    	}
+    	
+		return transmissionList;
+    	
     }
 }

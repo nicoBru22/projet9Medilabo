@@ -51,28 +51,29 @@ function AddTransmissionPage() {
     console.log({ nomMedecin, prenomMedecin, transmission });
 
     const transmissionData = {
-        patientId: id,
         nomMedecin: nomMedecin,
         prenomMedecin: prenomMedecin,
         transmission: transmission,
     };
 
-  fetch("http://localhost:8080/transmission/add", {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-    body: JSON.stringify(transmissionData),
+  fetch(`http://localhost:8080/patient/transmission/add?patientId=${id}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: "include",
+    body: JSON.stringify(transmissionData), // <-- bonne indentation ici
   })
+
   .then((response) => {
     if (!response.ok) {
       throw new Error("Erreur lors de l'envoi de la transmission");
     }
-    return response.json();
+    return response.text(); // on prend le texte brut
   })
-  .then((data) => {
+  .then((text) => {
+    const data = text ? JSON.parse(text) : {}; // on parse que s'il y a du contenu
     console.log("Transmission ajoutée :", data);
     alert("Transmission ajoutée avec succès !");
     navigate(`/patient/infos/${id}`);

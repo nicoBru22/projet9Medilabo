@@ -10,7 +10,6 @@ function InfosPatientPage() {
 
   const [patient, setPatient] = useState(null);
   const [medecins, setMedecins] = useState([]);
-  const [transmissions, setTransmissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,41 +20,25 @@ function InfosPatientPage() {
       return;
     }
 
-
-    Promise.all([
-      fetch(`http://localhost:8080/patient/infos/${id}`, {
+    fetch(`http://localhost:8080/patient/infos/${id}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       credentials: "include",
-      }),
-      fetch(`http://localhost:8080/transmission/getTransmissionsOfPatient?patientId=${id}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-      })
-    ])
-      .then(async ([patientRes, transmissionsRes]) => {
-        if (!patientRes.ok) throw new Error("Erreur lors du chargement du patient");
-        if (!transmissionsRes.ok) throw new Error("Erreur lors du chargement des transmissions");
-
-        const patientData = await patientRes.json();
-        const transmissionsData = await transmissionsRes.json();
-
-        setPatient(patientData);
-        setTransmissions(transmissionsData);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setIsLoading(false);
-      });
-  }, [id]);
+    })
+    .then(async (response) => {
+      if (!response.ok) throw new Error("Erreur lors du chargement du patient");
+      const data = await response.json();
+      setPatient(data);
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      setError(err.message);
+      setIsLoading(false);
+    });
+  }, [id, navigate]);
 
   useEffect(() => {
     if (patient) {
@@ -88,11 +71,10 @@ function InfosPatientPage() {
               <p className="adresse"><strong>Adresse :</strong> {patient.adresse}</p>
               <p className="telephone"><strong>Téléphone :</strong> {patient.telephone}</p>
               <p className="dateCréation"><strong>Dossier créé le :</strong> {patient.dateCreation}</p>
-              <p className="dateModification"><strong>Dossier modifié le :</strong> {patient.dateModification}</p>
-              <p>Ici doit apparaitre l'alerte en rouge si le fetch revient true. Si il est faux alors </p>       
+              <p className="dateModification"><strong>Dossier modifié le :</strong> {patient.dateModification}</p>    
             </div>
             <div>
-              <AlertSante patientId={id}/>
+              <AlertSante patientId={id} />
             </div>
 
             <div className="containerMedecinRef">
@@ -113,22 +95,21 @@ function InfosPatientPage() {
           <div className="containerTransmission">
             <p className="transmission"><strong>Transmissions :</strong></p> 
             <ul>
-              {transmissions.length > 0 ? (
-                transmissions.map((transmission) => (
+              {Array.isArray(patient.transmissionsList) && patient.transmissionsList.length > 0 ? (
+                patient.transmissionsList.map((transmission) => (
                   <li className="transmissionList" key={transmission.id}>
                     <div className="infosTransmission">
                       <div className="dateTransmission">Date : {transmission.dateTransmission}</div>
-                      <div className="nomPrenomMedecin"> Dr {transmission.nomMedecin} {transmission.prenomMedecin}</div>
+                      <div className="nomPrenomMedecin">Dr {transmission.nomMedecin} {transmission.prenomMedecin}</div>
                     </div>
                     <div className="transmissionEcrite">{transmission.transmission}</div>
-                  
-                  
                   </li>
                 ))
               ) : (
                 <li className="aucuneTransmission">Aucune transmission</li>
               )}
             </ul>
+
             <button className="btnAjouterTransmission" onClick={() => navigate(`/patient/infos/${patient.id}/transmission`)}>Ajouter une transmission</button>
           </div>
 

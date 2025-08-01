@@ -1,23 +1,37 @@
 import React from "react";
 import Menu from "../components/Menu";
 import { Link } from "react-router-dom";
+import "../styles/accueilPage.css";
 
 function HomePage() {
     return (
-        <div>
+        <div className="containerPageAccueil">
             <Menu />
-            <h1>Bienvenue sur le site MediLabo</h1>
-
-            <Link to="/patient/Liste">afficher la liste des patients</Link>
-            <Link to="/medecin/Liste">afficher la liste des médecins</Link>
-            <Link to="/patient/add">Ajouter un nouveau patient</Link>
-            <Link to="/medecin/add">Ajouter un nouveau médecin</Link>
-            <Link to="http://localhost:8081/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">Accéder à la documentation Swagger UI de l'API Patient</Link>
-            <Link to="http://localhost:8082/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">Accéder à la documentation Swagger UI de l'API transmission</Link>
-            <Link to="http://localhost:8083/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">Accéder à la documentation Swagger UI de l'API-Utilisateur</Link>
-            <Link to="http://localhost:8084/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">Accéder à la documentation Swagger UI de l'API Anticipation</Link>
-          <Link to="http://localhost:8081/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">Accéder à la documentation Swagger UI de l'API Patient</Link>
-
+            <div className="containerAccueil">
+                <h1 className="titrePageAccueil">Bienvenue sur le site MediLabo</h1>
+                <div className="containerElementAccueil">
+                    <div className="navigationTitre">Navigation Patient :</div>
+                    <Link className="linkAccueil" to="/patient/liste">- Afficher la liste des patients</Link>
+                    <Link className="linkAccueil" to="/patient/add">- Ajouter un nouveau patient</Link>
+                </div>
+                <div className="containerElementAccueil">
+                    <div className="navigationTitre">Navigation Utilisateur :</div>
+                    <Link className="linkAccueil" to="/user/liste">- Afficher la liste des médecins</Link>
+                    <Link className="linkAccueil" to="/user/add">- Ajouter un nouvel utilisateur</Link>
+                </div>
+                <div className="containerElementAccueil">
+                    <div className="navigationTitre">Autres navigations :</div>
+                    <Link className="linkAccueil" to="/medecin/liste">- Afficher la liste des médecins</Link>
+                    <Link className="linkAccueil" to="/medecin/add">- Ajouter un nouveau médecin</Link>
+                </div>
+                <div className="containerElementAccueil">
+                    <div className="navigationTitre">Documentation API :</div>
+                    <Link className="linkAccueil" to="http://localhost:8081/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API Patient</Link>
+                    <Link className="linkAccueil" to="http://localhost:8082/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API transmission</Link>
+                    <Link className="linkAccueil" to="http://localhost:8083/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API-Utilisateur</Link>
+                    <Link className="linkAccueil" to="http://localhost:8084/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API Anticipation</Link>
+                </div>
+            </div>
         </div>
     )
 }
