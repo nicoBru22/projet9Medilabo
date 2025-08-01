@@ -60,14 +60,6 @@ jobs:
         done
         echo 'Gateway est disponible.'
         
-        # 2. Attente pour api-patient (via la Gateway)
-        # La Gateway est maintenant prête à router
-        until curl --fail http://localhost:8080/patient/actuator/health; do
-          echo 'Attente de la disponibilité de api-patient via la Gateway...'
-          sleep 5
-        done
-        echo 'api-patient est disponible.'
-        
         # 3. Attente pour api-utilisateur (via la Gateway)
         # La Gateway est prête à router
         until curl --fail http://localhost:8080/utilisateur/actuator/health; do
@@ -75,6 +67,14 @@ jobs:
           sleep 5
         done
         echo 'api-utilisateur est disponible.'
+        
+        # 2. Attente pour api-patient (via la Gateway)
+        # La Gateway est maintenant prête à router
+        until curl --fail http://localhost:8080/patient/actuator/health; do
+          echo 'Attente de la disponibilité de api-patient via la Gateway...'
+          sleep 5
+        done
+        echo 'api-patient est disponible.'
 
         echo "Tous les services nécessaires sont démarrés et prêts."
     # --- FIN DES MODIFICATIONS ---
