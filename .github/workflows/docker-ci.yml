@@ -1,4 +1,4 @@
-name: CI - Docker Compose
+name: CI - Docker Compose et Tests d'Intégration
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      DOCKER_BUILDKIT: 0
+      DOCKER_BUILDKIT: 0 
 
     steps:
     - name: Checkout du code
@@ -21,76 +21,89 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '21'
+        cache: 'maven'
 
-    - name: Build du microservice utilisateur
+    - name: Build des microservices (sans les tests)
       run: |
-        cd Back/microService-utilisateur && ./mvnw package -DskipTests
+        echo "Build du microservice utilisateur..."
+        cd Back/microService-utilisateur && ./mvnw package -DskipTests && cd -
+        echo "Build du microservice patient..."
+        cd Back/microService-patient && ./mvnw package -DskipTests && cd -
+        echo "Build du microservice gateway..."
+        cd gateway && ./mvnw package -DskipTests && cd -
+        # Si vous avez d'autres microservices, ajoutez leurs builds ici
 
-    - name: Build du microservice patient
-      run: |
-        cd Back/microService-patient && ./mvnw package -DskipTests
-
-    - name: Build du microservice transmission
-      run: |
-        cd Back/microService-transmission && ./mvnw package -DskipTests
-
-    - name: Build du microservice anticipation
-      run: |
-        cd Back/microService-anticipation && ./mvnw package -DskipTests
-
-    - name: Build du microservice gateway
-      run: |
-        cd gateway && ./mvnw package -DskipTests
-
-    - name: Vérifier le contenu du dossier utilisateur
+    - name: Vérifier les JARs générés
       run: |
         echo "Contenu de Back/microService-utilisateur/target :"
-        ls -l Back/microService-utilisateur/target
-
-    - name: Vérifier le contenu du dossier patient
-      run: |
+        ls -l Back/microService-utilisateur/target/*.jar || echo "JAR non trouvé pour utilisateur"
         echo "Contenu de Back/microService-patient/target :"
-        ls -l Back/microService-patient/target
+        ls -l Back/microService-patient/target/*.jar || echo "JAR non trouvé pour patient"
+        echo "Contenu de gateway/target :"
+        ls -l gateway/target/*.jar || echo "JAR non trouvé pour gateway"
 
-    - name: Vérifier le contenu du dossier transmission
+    - name: Lancer les tests unitaires des microservices
       run: |
-        echo "Contenu de Back/microService-transmission/target :"
-        ls -l Back/microService-transmission/target
-
-    - name: Vérifier le contenu du dossier anticipation
-      run: |
-        echo "Contenu de Back/microService-anticipation/target :"
-        ls -l Back/microService-anticipation/target
-
-    - name: Vérifier le contenu du dossier gateway
-      run: |
-        echo "Contenu de la gateway :"
-        ls -l gateway/target
-        
-    - name: Lancer les tests des microservices
-      run: |
-        echo "Tests microservice utilisateur"
+        echo "Exécution des tests unitaires du microservice utilisateur..."
         cd Back/microService-utilisateur && ./mvnw test && cd -
 
-        echo "Tests microservice patient"
+        echo "Exécution des tests unitaires du microservice patient..."
         cd Back/microService-patient && ./mvnw test && cd -
 
-        echo "Tests microservice transmission"
-        cd Back/microService-transmission && ./mvnw test && cd -
-
-        echo "Tests microservice anticipation"
-        cd Back/microService-anticipation && ./mvnw test && cd -
-
-        echo "Tests gateway"
+        echo "Exécution des tests unitaires de la gateway..."
         cd gateway && ./mvnw test && cd -
+        # Si vous avez d'autres microservices, ajoutez leurs tests unitaires ici
 
-
-
-    - name: Build & Run avec Docker Compose
+    - name: Build & Run des conteneurs avec Docker Compose
       run: |
+        echo "Démarrage des conteneurs Docker..."
+        # Le -d détache les conteneurs du terminal, permettant au workflow de continuer
         docker compose -f docker-compose.yml up --build -d
-        sleep 15
-        docker compose ps
+        echo "Conteneurs démarrés, attente pour la disponibilité des services..."
 
-    - name: Arrêt des conteneurs
-      run: docker compose down
+    - name: Attendre que les services soient prêts (Health Checks)
+      run: |
+        # Attente pour api-patient
+        until curl --fail http://localhost:8080/patient/actuator/health; do
+          echo 'Attente de la disponibilité de api-patient...'
+          sleep 5
+        done
+        echo 'api-patient est disponible.'
+
+        # Attente pour api-utilisateur
+        until curl --fail http://localhost:8080/utilisateur/actuator/health; do
+          echo 'Attente de la disponibilité de api-utilisateur...'
+          sleep 5
+        done
+        echo 'api-utilisateur est disponible.'
+
+        # Attente pour la gateway elle-même
+        until curl --fail http://localhost:8080/actuator/health; do
+          echo 'Attente de la disponibilité de la gateway...'
+          sleep 5
+        done
+        echo 'Gateway est disponible.'
+
+        echo "Tous les services nécessaires sont démarrés et prêts."
+
+    - name: Vérifier l'état des conteneurs Docker
+      run: docker compose ps
+
+    - name: Lancer les tests d'intégration des microservices
+      run: |
+        echo "Exécution des tests d'intégration du microservice utilisateur..."
+        # Si ce service a des tests d'intégration (ex: *IT.java), mvnw verify les exécutera.
+        cd Back/microService-utilisateur && ./mvnw verify && cd - 
+
+        echo "Exécution des tests d'intégration du microservice patient..."
+        cd Back/microService-patient && ./mvnw verify && cd - 
+
+        echo "Exécution des tests d'intégration de la gateway..."
+        cd gateway && ./mvnw verify && cd -
+        # Si vous avez d'autres microservices, ajoutez leurs tests d'intégration ici
+
+    - name: Arrêt des conteneurs Docker
+      if: always()
+      run: |
+        echo "Arrêt des conteneurs Docker..."
+        docker compose down

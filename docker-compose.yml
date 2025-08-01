@@ -29,36 +29,6 @@ services:
       retries: 5
       start_period: 30s
 
-  api-transmissions:
-    build:
-      context: ./Back/microService-transmission
-    container_name: api-transmissions
-    ports:
-      - "8082:8081"
-    networks:
-      - medilabo-net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-      
-  api-anticipation:
-    build:
-      context: ./Back/microService-anticipation
-    container_name: api-anticipation
-    ports:
-      - "8084:8081"
-    networks:
-      - medilabo-net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
   gateway:
     build:
       context: ./gateway
@@ -67,10 +37,6 @@ services:
       - "8080:8080"
     depends_on:
       api-patient:
-        condition: service_healthy
-      api-anticipation:
-        condition: service_healthy
-      api-transmissions:
         condition: service_healthy
       api-utilisateur:
         condition: service_healthy

@@ -49,7 +49,7 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // 3. Vos autres chemins publics
-                .pathMatchers("/utilisateur/login", "/utilisateur/add").permitAll()
+                .pathMatchers("/utilisateur/login").permitAll()
 
                 // 4. Sécuriser tout le reste
                 .anyExchange().authenticated()
