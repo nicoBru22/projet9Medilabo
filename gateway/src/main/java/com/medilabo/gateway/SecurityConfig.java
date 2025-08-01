@@ -38,9 +38,6 @@ public class SecurityConfig {
                     "/webjars/**"          // Dépendances web de Swagger UI
                 ).permitAll()
 
-                // 2. Autoriser l'accès aux chemins des api-docs des microservices
-                // C'est redondant avec "/v3/api-docs/**" mais plus explicite.
-                // La gateway va intercepter ces appels et les router vers les services.
                 .pathMatchers(
                     "/patient/v3/api-docs",
                     "/utilisateur/v3/api-docs"
