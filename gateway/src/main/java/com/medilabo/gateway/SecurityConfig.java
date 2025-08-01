@@ -43,13 +43,14 @@ public class SecurityConfig {
                 // La gateway va intercepter ces appels et les router vers les services.
                 .pathMatchers(
                     "/patient/v3/api-docs",
-                    "/utilisateur/v3/api-docs",
-                    "/transmission/v3/api-docs",
-                    "/alertes/v3/api-docs"
+                    "/utilisateur/v3/api-docs"
                 ).permitAll()
 
                 // 3. Vos autres chemins publics
                 .pathMatchers("/utilisateur/login").permitAll()
+                .pathMatchers("/patient/health").permitAll()
+                .pathMatchers("/utilisateur/health").permitAll()
+                
 
                 // 4. Sécuriser tout le reste
                 .anyExchange().authenticated()

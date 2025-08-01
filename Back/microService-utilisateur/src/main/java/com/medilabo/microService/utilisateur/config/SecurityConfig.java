@@ -32,8 +32,8 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/utilisateur/login").permitAll()
-                        .requestMatchers("/utilisateur/add").permitAll() /* a supprimer en prod*/
                         .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/utilisateur/health").permitAll()
                         .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
