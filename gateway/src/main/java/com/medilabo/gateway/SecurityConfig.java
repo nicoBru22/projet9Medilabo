@@ -35,7 +35,7 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     "/swagger-ui/**",      // Ressources statiques de Swagger UI
                     "/v3/api-docs/**",     // Les définitions OpenAPI (y compris celle de la gateway elle-même)
-                    "/webjars/**"          // Dépendances web de Swagger UI
+                    "/webjars/**"
                 ).permitAll()
 
                 .pathMatchers(
