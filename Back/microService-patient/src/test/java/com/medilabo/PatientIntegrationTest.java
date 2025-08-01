@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.time.LocalDate;
 import java.time.Period;
 
-import org.junit.jupiter.api.BeforeEach; // Changement ici: BeforeAll -> BeforeEach
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,28 +19,60 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
 import com.medilabo.repository.IPatientRepository;
 
+// Nouveaux imports pour Testcontainers
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@Testcontainers // AJOUTER CETTE ANNOTATION
 public class PatientIntegrationTest  {
 
 	@Autowired
 	private IPatientRepository patientRepository;
-	
+
 	@Autowired
 	private MockMvc mockMvc;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	// Variable pour stocker l'ID du patient de test si nécessaire pour plusieurs tests
-	private String patientTestId; 
-	
-	@BeforeEach // CHANGEMENT : @BeforeAll en @BeforeEach
+	private String patientTestId;
+
+    // DÉCLARATION DU CONTENEUR MONGODB
+    // @Container démarre le conteneur et gère son cycle de vie.
+    // 'static' assure que le conteneur démarre une seule fois pour toutes les méthodes de test de cette classe.
+    @Container
+    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")
+                                                        .withExposedPorts(27017); // Optionnel mais bonne pratique d'exposer le port
+
+    // CONFIGURATION DYNAMIQUE DES PROPRIÉTÉS SPRING
+    // Cette méthode est exécutée avant le démarrage du contexte Spring pour injecter
+    // l'URI de connexion du conteneur MongoDB démarré.
+    @DynamicPropertySource
+    static void setMongoProperties(DynamicPropertyRegistry registry) {
+        // Obtenez l'URI de connexion du conteneur MongoDB et configurez-la dans Spring
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+
+        // Si vous avez besoin d'un nom de base de données spécifique pour vos tests (par défaut 'test'),
+        // vous pouvez l'ajouter à l'URI comme ceci, ou spécifier une base de données par défaut dans le conteneur.
+        // registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("medilabo_patient_test_db"));
+        // Ou plus simplement, si vous n'avez pas de base de données nommée spécifiquement :
+        // registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
+        // registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
+        // registry.add("spring.data.mongodb.database", () -> "medilabo_patient_test_db"); // Remplacez par le nom de votre BDD de test si nécessaire
+    }
+
+	@BeforeEach // `@BeforeEach` est approprié car il assure un état propre avant chaque test
 	void setupPatientData() { // Renommée pour clarté, méthode NON-static
 		patientRepository.deleteAll(); // Nettoie la base avant CHAQUE test
-		
+
 		Patient patientTest1 = new Patient();
 		patientTest1.setNom("brunet");
 		patientTest1.setPrenom("nicolas");
@@ -51,7 +83,7 @@ public class PatientIntegrationTest  {
 		this.patientTestId = savedPatient.getId(); // Stocke l'ID pour les tests suivants
 		System.out.println("Patient initial 'nbrunet' ajouté avec ID: " + patientTestId);
 	}
-	
+
 	@Test
 	void getListPatientTest() throws Exception {
 		mockMvc.perform(get("/patient/list"))
@@ -87,7 +119,9 @@ public class PatientIntegrationTest  {
     @Test
     void addPatientTest() throws Exception {
         // Supprimer le patient initial pour s'assurer que le test d'ajout commence avec un état connu
-        patientRepository.deleteAll(); 
+        // Ce deleteAll() est en plus de celui du @BeforeEach, il garantit que pour CE test précis
+        // on part d'une base complètement vide.
+        patientRepository.deleteAll();
 
         // Nouveau patient à ajouter
         Patient newPatient = new Patient();
@@ -96,7 +130,7 @@ public class PatientIntegrationTest  {
         newPatient.setTelephone("0711223344");
         newPatient.setDateNaissance(LocalDate.of(1985, 5, 15));
         newPatient.setGenre("F");
-        
+
         String newPatientJson = objectMapper.writeValueAsString(newPatient);
 
         mockMvc.perform(post("/patient/add")
@@ -123,7 +157,7 @@ public class PatientIntegrationTest  {
         updatedPatient.setTelephone("0699887766"); // Nouvelle valeur
         updatedPatient.setDateNaissance(LocalDate.of(1991, 9, 24));
         updatedPatient.setGenre("M");
-        
+
         String updatedPatientJson = objectMapper.writeValueAsString(updatedPatient);
 
         mockMvc.perform(put("/patient/update/{id}", patientTestId)
@@ -150,6 +184,9 @@ public class PatientIntegrationTest  {
         mockMvc.perform(delete("/patient/delete/{id}", patientTestId))
             .andExpect(status().isNoContent()); // 204 No Content
 
+        // Vérifier que le patient a bien été supprimé
+        mockMvc.perform(get("/patient/list"))
+            .andExpect(status().isOk()) // Ou isNoContent() selon l'implémentation de votre endpoint /list quand vide
+            .andExpect(jsonPath("$.length()").value(0));
     }
-
 }
