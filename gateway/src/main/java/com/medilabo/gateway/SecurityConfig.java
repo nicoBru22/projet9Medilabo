@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .pathMatchers("/utilisateur/login").permitAll()
                 .pathMatchers("/patient/health").permitAll()
                 .pathMatchers("/utilisateur/health").permitAll()
+                .pathMatchers("/actuator/**").permitAll()
                 
 
                 // 4. Sécuriser tout le reste
