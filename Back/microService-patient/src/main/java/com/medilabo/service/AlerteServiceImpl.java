@@ -36,29 +36,20 @@ public class AlerteServiceImpl implements IAlerteService {
 	    logger.debug("Transmissions récupérées pour le patient {} {}. Nombre de transmissions {}", patient.getNom(), patient.getPrenom(), listTransmission.size());
 
 
-	    // 3. Comptage TOTAL des termes déclencheurs dans TOUTES les transmissions
-	    long totalKeywordOccurrences = 0;
-	    for (Transmission transmission : listTransmission) {
-	        String transmissionContent = transmission.getTransmission().toLowerCase(); // Convertir une seule fois
-	        for (String motCle : listMotCle) {
-	            // Compter les occurrences de chaque mot-clé dans la transmission
-	            // Ceci est une implémentation simple qui compte les correspondances exactes.
-	            // Si un mot-clé apparaît plusieurs fois dans la même transmission, il sera compté plusieurs fois.
-	            if (transmissionContent.contains(motCle.toLowerCase())) {
-	                // Pour un comptage exact de toutes les occurrences d'un mot (ex: "fumeur fumeur" compte 2)
-	                // il faudrait une logique plus complexe (regex ou boucle de indexOf).
-	                // Pour l'instant, on compte si le mot-clé est présent au moins une fois par transmission pour chaque mot-clé.
-	                // Si "Fumeur" apparaît 3 fois dans une note, et "Cholestérol" 1 fois,
-	                // cette logique comptera 1 pour "Fumeur" et 1 pour "Cholestérol" dans cette note.
-	                // Si vous voulez compter chaque apparition, même multiple dans une note, il faut affiner.
-	                // Pour l'instant, je vais implémenter le comptage "est-ce que le mot-clé X est présent dans la note Y ?".
-	                // Si vous voulez compter N fois si le mot apparaît N fois, dites-le moi.
-	                totalKeywordOccurrences++;
-	            }
-	        }
-	    }
-	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les transmissions : {}", totalKeywordOccurrences);
+	    List<String> keywords = listMotCle.stream()
+	    	    .map(String::toLowerCase)
+	    	    .toList();
 
+    	long totalKeywordOccurrences = listTransmission.stream()
+    	    .map(Transmission::getTransmission)
+    	    .map(String::toLowerCase)
+    	    .flatMap(transmissionContent ->
+    	        keywords.stream()
+    	            .filter(transmissionContent::contains)
+    	    )
+    	    .count();
+
+	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les transmissions : {}", totalKeywordOccurrences);
 
 	    // 4. Récupération de l'âge et du genre du patient
 	    int agePatient = patientService.agePatient(patient.getDateNaissance());
@@ -95,14 +86,18 @@ public class AlerteServiceImpl implements IAlerteService {
     public boolean isInDanger(long occurence, int age, String genre) {
 		// Homme < 30 ans : >= 3 déclencheurs
 		if (age < 30 && "masculin".equalsIgnoreCase(genre) && occurence >= 3) {
+			logger.info("ici");
 			return true;
 		}
 		// Femme < 30 ans : >= 4 déclencheurs
 		else if (age < 30 && "feminin".equalsIgnoreCase(genre) && occurence >= 4) {
+			
+			logger.info("le patient : age {}, genre : {}, occurence : {}", age, genre, occurence);
 			return true;
 		}
 		// > 30 ans : 6 ou 7 déclencheurs
 		else if (age >= 30 && (occurence == 6 || occurence == 7)) {
+			logger.info("ici: 3");
 			return true;
 		}
 		else {

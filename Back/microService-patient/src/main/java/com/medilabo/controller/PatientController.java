@@ -128,7 +128,7 @@ public class PatientController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
 	                .body("Patient non trouvé avec id " + id);
 	    }
-	}
+	} 
 	
 	@PostMapping("/transmission/add")
 	public ResponseEntity<Transmission> addTransmission(@Valid @RequestBody Transmission newTransmission, 

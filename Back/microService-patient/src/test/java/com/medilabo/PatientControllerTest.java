@@ -195,6 +195,45 @@ public class PatientControllerTest {
 	    verify(patientService, times(1)).updatePatient(any(Patient.class));
 	}
 	
+	@Test
+	@WithMockUser(username = "testuser", roles = {"USER"})
+	public void addTransmissionTest() throws Exception {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+	    String transmissionJson = objectMapper.writeValueAsString(transmissionTest1);
+	    String patientId = "1";
+
+	    when(patientService.addTransmission(any(Transmission.class), any(String.class))).thenReturn(transmissionTest1);
+
+	    mockMvc.perform(post("/patient/transmission/add")
+	            .param("patientId", patientId)
+	            .contentType("application/json")
+	            .content(transmissionJson))
+	            .andExpect(status().isCreated())
+	            .andExpect(jsonPath("$.id").value("1"))
+	            .andExpect(jsonPath("$.patientId").value("1"));
+
+	    verify(patientService, times(1)).addTransmission(any(Transmission.class), any(String.class));
+	}
+	
+	@Test
+	@WithMockUser(username = "testuser", roles = {"USER"})
+	public void getTransmissionListTest() throws Exception {
+	    String patientId = "1";
+	    
+	    when(patientService.getAllTransmissionOfPatient(patientId)).thenReturn(listTransmissionTest);
+
+	    mockMvc.perform(get("/patient/transmission/liste")
+	            .param("patientId", patientId))
+	            .andExpect(status().isOk())
+	            .andExpect(content().contentType("application/json"))
+	            .andExpect(jsonPath("$.length()").value(2))
+	            .andExpect(jsonPath("$[0].id").value("1"))
+	            .andExpect(jsonPath("$[1].id").value("2"));
+
+	    verify(patientService, times(1)).getAllTransmissionOfPatient(patientId);
+	}
+	
 	
 	
 	
