@@ -27,6 +27,11 @@ import com.medilabo.service.IPatientService;
 
 import jakarta.validation.Valid;
 
+
+/**
+ * Contrôleur REST permettant de gérer les opérations CRUD sur les patients
+ * et leurs transmissions médicales.
+ */
 @RequestMapping("/patient")
 @RestController
 public class PatientController {
@@ -36,6 +41,11 @@ public class PatientController {
 	@Autowired
 	private IPatientService patientService;
 	
+    /**
+     * Récupère la liste de tous les patients enregistrés.
+     *
+     * @return la liste des patients avec un code HTTP 200
+     */
     @GetMapping("/list")
     public ResponseEntity<List<Patient>> getAllPatients() {
     	logger.info("Entrée dans le controller getAllPatients.");
@@ -44,6 +54,13 @@ public class PatientController {
         return ResponseEntity.ok(patientList);
     }
     
+    /**
+     * Calcule et retourne l'âge du patient à partir de sa date de naissance.
+     *
+     * @param id identifiant du patient
+     * @return âge du patient
+     * @throws ResponseStatusException si le patient est introuvable ou que sa date de naissance est absente
+     */
     @GetMapping("/infos/{id}/age")
     public int getAgePatient(@PathVariable String id) {
         logger.info("Tentative de récupération de l'âge pour le patient avec l'ID : {}", id);
@@ -78,12 +95,25 @@ public class PatientController {
         }
     }
 	
+    /**
+     * Récupère les informations d'un patient selon son identifiant.
+     *
+     * @param id identifiant du patient
+     * @return le patient correspondant
+     */
 	@GetMapping("/infos/{id}")
 	public Patient getPatientById(@PathVariable String id) {
 	    Patient patient = patientService.getPatientById(id);
         return patient;
 	}
 	
+    /**
+     * Ajoute un nouveau patient au système.
+     *
+     * @param patient objet Patient à enregistrer
+     * @param result résultat de la validation
+     * @return le patient ajouté ou une erreur 400 si les données sont invalides
+     */
 	@PostMapping("/add")
 	public ResponseEntity<?> ajouterPatientApi(@RequestBody @Valid Patient patient, BindingResult result) {
 	    logger.info("Entrée dans POST patient/add");
@@ -99,7 +129,12 @@ public class PatientController {
 	    return ResponseEntity.status(HttpStatus.CREATED).body(savedPatient);
 	}
 
-	
+    /**
+     * Supprime un patient à partir de son identifiant.
+     *
+     * @param id identifiant du patient à supprimer
+     * @return réponse HTTP 204 si la suppression est réussie
+     */
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Void> deletePatient(@PathVariable("id") String id) {
 	    logger.info("Entrée dans DELETE /delete/{} ", id);
@@ -107,6 +142,14 @@ public class PatientController {
 	    return ResponseEntity.noContent().build(); // 204 No Content
 	}
 	
+    /**
+     * Met à jour les informations d'un patient existant.
+     *
+     * @param id identifiant du patient à mettre à jour
+     * @param patient données mises à jour
+     * @param result résultat de la validation
+     * @return le patient mis à jour ou une erreur si non trouvé ou invalide
+     */
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updatePatient(
 	        @PathVariable("id") String id,
@@ -130,6 +173,13 @@ public class PatientController {
 	    }
 	} 
 	
+    /**
+     * Ajoute une nouvelle transmission médicale à un patient existant.
+     *
+     * @param newTransmission transmission à ajouter
+     * @param patientId identifiant du patient concerné
+     * @return la transmission créée
+     */
 	@PostMapping("/transmission/add")
 	public ResponseEntity<Transmission> addTransmission(@Valid @RequestBody Transmission newTransmission, 
 																@RequestParam String patientId) {
@@ -139,6 +189,12 @@ public class PatientController {
 	    return ResponseEntity.status(HttpStatus.CREATED).body(transmission);
 	}
 	
+    /**
+     * Récupère toutes les transmissions associées à un patient donné.
+     *
+     * @param patientId identifiant du patient
+     * @return la liste des transmissions médicales
+     */
 	@GetMapping("/transmission/liste")
 	public ResponseEntity<List<Transmission>> getAllTransmissionOfPatient(@RequestParam String patientId) {
 	    logger.info("Requête reçue pour récupérer la liste des transmissions du patient avec l'Id : {}", patientId);

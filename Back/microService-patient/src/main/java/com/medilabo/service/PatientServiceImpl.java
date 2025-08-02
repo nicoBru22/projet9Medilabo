@@ -18,6 +18,10 @@ import com.medilabo.model.Patient;
 import com.medilabo.model.Transmission;
 import com.medilabo.repository.IPatientRepository;
 
+/**
+ * Implémentation de l'interface {@link IPatientService}, fournissant
+ * les opérations de gestion des patients et de leurs transmissions médicales.
+ */
 @Service
 public class PatientServiceImpl implements IPatientService{
 	
@@ -26,6 +30,11 @@ public class PatientServiceImpl implements IPatientService{
 	@Autowired
 	private IPatientRepository patientRepository;
 	
+    /**
+     * Récupère la liste de tous les patients.
+     *
+     * @return la liste des patients.
+     */
 	public List<Patient> getAllPatient() {
 	    logger.info("Récupération de tous les patients.");
 	    List<Patient> listePatient = patientRepository.findAll();
@@ -33,6 +42,14 @@ public class PatientServiceImpl implements IPatientService{
 	    return listePatient;
 	}
 
+    /**
+     * Récupère un patient par son identifiant.
+     *
+     * @param id l'identifiant du patient.
+     * @return le patient correspondant.
+     * @throws IllegalArgumentException si l'id est nul ou vide.
+     * @throws NoSuchElementException si aucun patient n'est trouvé.
+     */
 	public Patient getPatientById(String id) {
 	    logger.info("Récupération du patient avec l'id : {}", id);
 	    if (id == null || id.isBlank()) {
@@ -50,6 +67,13 @@ public class PatientServiceImpl implements IPatientService{
 	    return patient;
 	}
 
+    /**
+     * Supprime un patient par son identifiant.
+     *
+     * @param id l'identifiant du patient.
+     * @throws IllegalArgumentException si l'id est nul ou vide.
+     * @throws NoSuchElementException si aucun patient n'est trouvé.
+     */
 	public void deletePatient(String id) {
 	    logger.info("Appel à deletePatient avec id = {}", id);
 	    if (id == null || id.isBlank()) {
@@ -67,7 +91,13 @@ public class PatientServiceImpl implements IPatientService{
 	}
 
 
-	
+    /**
+     * Ajoute un nouveau patient dans le système.
+     *
+     * @param newPatient le patient à ajouter.
+     * @return le patient ajouté.
+     * @throws IllegalArgumentException si le patient est nul ou son nom est vide.
+     */
     public Patient addPatient(Patient newPatient) {
         logger.info("Tentative d'ajout d'un nouveau patient : {}", newPatient);
 
@@ -91,6 +121,14 @@ public class PatientServiceImpl implements IPatientService{
         return patientAjoute;
     }
 
+    /**
+     * Met à jour les informations d’un patient existant.
+     *
+     * @param patient le patient à mettre à jour.
+     * @return un Optional contenant le patient mis à jour.
+     * @throws IllegalArgumentException si le patient ou son id est null ou vide.
+     * @throws RuntimeException si le patient n'existe pas.
+     */
     public Optional<Patient> updatePatient(Patient patient) {
         logger.info("Tentative de mise à jour du patient avec l'id : {}", patient.getId());
 
@@ -122,6 +160,13 @@ public class PatientServiceImpl implements IPatientService{
     }
 
 
+    /**
+     * Calcule l'âge d’un patient à partir de sa date de naissance.
+     *
+     * @param dateNaissance la date de naissance.
+     * @return l'âge en années.
+     * @throws IllegalArgumentException si la date de naissance est null.
+     */
     public int agePatient(LocalDate dateNaissance) {
     	logger.info("Tentative de calcul de l'age du patient à partir de sa date de naissance.");
         if (dateNaissance == null) {
@@ -135,6 +180,15 @@ public class PatientServiceImpl implements IPatientService{
         return age;
     }
     
+    /**
+     * Ajoute une nouvelle transmission médicale pour un patient donné.
+     *
+     * @param newTransmission les informations de la transmission.
+     * @param patientid l'identifiant du patient.
+     * @return la transmission ajoutée.
+     * @throws IllegalArgumentException si la transmission est invalide ou l'id du patient est vide.
+     * @throws NoSuchElementException si le patient n'existe pas.
+     */
     public Transmission addTransmission(Transmission newTransmission, String patientid) {
 	    logger.info("Tentative d'ajout d'une nouvelle transmission.");
 	    if (newTransmission == null) {
@@ -177,6 +231,14 @@ public class PatientServiceImpl implements IPatientService{
     	
     }
     
+    /**
+     * Récupère toutes les transmissions médicales d’un patient donné.
+     *
+     * @param patientId l'identifiant du patient.
+     * @return la liste des transmissions associées.
+     * @throws IllegalArgumentException si l'id est nul ou vide.
+     * @throws NoSuchElementException si le patient n'existe pas.
+     */
     public List<Transmission> getAllTransmissionOfPatient(String patientId) {
 	    if (patientId == null || patientId.isBlank()) {
 	        logger.error("L'id ne peut pas être null ou vide : {}", patientId);

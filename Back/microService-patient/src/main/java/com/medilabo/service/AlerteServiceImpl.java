@@ -10,9 +10,16 @@ import org.springframework.stereotype.Service;
 import com.medilabo.model.Patient;
 import com.medilabo.model.Transmission;
 
+/**
+ * Service permettant d'évaluer le risque de santé d'un patient en fonction de mots-clés
+ * retrouvés dans ses transmissions médicales et de ses données personnelles (âge, genre).
+ */
 @Service
 public class AlerteServiceImpl implements IAlerteService {
 	
+    /**
+     * Liste des mots-clés déclencheurs utilisés pour détecter un risque médical.
+     */
 	private List<String> listMotCle = List.of(
 		    "HbA1C", "Microalbumine", "Taille", "Poids", "Fumeur", "Fumer",
 		    "Fumeuse", "Anormal", "Cholestérol", "Vertiges", "Rechute", "Réaction", "Anticorps"
@@ -22,6 +29,12 @@ public class AlerteServiceImpl implements IAlerteService {
 	@Autowired
 	private IPatientService patientService;
 	
+    /**
+     * Évalue le risque médical d’un patient en analysant ses transmissions et données personnelles.
+     *
+     * @param patientId l'identifiant du patient
+     * @return une chaîne décrivant le niveau de risque : "Early onset", "In Danger", "Borderline", ou "None"
+     */
 	public String riskEvaluation (String patientId) {
 		logger.info("Tentative de récupération de l'alerte santé pour le patient : {}", patientId);
 		Patient patient = patientService.getPatientById(patientId);
@@ -74,6 +87,13 @@ public class AlerteServiceImpl implements IAlerteService {
 	    }
 	}
 	
+    /**
+     * Vérifie si le patient est en situation de risque limité (Borderline).
+     *
+     * @param occurence le nombre de mots-clés déclencheurs trouvés
+     * @param age l’âge du patient
+     * @return true si le patient est borderline, sinon false
+     */
     public boolean isBordline(long occurence, int age) {
         // Le dossier du patient contient entre deux et cinq déclencheurs et le patient est âgé de plus de 30 ans.
     	if (occurence >= 2 && occurence <= 5 && age >= 30) {
@@ -83,6 +103,14 @@ public class AlerteServiceImpl implements IAlerteService {
     	}
     }
     
+    /**
+     * Vérifie si le patient est en situation de danger (In Danger).
+     *
+     * @param occurence le nombre de mots-clés déclencheurs trouvés
+     * @param age l’âge du patient
+     * @param genre le genre du patient ("masculin" ou "féminin")
+     * @return true si le patient est en danger, sinon false
+     */
     public boolean isInDanger(long occurence, int age, String genre) {
 		// Homme < 30 ans : >= 3 déclencheurs
 		if (age < 30 && "masculin".equalsIgnoreCase(genre) && occurence >= 3) {
@@ -105,6 +133,14 @@ public class AlerteServiceImpl implements IAlerteService {
 		}
     }
     
+    /**
+     * Vérifie si le patient est en situation d’apparition précoce (Early Onset).
+     *
+     * @param occurence le nombre de mots-clés déclencheurs trouvés
+     * @param age l’âge du patient
+     * @param genre le genre du patient
+     * @return true si le patient est en early onset, sinon false
+     */
     public boolean isEarlyOnset(long occurence, int age, String genre) {
     	logger.info("Tentative de calcul si la personne est : isEarlyOnSet");
     	logger.debug("le nombre d occurence : {}, l age : {}, le genre : {} ",occurence, age, genre);
