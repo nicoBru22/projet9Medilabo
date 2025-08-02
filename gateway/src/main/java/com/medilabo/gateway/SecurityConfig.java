@@ -14,15 +14,42 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuration de la sécurité pour la gateway API.
+ * <p>
+ * Cette classe configure les règles de sécurité WebFlux,
+ * y compris la gestion des accès publics, la sécurisation des routes,
+ * l'ajout du filtre d'authentification JWT, et la configuration CORS.
+ * </p>
+ * Elle permet notamment :
+ * <ul>
+ *   <li>L'accès public aux ressources Swagger UI pour la documentation.</li>
+ *   <li>L'accès public aux endpoints de login et de santé des microservices.</li>
+ *   <li>La sécurisation par défaut de toutes les autres requêtes.</li>
+ *   <li>La configuration des règles CORS autorisant les requêtes depuis localhost:3000.</li>
+ * </ul>
+ */
 @Configuration
 public class SecurityConfig {
 
     private final JwtAuthenticationWebFilter jwtAuthenticationWebFilter;
 
+    /**
+     * Constructeur injectant le filtre d'authentification JWT.
+     * 
+     * @param jwtAuthenticationWebFilter le filtre d'authentification JWT à ajouter dans la chaîne de filtres
+     */
     public SecurityConfig(JwtAuthenticationWebFilter jwtAuthenticationWebFilter) {
         this.jwtAuthenticationWebFilter = jwtAuthenticationWebFilter;
     }
+    
 
+    /**
+     * Configuration de la chaîne de filtres de sécurité WebFlux.
+     * 
+     * @param http l'objet ServerHttpSecurity pour configurer la sécurité HTTP
+     * @return la chaîne de filtres de sécurité configurée
+     */
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
@@ -64,8 +91,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-
-
+    /**
+     * Configuration des règles CORS autorisant les requêtes cross-origin.
+     * <p>
+     * Ici, seules les requêtes venant de "http://localhost:3000" sont autorisées,
+     * avec les méthodes HTTP GET, POST, PUT, DELETE, OPTIONS,
+     * et certains headers spécifiques (Authorization, Cache-Control, Content-Type).
+     * </p>
+     * 
+     * @return la source de configuration CORS à appliquer
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

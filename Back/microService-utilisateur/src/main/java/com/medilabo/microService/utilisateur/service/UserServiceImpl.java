@@ -13,6 +13,16 @@ import com.medilabo.microService.utilisateur.exception.UsernameAlreadyExistsExce
 import com.medilabo.microService.utilisateur.model.User;
 import com.medilabo.microService.utilisateur.repository.IUserRepository;
 
+/**
+ * Implémentation du service utilisateur pour la gestion des opérations
+ * CRUD sur les utilisateurs.
+ * <p>
+ * Cette classe fournit les méthodes pour récupérer, ajouter, modifier,
+ * et supprimer des utilisateurs, avec gestion des exceptions spécifiques.
+ * Le mot de passe est automatiquement encodé lors de la création ou
+ * mise à jour d'un utilisateur.
+ * </p>
+ */
 @Service
 public class UserServiceImpl implements IUserService {
 	
@@ -22,6 +32,11 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private IUserRepository userRepository;
 	
+	/**
+	 * Récupère la liste de tous les utilisateurs.
+	 * 
+	 * @return une liste contenant tous les utilisateurs
+	 */
 	public List<User> getAllUser() {
 		logger.info("Tentative de récupération de la liste d'utilisateur.");
 		List<User> listUtilisateur = userRepository.findAll();
@@ -32,6 +47,14 @@ public class UserServiceImpl implements IUserService {
 		return listUtilisateur;
 	}
 	
+	/**
+	 * Récupère un utilisateur par son identifiant unique.
+	 * 
+	 * @param id l'identifiant de l'utilisateur
+	 * @return l'utilisateur correspondant à l'id
+	 * @throws IllegalArgumentException si l'id est null ou vide
+	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec cet id
+	 */	
 	public User getUserById(String id) {
 		logger.info("Tentative de récupération de l'utilisateur avec l'id : {}", id);
 		if (id == null || id.isBlank()) {
@@ -45,6 +68,14 @@ public class UserServiceImpl implements IUserService {
 		return utilisateur;
 	}
 	
+	/**
+	 * Récupère un utilisateur par son nom d'utilisateur (username).
+	 * 
+	 * @param username le nom d'utilisateur
+	 * @return l'utilisateur correspondant au username
+	 * @throws IllegalArgumentException si le username est null ou vide
+	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec ce username
+	 */
 	public User getUserByUsername(String username) {
 		logger.info("Tentative de récupération de l'utilisateur par son username.");
 		if(username == null || username.isBlank()) {
@@ -62,6 +93,14 @@ public class UserServiceImpl implements IUserService {
 		return utilisateurFinded;
 	}
 	
+	/**
+	 * Ajoute un nouvel utilisateur en encodant son mot de passe.
+	 * 
+	 * @param utilisateur l'objet utilisateur à ajouter
+	 * @return l'utilisateur ajouté avec son mot de passe encodé
+	 * @throws IllegalArgumentException si les informations de l'utilisateur sont incomplètes ou nulles
+	 * @throws UsernameAlreadyExistsException si un utilisateur avec le même username existe déjà
+	 */
 	public User addUser(User utilisateur) {
 		logger.info("Tentative d'ajout de l'utilisateur : {}", utilisateur);
 		
@@ -89,6 +128,13 @@ public class UserServiceImpl implements IUserService {
 		return newUtilisateur;
 	}
 	
+	/**
+	 * Supprime un utilisateur par son identifiant.
+	 * 
+	 * @param id l'identifiant de l'utilisateur à supprimer
+	 * @throws IllegalArgumentException si l'id est null ou vide
+	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec cet id
+	 */
 	public void deleteUser(String id) {
 		logger.info("Tentative de suppression d'un utilisateur par son Id.");
 		if (id ==null || id.isBlank()) {
@@ -104,6 +150,19 @@ public class UserServiceImpl implements IUserService {
 		userRepository.deleteById(id);
 	}
 	
+	/**
+	 * Met à jour un utilisateur existant.
+	 * <p>
+	 * Si le mot de passe est modifié, il est encodé avant sauvegarde.
+	 * </p>
+	 * 
+	 * @param userUpdated l'objet utilisateur contenant les nouvelles informations
+	 * @param id l'identifiant de l'utilisateur à mettre à jour
+	 * @return l'utilisateur mis à jour
+	 * @throws IllegalArgumentException si l'id est null ou vide, ou si l'objet utilisateur est null
+	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec cet id
+	 * @throws UsernameAlreadyExistsException si le nouveau nom d'utilisateur est déjà pris par un autre utilisateur
+	 */
 	public User updateUser(User userUpdated, String id) {
 	    logger.info("Tentative de mise à jour de l'utilisateur avec l'id : {}", id);
 	    

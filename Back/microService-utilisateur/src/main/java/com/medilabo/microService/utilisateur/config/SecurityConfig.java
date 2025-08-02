@@ -12,7 +12,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
+/**
+ * Configuration de la sécurité pour le microservice utilisateur.
+ * <p>
+ * Cette classe configure les aspects liés à la sécurité HTTP, 
+ * notamment la gestion des filtres JWT, les règles d'autorisation, 
+ * l'encodage des mots de passe et le gestionnaire d'authentification.
+ * </p>
+ */
 @Configuration
 public class SecurityConfig {
 	
@@ -25,6 +32,21 @@ public class SecurityConfig {
 	private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
+    /**
+     * Définit la chaîne de filtres de sécurité HTTP.
+     * <p>
+     * - Désactive la protection CSRF (Cross-Site Request Forgery).<br>
+     * - Ajoute un filtre personnalisé pour l'authentification JWT avant le filtre standard UsernamePasswordAuthenticationFilter.<br>
+     * - Configure les règles d'accès aux endpoints (autorisation) :<br>
+     *   - Autorise l'accès libre aux endpoints de login, de santé, et à la documentation Swagger.<br>
+     *   - Nécessite une authentification pour toutes les autres requêtes.<br>
+     * - Configure la gestion des sessions pour limiter à une session simultanée par utilisateur.
+     * </p>
+     * 
+     * @param http l'objet HttpSecurity à configurer
+     * @return la chaîne de filtres de sécurité configurée
+     * @throws Exception en cas d'erreur de configuration
+     */
     @Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -46,12 +68,25 @@ public class SecurityConfig {
 		
 	}
 	
+    /**
+     * Bean pour encoder les mots de passe avec l'algorithme BCrypt.
+     * 
+     * @return un encodeur de mot de passe BCryptPasswordEncoder
+     */
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
         logger.debug("Initialisation du BCryptPasswordEncoder");
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bean pour configurer le gestionnaire d'authentification avec le service utilisateur et l'encodeur de mot de passe.
+     * 
+     * @param http l'objet HttpSecurity partagé
+     * @param bCryptPasswordEncoder l'encodeur de mot de passe BCrypt
+     * @return un gestionnaire d'authentification configuré
+     * @throws Exception en cas d'erreur lors de la configuration
+     */
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
         logger.info("Configuration du gestionnaire d'authentification");
