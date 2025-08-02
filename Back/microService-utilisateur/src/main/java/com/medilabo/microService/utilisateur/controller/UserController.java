@@ -33,7 +33,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import jakarta.servlet.http.HttpServletRequest;
 
 
-
+/**
+ * Contrôleur REST pour la gestion des utilisateurs.
+ * <p>
+ * Cette classe expose les points d'entrée HTTP pour les opérations CRUD sur les utilisateurs,
+ * ainsi que l'authentification via un endpoint de login qui génère un token JWT.
+ * </p>
+ */
 @RestController
 @RequestMapping("/utilisateur")
 public class UserController {
@@ -49,6 +55,11 @@ public class UserController {
 	@Autowired
 	public JwtUtil jwtUtil;
 	
+    /**
+     * Récupère la liste complète des utilisateurs.
+     * 
+     * @return ResponseEntity contenant la liste des utilisateurs et le code HTTP 200 OK.
+     */
 	@GetMapping("/list")
 	public ResponseEntity<List<User>> getListUsers() {
 		logger.info("Requête reçu sur le controller getListUsers()");
@@ -57,6 +68,12 @@ public class UserController {
 		return ResponseEntity.ok(userList);
 	}
 	
+    /**
+     * Ajoute un nouvel utilisateur.
+     * 
+     * @param newUser l'utilisateur à ajouter, validé selon les contraintes définies
+     * @return ResponseEntity contenant l'utilisateur créé et le code HTTP 201 CREATED
+     */
 	@PostMapping("/add")
 	public ResponseEntity<User> addUser(@RequestBody @Valid User newUser) {
 		logger.info("Requête reçu sur le controller addUser()");
@@ -64,6 +81,12 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(userAdded);
 	}
 	
+    /**
+     * Supprime un utilisateur par son identifiant.
+     * 
+     * @param id l'identifiant de l'utilisateur à supprimer
+     * @return ResponseEntity avec le code HTTP 204 NO CONTENT en cas de succès
+     */
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable String id) {
 		logger.info("Requête reçu sur le controller deleteUser()");
@@ -71,6 +94,15 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
+    /**
+     * Met à jour un utilisateur existant.
+     * 
+     * @param id l'identifiant de l'utilisateur à mettre à jour
+     * @param userToUpdate les données mises à jour de l'utilisateur, validées
+     * @param result résultat de la validation des données
+     * @return ResponseEntity contenant l'utilisateur mis à jour et le code HTTP 201 CREATED
+     *         ou une erreur 500 en cas de problème de validation
+     */
 	@PutMapping("/update/{id}")
 	public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody @Valid User userToUpdate, BindingResult result) {
 		logger.info("Requête reçu sur le controller updateUser()");
@@ -82,6 +114,14 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(userUpdated);
 	}
 	
+    /**
+     * Authentifie un utilisateur et génère un token JWT.
+     * 
+     * @param userDto les informations d'identification (username et password)
+     * @param httpRequest la requête HTTP (non utilisée ici mais injectable)
+     * @return ResponseEntity contenant le token JWT en cas de succès avec statut 200 OK,
+     *         ou un message d'erreur avec statut 401 UNAUTHORIZED en cas d'échec d'authentification
+     */
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpServletRequest httpRequest) {
 		logger.info("Requête reçu sur le controller login()");

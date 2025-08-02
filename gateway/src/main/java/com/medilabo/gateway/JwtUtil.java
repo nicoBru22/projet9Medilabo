@@ -1,11 +1,15 @@
 package com.medilabo.gateway;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * Composant utilitaire pour la gestion des JSON Web Tokens (JWT).
@@ -23,15 +27,35 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     /**
-     * Clé secrète utilisée pour signer et valider les JWT.
-     * Doit être identique à celle utilisée dans le microservice utilisateur.
+     * Clé secrète injectée directement depuis les variables d'environnement.
+     * Le nom de la variable est défini dans le fichier .env et transmis par docker-compose.yml.
      */
-	private static final String SECRET_KEY = "fF3uM8XbZ9LpQwErTyUiOpAsDfGhJkL1";
-
+    @Value("${JWT_SECRET}")
+    private String secretKey;
+    
     /**
      * Clé de chiffrement générée à partir de la clé secrète.
      */
-    private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private Key key;
+
+    /**
+     * Cette méthode sera appelée après l'injection des dépendances,
+     * donc après que secretKey soit injectée par Spring.
+     */
+    /**
+     * Cette méthode sera appelée après l'injection des dépendances,
+     * donc après que secretKey soit injectée par Spring.
+     */
+    @PostConstruct
+    public void init() {
+        // Assurez-vous que la clé a été trouvée
+        if (secretKey == null || secretKey.isEmpty()) {
+            throw new IllegalStateException("JWT_SECRET n'a pas été défini comme variable d'environnement.");
+        }
+
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        System.out.println("Clé JWT chargée avec succès depuis l'environnement Docker !"); // Pour confirmation
+    }
 
     /**
      * Valide la validité d'un token JWT.

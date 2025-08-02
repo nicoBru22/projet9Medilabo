@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>
  * Fournit un endpoint simple permettant de vérifier que le service est opérationnel.
  * </p>
- * 
- * @author Medilabo
- * @version 1.0
  */
 @RestController
 @RequestMapping("/utilisateur")

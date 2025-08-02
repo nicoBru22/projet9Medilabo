@@ -1,11 +1,14 @@
 package com.medilabo.microService.utilisateur.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 import java.security.Key;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,25 +30,39 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-
-    /**
-     * Clé secrète utilisée pour la signature du JWT.
-     * <p>
-     * Attention : pour la production, il est conseillé de stocker cette clé en sécurité (ex: variables d'environnement).
-     * </p>
-     */
-	private static final String SECRET_KEY = "fF3uM8XbZ9LpQwErTyUiOpAsDfGhJkL1";
-
     /**
      * Durée de validité du token (en millisecondes).
      * Ici, 10 heures.
      */
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 heures
+    
+    /**
+     * Clé secrète injectée directement depuis les variables d'environnement.
+     * Le nom de la variable est défini dans le fichier .env et transmis par docker-compose.yml.
+     */
+    @Value("${JWT_SECRET}")
+    private String secretKey;
 
     /**
      * Clé symétrique utilisée pour la signature des JWT.
      */
-    private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private Key key;
+    
+    /**
+     * Cette méthode sera appelée après l'injection des dépendances,
+     * donc après que secretKey soit injectée par Spring.
+     */
+    @PostConstruct
+    public void init() {
+        // Assurez-vous que la clé a été trouvée
+        if (secretKey == null || secretKey.isEmpty()) {
+            throw new IllegalStateException("JWT_SECRET n'a pas été défini comme variable d'environnement.");
+        }
+
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        System.out.println("Clé JWT chargée avec succès depuis l'environnement Docker !"); // Pour confirmation
+    }
+    
 
     /**
      * Génère un token JWT avec les informations utilisateur.
