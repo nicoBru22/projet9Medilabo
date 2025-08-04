@@ -1,5 +1,6 @@
 package com.medilabo.microService.utilisateur.model;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,13 @@ public class UserDto {
     /**
      * Nom d'utilisateur.
      */
+	@NotBlank(message= "Le username de peut pas être vide")
 	String username;
 	
     /**
      * Mot de passe de l'utilisateur.
      */
+	@NotBlank(message="Le mot de passe ne peut pas être vide")
 	String password;
 
 }

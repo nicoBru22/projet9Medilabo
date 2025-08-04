@@ -11,6 +11,7 @@ function AddPatientPage() {
   const [genre, setGenre] = useState("");
   const [adresse, setAdresse] = useState("");
   const [telephone, setTelephone] = useState("");
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate(); 
   const token = localStorage.getItem('jwtToken');
@@ -47,7 +48,12 @@ function AddPatientPage() {
         alert("Patient ajouté avec succès !");
         navigate("/patient/Liste")
       } else {
-        alert("Erreur lors de l'ajout du patient.");
+          const errorData = await response.json();
+          if (response.status === 400 && typeof errorData === "object") {
+          setErrors(errorData);
+        } else {
+            alert("Erreur lors de l'ajout du patient.");
+        }
       }
     } catch (error) {
       console.error("Erreur fetch :", error);
@@ -72,6 +78,7 @@ function AddPatientPage() {
               onChange={(e) => setPrenom(e.target.value)}
             />
           </div>
+          {errors.prenom && <div className="errorPatient">{errors.prenom}</div>}
 
           <div className="elementForm">
             <label htmlFor="nom" className="labelForm">Nom :</label>
@@ -82,7 +89,7 @@ function AddPatientPage() {
               value={nom}
               onChange={(e) => setNom(e.target.value)}
             />
-          </div>
+          </div>{errors.nom && <div className="errorPatient">{errors.nom}</div>}
 
           <div className="elementForm">
             <label htmlFor="dateNaissance" className="labelForm">Date de naissance :</label>
@@ -94,20 +101,22 @@ function AddPatientPage() {
               onChange={(e) => setDateNaissance(e.target.value)}
             />
           </div>
+          {errors.dateNaissance && <div className="errorPatient">{errors.dateNaissance}</div>}
 
           <div className="elementForm">
-          <label htmlFor="genre" className="labelForm">Genre :</label>
-          <select
-            id="genre"
-            name="genre"
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-          >
-            <option value="">-- Sélectionner --</option>
-            <option value="masculin">Masculin</option>
-            <option value="feminin">Féminin</option>
-          </select>
+            <label htmlFor="genre" className="labelForm">Genre :</label>
+            <select
+              id="genre"
+              name="genre"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+            >
+              <option value="">-- Sélectionner --</option>
+              <option value="masculin">Masculin</option>
+              <option value="feminin">Féminin</option>
+            </select>
           </div>
+          {errors.prenom && <div className="errorPatient">{errors.prenom}</div>}
 
           <div className="elementForm">
           <label htmlFor="adresse" className="labelForm">Adresse :</label>

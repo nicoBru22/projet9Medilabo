@@ -56,12 +56,10 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeExchange(exchanges -> exchanges
-                // 1. Autoriser l'accès à l'interface Swagger UI SERVIE PAR LA GATEWAY
-                // Ceci inclut la page HTML, les CSS, les JS, etc.
                 .pathMatchers(
                     "/swagger-ui.html",
-                    "/swagger-ui/**",      // Ressources statiques de Swagger UI
-                    "/v3/api-docs/**",     // Les définitions OpenAPI (y compris celle de la gateway elle-même)
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
                     "/webjars/**"
                 ).permitAll()
 
@@ -69,18 +67,12 @@ public class SecurityConfig {
                     "/patient/v3/api-docs",
                     "/utilisateur/v3/api-docs"
                 ).permitAll()
-
-                // 3. Vos autres chemins publics
                 .pathMatchers("/utilisateur/login").permitAll()
                 .pathMatchers("/patient/health").permitAll()
                 .pathMatchers("/utilisateur/health").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
-                
-
-                // 4. Sécuriser tout le reste
                 .anyExchange().authenticated()
             )
-            // Assurez-vous que votre filtre est ajouté correctement
             .addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)

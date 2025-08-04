@@ -20,16 +20,14 @@ function HomePage() {
                     <Link className="linkAccueil" to="/user/add">- Ajouter un nouvel utilisateur</Link>
                 </div>
                 <div className="containerElementAccueil">
-                    <div className="navigationTitre">Autres navigations :</div>
+                    <div className="navigationTitre">Autres navigations : en cours de développement...</div>
                     <Link className="linkAccueil" to="/medecin/liste">- Afficher la liste des médecins</Link>
                     <Link className="linkAccueil" to="/medecin/add">- Ajouter un nouveau médecin</Link>
                 </div>
                 <div className="containerElementAccueil">
                     <div className="navigationTitre">Documentation API :</div>
                     <Link className="linkAccueil" to="http://localhost:8081/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API Patient</Link>
-                    <Link className="linkAccueil" to="http://localhost:8082/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API transmission</Link>
                     <Link className="linkAccueil" to="http://localhost:8083/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API-Utilisateur</Link>
-                    <Link className="linkAccueil" to="http://localhost:8084/swagger-ui/index.html" target="_blank" rel="noopener noreferrer">- Documentation Swagger UI de l'API Anticipation</Link>
                 </div>
             </div>
         </div>

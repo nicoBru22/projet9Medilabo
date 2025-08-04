@@ -9,14 +9,10 @@ function AddUserPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!prenom || !nom || !password) {
-      alert("Tous les champs sont obligatoires");
-      return;
-    }
 
     const newUser = { username, prenom, nom, password, role };
     const token = localStorage.getItem('jwtToken');
@@ -34,9 +30,17 @@ function AddUserPage() {
         alert("Utilisateur ajouté avec succès !");
         navigate("/user/liste");
       } else {
-        alert("Erreur lors de l'ajout de l'utilisateur.");
-      }
-    } catch (error) {
+          const errorData = await response.json();
+          if (response.status === 400 && typeof errorData === "object") {
+          setErrors(errorData);
+        } else {
+            alert("Erreur lors de l'ajout du patient.");
+        }
+      } 
+    } 
+    
+    
+    catch (error) {
       console.error("Erreur fetch :", error);
       alert("Erreur réseau ou serveur.");
     }
@@ -55,9 +59,12 @@ function AddUserPage() {
               id="username"
               name="username"
               value={username}
+              placeholder="Ex : nicolasb22"
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
+          {errors.username && <div className="errorUser">{errors.username}</div>}
+
           <div className="elementForm">
             <label htmlFor="prenom" className="labelForm">Prénom :</label>
             <input
@@ -66,8 +73,11 @@ function AddUserPage() {
               name="prenom"
               value={prenom}
               onChange={(e) => setPrenom(e.target.value)}
+              placeholder="Ex : Nicolas"
             />
           </div>
+          {errors.prenom && <div className="errorUser">{errors.prenom}</div>}
+
 
           <div className="elementForm">
             <label htmlFor="nom" className="labelForm">Nom :</label>
@@ -77,8 +87,11 @@ function AddUserPage() {
               name="nom"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
+              placeholder="Ex : BRUNET"
             />
           </div>
+          {errors.nom && <div className="errorUser">{errors.nom}</div>}
+
           <div className="elementForm">
             <label htmlFor="role" className="labelForm">Nom :</label>
             <select
@@ -94,6 +107,7 @@ function AddUserPage() {
               <option value="medecin">Médecin</option>
           </select>
           </div>
+          {errors.role && <div className="errorUser">{errors.role}</div>}
 
           <div className="elementForm">
             <label htmlFor="password" className="labelForm">Mot de passe :</label>
@@ -103,8 +117,10 @@ function AddUserPage() {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Ex : Password@123"
             />
           </div>
+          {errors.password && <div className="errorUser">{errors.password}</div>}
 
           <button type="submit" className="buttonSubmitForm">
             Créer le compte utilisateur

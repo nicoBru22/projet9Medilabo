@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,6 +44,7 @@ public class Patient {
      * Ce champ est obligatoire.
      */
 	@NotNull(message = "Le prénom est obligatoire.")
+	@NotBlank(message = "Le prénom est obligatoire.")
 	String prenom;
 	
     /**
@@ -50,6 +52,7 @@ public class Patient {
      * Ce champ est obligatoire.
      */
 	@NotNull(message = "Le nom du patient est obligatoire.")
+	@NotBlank(message = "Le nom du patient est obligatoire.")
 	String nom;
 	
     /**
@@ -64,6 +67,7 @@ public class Patient {
      * Ce champ est obligatoire.
      */
 	@NotNull(message = "Le genre est obligatoire.")
+	@NotBlank(message = "Le genre est obligatoire.")
 	String genre;
 	
     /**

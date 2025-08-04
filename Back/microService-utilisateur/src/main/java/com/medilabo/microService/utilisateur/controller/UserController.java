@@ -1,5 +1,6 @@
 package com.medilabo.microService.utilisateur.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,9 +76,18 @@ public class UserController {
      * @return ResponseEntity contenant l'utilisateur créé et le code HTTP 201 CREATED
      */
 	@PostMapping("/add")
-	public ResponseEntity<User> addUser(@RequestBody @Valid User newUser) {
+	public ResponseEntity<?> addUser(@RequestBody @Valid User newUser, BindingResult result) {
 		logger.info("Requête reçu sur le controller addUser()");
-		User userAdded = userService.addUser(newUser);		
+		
+	    if (result.hasErrors()) {
+	    	logger.info("Une erreur s'est produite lors de l'ajout du nouvel utilisateur.");
+	        Map<String, String> errors = new HashMap<>();
+	        result.getFieldErrors().forEach(error -> 
+	            errors.put(error.getField(), error.getDefaultMessage())
+	        );
+	        return ResponseEntity.badRequest().body(errors);
+	    }
+		User userAdded = userService.addUser(newUser);	
 		return ResponseEntity.status(HttpStatus.CREATED).body(userAdded);
 	}
 	
@@ -106,9 +116,13 @@ public class UserController {
 	@PutMapping("/update/{id}")
 	public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody @Valid User userToUpdate, BindingResult result) {
 		logger.info("Requête reçu sur le controller updateUser()");
+		
 		if(result.hasErrors()) {
 			logger.error("Une erreur s'est produite lors de la mise à jour de l utilisateur {}", userToUpdate);
-			ResponseEntity.internalServerError();
+			Map<String, String> errors = new HashMap<>();
+	        result.getFieldErrors().forEach(error -> 
+            	errors.put(error.getField(), error.getDefaultMessage()));
+    			ResponseEntity.badRequest().body(errors);
 		}
 		User userUpdated = userService.updateUser(userToUpdate, id);		
 		return ResponseEntity.status(HttpStatus.CREATED).body(userUpdated);
@@ -130,11 +144,8 @@ public class UserController {
 	            new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword())
 	        );
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-	        // Récupérer l'utilisateur complet depuis le service
+	        
 	        User user = userService.getUserByUsername(userDto.getUsername());
-
-	        // Générer le token avec toutes les infos nécessaires
 	        String jwt = jwtUtil.generateToken(user.getUsername(), user.getRole(), user.getPrenom(), user.getNom());
 	        
 	        logger.info("Utilisateur authentifié: " + user.getUsername());

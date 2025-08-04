@@ -1,6 +1,5 @@
 package com.medilabo.microService.utilisateur.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

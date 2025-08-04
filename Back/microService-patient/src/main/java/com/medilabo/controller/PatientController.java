@@ -1,7 +1,9 @@
 package com.medilabo.controller;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -68,29 +70,23 @@ public class PatientController {
 
         if (patient == null) {
             logger.warn("Patient non trouvé avec l'ID : {}", id);
-            // Renvoie un 404 si le patient n'est pas trouvé
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient with ID " + id + " not found.");
         }
 
         LocalDate dateNaissance = patient.getDateNaissance();
 
-        // AJOUT DE CETTE VÉRIFICATION :
         if (dateNaissance == null) {
             logger.error("Date de naissance non trouvée (null) pour le patient avec l'ID : {}. Impossible de calculer l'âge.", id);
-            // Il est important de renvoyer une erreur appropriée si la donnée est manquante.
-            // Un HttpStatus.BAD_REQUEST (400) ou HttpStatus.UNPROCESSABLE_ENTITY (422) peut être plus pertinent.
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date of birth is missing for patient with ID: " + id);
         }
 
         try {
             logger.info("Calcul de l'âge pour le patient {} avec date de naissance : {}", id, dateNaissance);
-            // La méthode agePatient sera appelée ici avec une dateNaissance non-null
             int agePatient = patientService.agePatient(dateNaissance);
             logger.info("Âge du patient {} calculé : {}", id, agePatient);
             return agePatient;
         } catch (Exception e) {
             logger.error("Erreur inattendue lors du calcul de l'âge pour le patient {} : {}", id, e.getMessage(), e);
-            // Renvoie une 500 en cas d'erreur de logique interne si la date n'est pas null
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error calculating age for patient with ID: " + id, e);
         }
     }
@@ -120,9 +116,12 @@ public class PatientController {
 	    logger.info("Patient reçu : {}", patient);
 
 	    if (result.hasErrors()) {
-	    	logger.error("une erreur lors de l ajout du patient.");
-	        result.getAllErrors().forEach(error -> logger.error(error.toString()));
-	        return ResponseEntity.badRequest().body(result.getAllErrors());
+	        Map<String, String> errors = new HashMap<>();
+	        result.getFieldErrors().forEach(error -> {
+	            errors.put(error.getField(), error.getDefaultMessage());
+	            logger.error("Erreur sur le champ {} : {}", error.getField(), error.getDefaultMessage());
+	        });
+	        return ResponseEntity.badRequest().body(errors);
 	    }
 
 	    Patient savedPatient = patientService.addPatient(patient);

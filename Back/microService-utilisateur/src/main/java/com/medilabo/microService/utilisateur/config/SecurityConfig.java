@@ -60,7 +60,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                                 .maximumSessions(1)
-                );
+                )
+                .logout(logout -> logout
+                	    .logoutUrl("/logout")
+                	    .invalidateHttpSession(true)
+                	    .deleteCookies("JSESSIONID")
+                	)
+                ;
 
 		logger.info("Configuration de la securité appliquée avec succès.");
 

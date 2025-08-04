@@ -60,8 +60,8 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void getAllUserControllerTest() throws Exception{
-        User userTest1 = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
-        User userTest2 = new User("2", "spiet", "Piet", "Sarah", "pwd456", "ADMIN");
+        User userTest1 = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
+        User userTest2 = new User("2", "sarahPiet", "Piet", "Sarah", "Password123@", "ADMIN");
         List<User> listUserMocked = List.of(userTest1, userTest2);
         
         when(userService.getAllUser()).thenReturn(listUserMocked);
@@ -75,8 +75,8 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void addUserControllerTest() throws Exception {
-        User userTest1 = new User(null, "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
-        User userAdded = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        User userTest1 = new User(null, "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
+        User userAdded = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
 
         when(userService.addUser(any(User.class))).thenReturn(userAdded);
 
@@ -108,7 +108,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     void updateUserControllerTest() throws Exception {
-        User userTest1 = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        User userTest1 = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
 
         when(userService.updateUser(any(User.class), eq("1"))).thenReturn(userTest1);
 
@@ -120,7 +120,7 @@ public class UserControllerTest {
                 .content(userJson))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value("1"))
-            .andExpect(jsonPath("$.username").value("nbrunet"));
+            .andExpect(jsonPath("$.username").value("nicolasb"));
 
         verify(userService, times(1)).updateUser(any(User.class), eq("1"));
     }
@@ -129,15 +129,15 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void loginControllerTest() throws Exception {
-        UserDto userDto = new UserDto("nbrunet", "pwd123");
-        User user = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        UserDto userDto = new UserDto("nicolasb", "Password123@");
+        User user = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
         String tokenMock = "mocked.jwt.token";
 
         // Mock Authentication local
         Authentication auth = Mockito.mock(Authentication.class);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
-        when(userService.getUserByUsername("nbrunet")).thenReturn(user);
+        when(userService.getUserByUsername("nicolasb")).thenReturn(user);
         when(jwtUtil.generateToken(user.getUsername(), user.getRole(), user.getPrenom(), user.getNom())).thenReturn(tokenMock);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -151,7 +151,7 @@ public class UserControllerTest {
             .andExpect(jsonPath("$.token").value(tokenMock));
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userService, times(1)).getUserByUsername("nbrunet");
+        verify(userService, times(1)).getUserByUsername("nicolasb");
         verify(jwtUtil, times(1)).generateToken(user.getUsername(), user.getRole(), user.getPrenom(), user.getNom());
     }
 

@@ -1,5 +1,7 @@
 
-
+.errorPatient {
+  color: red;
+}
 
 .containerForm {
   display: flex;
