@@ -34,7 +34,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Testcontainers // AJOUTER CETTE ANNOTATION
+@Testcontainers
 public class UtilisateurIntegrationTest {
 
     @Autowired

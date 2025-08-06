@@ -29,6 +29,11 @@
 	<properties>
 		<java.version>21</java.version>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
+		<dotenv.version>5.2.2</dotenv.version>
+		<springdoc.version>2.5.0</springdoc.version>
+		<jjwtjackson.version>0.11.5</jjwtjackson.version>
+		<jjwtimpl.version>0.11.5</jjwtimpl.version>
+		<jjwtapi.version>0.11.5</jjwtapi.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -39,23 +44,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-gateway</artifactId>
-</dependency>
-		<!-- Spring Security WebFlux (pour sécuriser la gateway reactive) -->
+		<dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		
-		<!-- Optionnel : pour la gestion des sessions réactives -->
 		<dependency>
 		    <groupId>org.springframework.session</groupId>
 		    <artifactId>spring-session-core</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -80,29 +80,29 @@
 		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-api</artifactId>
-		    <version>0.11.5</version>
+		    <version>${jjwtapi.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-impl</artifactId>
-		    <version>0.11.5</version>
+		    <version>${jjwtimpl.version}</version>
 		    <scope>runtime</scope>
 		</dependency>
 		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
-		    <artifactId>jjwt-jackson</artifactId> <!-- ou jjwt-gson selon ce que tu utilises -->
-		    <version>0.11.5</version>
+		    <artifactId>jjwt-jackson</artifactId>
+		    <version>${jjwtjackson.version}</version>
 		    <scope>runtime</scope>
 		</dependency>
 		<dependency>
 		  <groupId>org.springdoc</groupId>
 		  <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
-		  <version>2.5.0</version> <!-- dernière version stable à ce jour -->
+		  <version>${springdoc.version}</version>
 		</dependency>
 	    <dependency>
 		    <groupId>io.github.cdimascio</groupId>
 		    <artifactId>java-dotenv</artifactId>
-		    <version>5.2.2</version> 
+		    <version>${dotenv.version}</version> 
     	</dependency>
 	</dependencies>
 

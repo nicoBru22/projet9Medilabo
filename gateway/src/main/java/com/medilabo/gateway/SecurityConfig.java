@@ -1,5 +1,8 @@
 package com.medilabo.gateway;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +13,6 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
 
 import java.util.List;
 
@@ -32,16 +34,11 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationWebFilter jwtAuthenticationWebFilter;
-
-    /**
-     * Constructeur injectant le filtre d'authentification JWT.
-     * 
-     * @param jwtAuthenticationWebFilter le filtre d'authentification JWT à ajouter dans la chaîne de filtres
-     */
-    public SecurityConfig(JwtAuthenticationWebFilter jwtAuthenticationWebFilter) {
-        this.jwtAuthenticationWebFilter = jwtAuthenticationWebFilter;
-    }
+    
+    @Autowired
+    private JwtAuthenticationWebFilter jwtAuthenticationWebFilter;
+    
+    private Logger logger = LogManager.getLogger();
     
 
     /**
@@ -52,9 +49,7 @@ public class SecurityConfig {
      */
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-
         http
-            .csrf(csrf -> csrf.disable())
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers(
                     "/swagger-ui.html",
@@ -62,7 +57,6 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/webjars/**"
                 ).permitAll()
-
                 .pathMatchers(
                     "/patient/v3/api-docs",
                     "/utilisateur/v3/api-docs"
@@ -78,7 +72,7 @@ public class SecurityConfig {
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        System.out.println("Configuration de sécurité de la Gateway initialisée.");
+        logger.info("Configuration de sécurité de la Gateway initialisée.");
 
         return http.build();
     }

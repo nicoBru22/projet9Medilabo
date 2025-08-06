@@ -1,6 +1,5 @@
 package com.medilabo.gateway;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
