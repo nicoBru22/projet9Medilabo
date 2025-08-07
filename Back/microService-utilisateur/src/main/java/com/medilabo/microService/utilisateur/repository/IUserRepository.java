@@ -1,7 +1,7 @@
 package com.medilabo.microService.utilisateur.repository;
 
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.medilabo.microService.utilisateur.model.User;
@@ -18,7 +18,7 @@ import com.medilabo.microService.utilisateur.model.User;
  * </p>
  */
 @Repository
-public interface IUserRepository extends MongoRepository<User, String> {
+public interface IUserRepository extends JpaRepository<User, Long> {
 	
     /**
      * Recherche un utilisateur en fonction de son nom d'utilisateur.

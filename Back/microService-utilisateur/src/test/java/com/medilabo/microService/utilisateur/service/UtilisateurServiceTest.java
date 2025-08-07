@@ -10,32 +10,35 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import com.medilabo.microService.utilisateur.model.User;
 import com.medilabo.microService.utilisateur.repository.IUserRepository;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 public class UtilisateurServiceTest {
 
-	@Autowired
-	private IUserService userService;
-	
-	@MockBean
+	// @InjectMocks injecte les mocks dans l'instance du service
+	@InjectMocks
+	private UserServiceImpl userService; 
+
+	// @Mock crée des instances mockées des dépendances
+	@Mock
 	private IUserRepository userRepository;
-	
-	@MockBean
+
+	@Mock
 	private BCryptPasswordEncoder bCryptEncoder;
 	
 	@Test
 	void addUserTest() {
         User userTest1 = new User(null, "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
-        User userSaved = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        User userSaved = new User(1L, "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
         
         when(userRepository.save(userTest1)).thenReturn(userSaved);
    
@@ -50,8 +53,8 @@ public class UtilisateurServiceTest {
 	
     @Test
     void getAllUserTest() {
-        User userTest1 = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
-        User userTest2 = new User("2", "spiet", "Piet", "Sarah", "pwd456", "ADMIN");
+        User userTest1 = new User(1L, "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        User userTest2 = new User(2L, "spiet", "Piet", "Sarah", "pwd456", "ADMIN");
         List<User> listUserMocked = List.of(userTest1, userTest2);
 
         when(userRepository.findAll()).thenReturn(listUserMocked);
@@ -65,7 +68,7 @@ public class UtilisateurServiceTest {
 	
 	@Test
 	void getUserByIdTest() {
-        User userTest1 = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        User userTest1 = new User(1L, "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
 
         when(userRepository.findById(userTest1.getId())).thenReturn(Optional.of(userTest1));
         
@@ -77,7 +80,7 @@ public class UtilisateurServiceTest {
 	
 	@Test
 	void getUserByUsernameTest() {
-        User userTest1 = new User("1", "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
+        User userTest1 = new User(1L, "nbrunet", "Brunet", "Nicolas", "pwd123", "USER");
 
         when(userRepository.findByUsername(userTest1.getUsername())).thenReturn(userTest1);
         
@@ -89,7 +92,7 @@ public class UtilisateurServiceTest {
 	
 	@Test
 	void deleteUserTest() {
-	    String userId = "1";
+	    Long userId = 1L;
 	    
 	    when(userRepository.existsById(userId)).thenReturn(true);
 
@@ -101,11 +104,10 @@ public class UtilisateurServiceTest {
 	
 	@Test
 	void updateUserTest() {
-		    // Given
-		    String userId = "1";
+		    Long userId = 1L;
 
 		    User existingUser = new User(
-		        "1", "oldUsername", "Dupont", "Jean", "oldPwd", "USER"
+		        1L, "oldUsername", "Dupont", "Jean", "oldPwd", "USER"
 		    );
 
 		    User userUpdated = new User(
@@ -113,7 +115,7 @@ public class UtilisateurServiceTest {
 		    );
 
 		    User updatedUserSaved = new User(
-		        "1", "newUsername", "Durand", "Luc", "encodedPwd", "ADMIN"
+		        1L, "newUsername", "Durand", "Luc", "encodedPwd", "ADMIN"
 		    );
 
 		    when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
@@ -126,6 +128,7 @@ public class UtilisateurServiceTest {
 		    verify(userRepository).findById(userId);
 		    verify(userRepository).findByUsername("newUsername");
 		    verify(userRepository).save(any(User.class));
+		    verify(bCryptEncoder).encode("newPwd");
 
 		    assertThat(result.getUsername()).isEqualTo("newUsername");
 		    assertThat(result.getNom()).isEqualTo("Durand");

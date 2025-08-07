@@ -23,18 +23,10 @@ import com.medilabo.microService.utilisateur.model.User;
 import com.medilabo.microService.utilisateur.model.UserDto;
 import com.medilabo.microService.utilisateur.repository.IUserRepository;
 
-// Nouveaux imports pour Testcontainers
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Testcontainers
 public class UtilisateurIntegrationTest {
 
     @Autowired
@@ -49,17 +41,7 @@ public class UtilisateurIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String token; // Le token JWT obtenu après login
-
-    @Container
-    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")
-                                                        .withExposedPorts(27017);
-
-    @DynamicPropertySource
-    static void setMongoProperties(DynamicPropertyRegistry registry) {
-
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-    }
+    private String token;
 
     @BeforeEach
     public void setup() throws UnsupportedEncodingException, Exception {

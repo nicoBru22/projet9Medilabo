@@ -14,6 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.microService.utilisateur.config.JwtUtil;
 import com.medilabo.microService.utilisateur.model.User;
@@ -37,9 +38,8 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.List;
 
-
-@SpringBootTest
 @AutoConfigureMockMvc
+@SpringBootTest
 @ActiveProfiles("test")
 public class UserControllerTest {
 
@@ -60,8 +60,8 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void getAllUserControllerTest() throws Exception{
-        User userTest1 = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
-        User userTest2 = new User("2", "sarahPiet", "Piet", "Sarah", "Password123@", "ADMIN");
+        User userTest1 = new User(1L, "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
+        User userTest2 = new User(2L, "sarahPiet", "Piet", "Sarah", "Password123@", "ADMIN");
         List<User> listUserMocked = List.of(userTest1, userTest2);
         
         when(userService.getAllUser()).thenReturn(listUserMocked);
@@ -76,7 +76,7 @@ public class UserControllerTest {
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void addUserControllerTest() throws Exception {
         User userTest1 = new User(null, "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
-        User userAdded = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
+        User userAdded = new User(1L, "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
 
         when(userService.addUser(any(User.class))).thenReturn(userAdded);
 
@@ -94,7 +94,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void deleteUserControllerTest() throws Exception {
-        String userIdToDelete = "1";
+        Long userIdToDelete = 1L;
 
         doNothing().when(userService).deleteUser(userIdToDelete);
 
@@ -108,9 +108,9 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
     void updateUserControllerTest() throws Exception {
-        User userTest1 = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
+        User userTest1 = new User(1L, "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
 
-        when(userService.updateUser(any(User.class), eq("1"))).thenReturn(userTest1);
+        when(userService.updateUser(any(User.class), eq(1L))).thenReturn(userTest1);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String userJson = objectMapper.writeValueAsString(userTest1);
@@ -122,7 +122,7 @@ public class UserControllerTest {
             .andExpect(jsonPath("$.id").value("1"))
             .andExpect(jsonPath("$.username").value("nicolasb"));
 
-        verify(userService, times(1)).updateUser(any(User.class), eq("1"));
+        verify(userService, times(1)).updateUser(any(User.class), eq(1L));
     }
 
     
@@ -130,10 +130,9 @@ public class UserControllerTest {
     @WithMockUser(username = "testuser", roles = {"USER"})
     public void loginControllerTest() throws Exception {
         UserDto userDto = new UserDto("nicolasb", "Password123@");
-        User user = new User("1", "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
+        User user = new User(1L, "nicolasb", "Brunet", "Nicolas", "Password123@", "USER");
         String tokenMock = "mocked.jwt.token";
 
-        // Mock Authentication local
         Authentication auth = Mockito.mock(Authentication.class);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);

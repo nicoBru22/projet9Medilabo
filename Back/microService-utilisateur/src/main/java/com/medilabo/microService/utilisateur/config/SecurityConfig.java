@@ -50,23 +50,24 @@ public class SecurityConfig {
     @Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/utilisateur/login").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/utilisateur/health").permitAll()
-                        .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session
-                                .maximumSessions(1)
-                )
-                .logout(logout -> logout
-                	    .logoutUrl("/logout")
-                	    .invalidateHttpSession(true)
-                	    .deleteCookies("JSESSIONID")
-                	)
-                ;
+        	.csrf(csrf -> csrf.disable())
+        	.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/utilisateur/login").permitAll()
+                    .requestMatchers("/utilisateur/add").permitAll()
+                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/utilisateur/health").permitAll()
+                    .requestMatchers("/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
+                    .anyRequest().authenticated())
+            .sessionManagement(session -> session
+                            .maximumSessions(1)
+            )
+            .logout(logout -> logout
+            	    .logoutUrl("/logout")
+            	    .invalidateHttpSession(true)
+            	    .deleteCookies("JSESSIONID")
+            	)
+            ;
 
 		logger.info("Configuration de la securité appliquée avec succès.");
 

@@ -21,7 +21,7 @@ function AddUserPage() {
       const response = await fetch("http://localhost:8080/utilisateur/add", {
         method: "POST",
         headers: {         
-                    'Authorization': `Bearer ${token}`,
+    //                'Authorization': `Bearer ${token}`,
                     "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
       });

@@ -50,6 +50,9 @@ public class SecurityConfig {
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
+    		.csrf(csrf -> csrf.disable())
+
+        	.addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers(
                     "/swagger-ui.html",
@@ -62,12 +65,12 @@ public class SecurityConfig {
                     "/utilisateur/v3/api-docs"
                 ).permitAll()
                 .pathMatchers("/utilisateur/login").permitAll()
+                .pathMatchers("/utilisateur/add").permitAll()
                 .pathMatchers("/patient/health").permitAll()
                 .pathMatchers("/utilisateur/health").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
                 .anyExchange().authenticated()
             )
-            .addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
             .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()));

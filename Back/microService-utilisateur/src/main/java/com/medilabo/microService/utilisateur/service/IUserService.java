@@ -29,7 +29,7 @@ public interface IUserService {
      * @throws com.medilabo.microService.utilisateur.exception.UserNotFoundException
      *         si aucun utilisateur n'est trouvé avec cet id
      */
-	User getUserById(String id);
+	User getUserById(Long id);
 	
     /**
      * Récupère un utilisateur par son nom d'utilisateur (username).
@@ -61,7 +61,7 @@ public interface IUserService {
      * @throws com.medilabo.microService.utilisateur.exception.UserNotFoundException
      *         si aucun utilisateur n'est trouvé avec cet id
      */
-	void deleteUser(String id);
+	void deleteUser(Long id);
 	
     /**
      * Met à jour un utilisateur existant identifié par son id.
@@ -75,5 +75,5 @@ public interface IUserService {
      * @throws com.medilabo.microService.utilisateur.exception.UsernameAlreadyExistsException
      *         si le nouveau nom d'utilisateur est déjà utilisé par un autre utilisateur
      */
-	User updateUser(User userUpdated, String id);
+	User updateUser(User userUpdated, Long id);
 }

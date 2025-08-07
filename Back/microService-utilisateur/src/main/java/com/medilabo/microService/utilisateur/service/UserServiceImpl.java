@@ -27,10 +27,15 @@ import com.medilabo.microService.utilisateur.repository.IUserRepository;
 public class UserServiceImpl implements IUserService {
 	
 	private static final Logger logger = LogManager.getLogger();
-	private static final BCryptPasswordEncoder bCryptEncoder = new BCryptPasswordEncoder();
+	
+    private final IUserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptEncoder;
 
-	@Autowired
-	private IUserRepository userRepository;
+    // Injection via le constructeur
+    public UserServiceImpl(IUserRepository userRepository, BCryptPasswordEncoder bCryptEncoder) {
+        this.userRepository = userRepository;
+        this.bCryptEncoder = bCryptEncoder;
+    }
 	
 	/**
 	 * Récupère la liste de tous les utilisateurs.
@@ -55,10 +60,10 @@ public class UserServiceImpl implements IUserService {
 	 * @throws IllegalArgumentException si l'id est null ou vide
 	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec cet id
 	 */	
-	public User getUserById(String id) {
+	public User getUserById(Long id) {
 		logger.info("Tentative de récupération de l'utilisateur avec l'id : {}", id);
-		if (id == null || id.isBlank()) {
-			logger.error("L'id utilisateur ne peut pas être null ou vide.");
+		if (id == null) {
+			logger.error("L'id utilisateur ne peut pas être null");
 			throw new IllegalArgumentException("L'id ne peut pas être vide ou nulle");
 		}
 		User utilisateur = userRepository.findById(id)
@@ -135,9 +140,9 @@ public class UserServiceImpl implements IUserService {
 	 * @throws IllegalArgumentException si l'id est null ou vide
 	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec cet id
 	 */
-	public void deleteUser(String id) {
+	public void deleteUser(Long id) {
 		logger.info("Tentative de suppression d'un utilisateur par son Id.");
-		if (id ==null || id.isBlank()) {
+		if (id ==null) {
 			logger.error("L'Id ne peut être null ou vide : ", id);
 			throw new IllegalArgumentException("L'id ne peut être null ou vide :"+ id);
 		}
@@ -163,10 +168,10 @@ public class UserServiceImpl implements IUserService {
 	 * @throws UserNotFoundException si aucun utilisateur n'est trouvé avec cet id
 	 * @throws UsernameAlreadyExistsException si le nouveau nom d'utilisateur est déjà pris par un autre utilisateur
 	 */
-	public User updateUser(User userUpdated, String id) {
+	public User updateUser(User userUpdated, Long id) {
 	    logger.info("Tentative de mise à jour de l'utilisateur avec l'id : {}", id);
-	    
-	    if (id == null || id.isBlank() || userUpdated == null) {
+	    logger.info("le userupdated : {}", userUpdated);
+	    if (id == null || userUpdated == null) {
 	        logger.error("ID ou données utilisateur invalides.");
 	        throw new IllegalArgumentException("ID ou données utilisateur invalides.");
 	    }
@@ -182,16 +187,16 @@ public class UserServiceImpl implements IUserService {
 	            throw new UsernameAlreadyExistsException("Ce nom d'utilisateur est déjà utilisé.");
 	        }
 	    
-	    if (userUpdated.getPassword() != null && !userUpdated.getPassword().isBlank()) {
-	        String passwordEncoded = bCryptEncoder.encode(userUpdated.getPassword());
-	        userToUpdate.setPassword(passwordEncoded);
-	    }
-	    
 		userToUpdate.setNom(userUpdated.getNom());
 		userToUpdate.setPrenom(userUpdated.getPrenom());
 		userToUpdate.setUsername(userUpdated.getUsername());
-		userToUpdate.setPassword(userUpdated.getPassword());
 		userToUpdate.setRole(userUpdated.getRole());
+	    
+	    if (userUpdated.getPassword() != null && !userUpdated.getPassword().isBlank()) {
+	    	logger.info("le mot de passe n'est pas null et n'est pas vide.");
+	        String passwordEncoded = bCryptEncoder.encode(userUpdated.getPassword());
+	        userToUpdate.setPassword(passwordEncoded);
+	    }
 		
 	    User updatedUser = userRepository.save(userToUpdate);
 	    logger.info("Mise à jour réussie : {}", updatedUser);

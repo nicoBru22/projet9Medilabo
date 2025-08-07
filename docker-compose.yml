@@ -9,7 +9,6 @@ services:
       - medilabo-net
     environment:
       - JWT_SECRET=${JWT_SECRET}
-      - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s

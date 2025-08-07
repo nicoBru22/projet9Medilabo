@@ -11,13 +11,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class Application {
-
+	
     /**
      * Point d'entrée de l'application Spring Boot.
      * 
      * @param args arguments de la ligne de commande (non utilisés)
      */
 	public static void main(String[] args) {
+	    
 		SpringApplication.run(Application.class, args);
 	}
 

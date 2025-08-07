@@ -13,7 +13,7 @@ jobs:
       DOCKER_BUILDKIT: 0
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       SPRING_DATA_MONGODB_URI: ${{ secrets.SPRING_DATA_MONGODB_URI }}
-      
+	  SPRING_DATA_POSTGRE_URI: ${{secrets.SPRING_DATA_POSTGRE_URI}}
 
     steps:
     - name: Checkout du code

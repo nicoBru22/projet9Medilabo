@@ -1,9 +1,13 @@
 package com.medilabo.microService.utilisateur.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -27,21 +31,23 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "utilisateur")
+@Entity
+@Table(name = "utilisateur", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
 	
 	/**
 	 * Identifiant unique généré automatiquement par MongoDB.
 	 */
 	@Id
-	String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
 	
 	/**
 	 * Nom d'utilisateur unique utilisé pour l'authentification.
 	 * Ne peut pas être null ou vide.
 	 * Le username doit contenir entre 8 et 15 caractères.
 	 */
-	@Indexed(unique = true)
+    @Column(name = "username", nullable = false, unique = true)
 	@Size(min=8, max=15, message = "le username doit contenir au moins 8 caractères et au maximum 15.")
 	@NotBlank(message = "le username est obligatoire.")
 	String username;
@@ -51,6 +57,7 @@ public class User {
 	 * Ne peut pas être null ou vide.
 	 * Doit contenir seulement des lettres avec un tiret si nécessaire.
 	 */
+    @Column(name = "nom", nullable = false)
 	@NotBlank(message = "le nom est obligatoire.")
 	@Pattern(
 			  regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ]+(-[A-Za-zÀ-ÖØ-öø-ÿ]+)?$",
@@ -63,6 +70,7 @@ public class User {
 	 * Ne peut pas être null ou vide.
 	 * Doit contenir seulement des lettres avec un tiret si nécessaire.
 	 */
+    @Column(name = "prenom", nullable = false)
 	@NotBlank(message = "le prénom est obligatoire.")
 	@Pattern(
 			  regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ]+(-[A-Za-zÀ-ÖØ-öø-ÿ]+)?$",
@@ -76,6 +84,7 @@ public class User {
 	 * doit contenir au moins 8 caractères et au moins
 	 * une majuscule, un chiffre et un symbole parmis !@#$%^&*
 	 */
+    @Column(name = "password", nullable = false)
 	@NotBlank(message = "le mot de passe est obligatoire.")
 	@Size(min=8, message = "le mot de passe doit contenir au minimum 8 caractères")
 	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*$", 
@@ -87,6 +96,7 @@ public class User {
 	 * Ne peut pas être null.
 	 * Ne doit pas contenir de chiffre.
 	 */
+    @Column(nullable = false)
 	@NotBlank(message = "le rôle est obligatoire.")
 	@Pattern(
 			  regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$",

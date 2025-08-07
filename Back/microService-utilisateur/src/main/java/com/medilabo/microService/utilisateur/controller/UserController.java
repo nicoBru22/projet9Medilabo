@@ -98,7 +98,7 @@ public class UserController {
      * @return ResponseEntity avec le code HTTP 204 NO CONTENT en cas de succès
      */
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable String id) {
+	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		logger.info("Requête reçu sur le controller deleteUser()");
 		userService.deleteUser(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -114,7 +114,7 @@ public class UserController {
      *         ou une erreur 500 en cas de problème de validation
      */
 	@PutMapping("/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody @Valid User userToUpdate, BindingResult result) {
+	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody @Valid User userToUpdate, BindingResult result) {
 		logger.info("Requête reçu sur le controller updateUser()");
 		
 		if(result.hasErrors()) {
