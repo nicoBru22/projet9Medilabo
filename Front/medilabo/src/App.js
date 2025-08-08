@@ -11,19 +11,21 @@ import InfosPatientPage from './pages/patientPages/InfosPatientPage.js';
 import AddTransmissionPage from './pages/transmissionPages/AddTransmissionPage.js';
 import LoginPage from './pages/LoginPage.js';
 import ErreurPage from './pages/Erreur.js';
+import PrivateRoute from './components/PrivateRoute.js';
+
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<AccueilPage />} />
-        <Route path="/patient/liste" element={<ListPatientPage />} />
-        <Route path="/patient/add" element={<AddPatientPage />} />
-        <Route path="/patient/update/:id" element={<UpdatePatientPage />} />
-        <Route path="/user/liste" element={<ListUserPage />} />
-        <Route path="/user/add" element={<AddUserPage />} />
-        <Route path="/patient/infos/:id" element={<InfosPatientPage />} />
-        <Route path="/patient/infos/:id/transmission" element={<AddTransmissionPage />} />
+        <Route path="/patient/liste" element={<PrivateRoute><ListPatientPage /></PrivateRoute>} />
+        <Route path="/patient/add" element={<PrivateRoute><AddPatientPage /></PrivateRoute>} />
+        <Route path="/patient/update/:id" element={<PrivateRoute><UpdatePatientPage /></PrivateRoute>} />
+        <Route path="/user/liste" element={<PrivateRoute><ListUserPage /></PrivateRoute>} />
+        <Route path="/user/add" element={<PrivateRoute><AddUserPage /></PrivateRoute>} />
+        <Route path="/patient/infos/:id" element={<PrivateRoute><InfosPatientPage /></PrivateRoute>} />
+        <Route path="/patient/infos/:id/transmission" element={<PrivateRoute><AddTransmissionPage /></PrivateRoute>} />
         <Route path="/connexion" element={<LoginPage />} />
         <Route path="/erreur" element={<ErreurPage />} />
       </Routes>
