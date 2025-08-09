@@ -47,7 +47,7 @@ public class Patient {
      */
 	@NotNull(message = "Le prénom est obligatoire.")
 	@NotBlank(message = "Le prénom est obligatoire.")
-	@Size(min = 8, message = "Le nom d'utilisateur doit contenir au moins 8 caractères.")
+	@Size(min = 3, message = "Le nom d'utilisateur doit contenir au moins 3 caractères.")
 	@Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$", message = "Le prénom ne doit contenir que des lettres.")
 	String prenom;
 	
