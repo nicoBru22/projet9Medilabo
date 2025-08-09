@@ -55,12 +55,6 @@ public class SecurityConfig {
         	.addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers(
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/webjars/**"
-                ).permitAll()
-                .pathMatchers(
                     "/patient/v3/api-docs",
                     "/utilisateur/v3/api-docs"
                 ).permitAll()

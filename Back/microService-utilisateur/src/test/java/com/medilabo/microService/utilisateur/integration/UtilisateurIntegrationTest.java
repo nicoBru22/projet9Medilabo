@@ -63,7 +63,7 @@ public class UtilisateurIntegrationTest {
             .getResponse()
             .getContentAsString();
 
-        this.token = objectMapper.readTree(response).get("token").asText(); // Affectation à la variable d'instance
+        this.token = objectMapper.readTree(response).get("token").asText();
     }
 
     @Test

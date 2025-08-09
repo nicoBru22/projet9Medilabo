@@ -49,11 +49,12 @@ public class AlerteServiceImpl implements IAlerteService {
 	    
 	    if (patient == null) {
 	    	logger.warn("Patient non trouvé avec l'ID : {}. Impossible d'évaluer le risque.", patientId);
-	    	return "Aucun risque (Patient non trouvé)"; // Ou un autre statut d'erreur/inconnu si plus approprié.
+	    	return "Aucun risque (Patient non trouvé)";
 	    }
 
 	    List<Transmission> listTransmission = patient.getTransmissionsList();
-	    logger.debug("Transmissions récupérées pour le patient {} {}. Nombre de transmissions {}", patient.getNom(), patient.getPrenom(), listTransmission.size());
+	    logger.debug("Transmissions récupérées pour le patient {} {}. "
+	    		+ "Nombre de transmissions {}", patient.getNom(), patient.getPrenom(), listTransmission.size());
 
 	    int agePatient = patientService.agePatient(patient.getDateNaissance());
 	    logger.debug("Le patient est âgé de : {}", agePatient);
@@ -95,7 +96,8 @@ public class AlerteServiceImpl implements IAlerteService {
     	    )
     	    .count();
 
-	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les transmissions : {}", totalKeywordOccurrences);
+	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les "
+	    		+ "transmissions : {}", totalKeywordOccurrences);
 		
 		if (isEarlyOnset(totalKeywordOccurrences, agePatient, genrePatient)) {
 	    	logger.info("Le patient est classé 'Apparition précoce' (Early Onset).");

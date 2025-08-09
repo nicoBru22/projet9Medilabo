@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,6 @@ public class UserServiceImpl implements IUserService {
     private final IUserRepository userRepository;
     private final BCryptPasswordEncoder bCryptEncoder;
 
-    // Injection via le constructeur
     public UserServiceImpl(IUserRepository userRepository, BCryptPasswordEncoder bCryptEncoder) {
         this.userRepository = userRepository;
         this.bCryptEncoder = bCryptEncoder;

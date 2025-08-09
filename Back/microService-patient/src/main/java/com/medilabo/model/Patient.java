@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +47,8 @@ public class Patient {
      */
 	@NotNull(message = "Le prénom est obligatoire.")
 	@NotBlank(message = "Le prénom est obligatoire.")
+	@Size(min = 8, message = "Le nom d'utilisateur doit contenir au moins 8 caractères.")
+	@Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$", message = "Le prénom ne doit contenir que des lettres.")
 	String prenom;
 	
     /**
@@ -53,6 +57,7 @@ public class Patient {
      */
 	@NotNull(message = "Le nom du patient est obligatoire.")
 	@NotBlank(message = "Le nom du patient est obligatoire.")
+	@Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$", message = "Le nom ne doit contenir que des lettres.")
 	String nom;
 	
     /**

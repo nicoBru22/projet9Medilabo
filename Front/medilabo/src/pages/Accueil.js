@@ -16,7 +16,7 @@ function HomePage() {
                 </div>
                 <div className="containerElementAccueil">
                     <div className="navigationTitre">Navigation Utilisateur :</div>
-                    <Link className="linkAccueil" to="/user/liste">- Afficher la liste des médecins</Link>
+                    <Link className="linkAccueil" to="/user/liste">- Afficher la liste des utilisateurs</Link>
                     <Link className="linkAccueil" to="/user/add">- Ajouter un nouvel utilisateur</Link>
                 </div>
                 <div className="containerElementAccueil">

@@ -14,8 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.medilabo.microService.utilisateur.model.User;
@@ -24,11 +22,9 @@ import com.medilabo.microService.utilisateur.repository.IUserRepository;
 @ExtendWith(MockitoExtension.class)
 public class UtilisateurServiceTest {
 
-	// @InjectMocks injecte les mocks dans l'instance du service
 	@InjectMocks
 	private UserServiceImpl userService; 
 
-	// @Mock crée des instances mockées des dépendances
 	@Mock
 	private IUserRepository userRepository;
 
