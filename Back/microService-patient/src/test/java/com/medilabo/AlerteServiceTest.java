@@ -117,10 +117,10 @@ public class AlerteServiceTest {
 	
 	@Test
 	public void patienBorderlineTest() {
-		boolean result1 = alerteService.isBordline(4, 35);
+		boolean result1 = alerteService.isBorderline(4, 35);
 		assertThat(true).isEqualTo(result1);
 		
-		boolean result2 = alerteService.isBordline(7, 25);
+		boolean result2 = alerteService.isBorderline(7, 25);
 		assertThat(false).isEqualTo(result2);
 	}
 	

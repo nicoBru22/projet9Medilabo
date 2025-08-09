@@ -1,5 +1,9 @@
 package com.medilabo.service;
 
+import java.util.List;
+
+import com.medilabo.model.Transmission;
+
 /**
  * Interface définissant les services liés à l'évaluation du risque de diabète
  * pour un patient à partir de ses transmissions médicales.
@@ -17,6 +21,8 @@ public interface IAlerteService {
      */
 	String riskEvaluation (String patientId);
 	
+	String riskDiabete(List<Transmission> listTransmission, int agePatient, String genrePatient);
+	
     /**
      * Détermine si le patient est classé en risque "Borderline".
      * Un risque est "Borderline" si le patient a entre 2 et 5 déclencheurs
@@ -26,7 +32,7 @@ public interface IAlerteService {
      * @param age l'âge du patient
      * @return {@code true} si les conditions sont remplies, {@code false} sinon
      */
-	boolean isBordline(long occurence, int age);
+	boolean isBorderline(long occurence, int age);
 	
     /**
      * Détermine si le patient est classé "In Danger".

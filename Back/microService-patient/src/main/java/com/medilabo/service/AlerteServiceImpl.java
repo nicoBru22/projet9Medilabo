@@ -29,26 +29,59 @@ public class AlerteServiceImpl implements IAlerteService {
 	@Autowired
 	private IPatientService patientService;
 	
-    /**
-     * Évalue le risque médical d’un patient en analysant ses transmissions et données personnelles.
-     *
-     * @param patientId l'identifiant du patient
-     * @return une chaîne décrivant le niveau de risque : "Early onset", "In Danger", "Borderline", ou "None"
-     */
+	/**
+	 * Évalue le risque médical d’un patient en analysant ses transmissions et ses données personnelles.
+	 * <p>
+	 * Cette méthode récupère le patient via son identifiant, puis analyse l'ensemble
+	 * de ses transmissions et ses données démographiques (âge, genre) afin de déterminer
+	 * un niveau de risque lié à une maladie. Actuellement, seulement le diabète.
+	 * </p>
+	 *
+	 * @param patientId l'identifiant unique du patient à analyser
+	 * @return une chaîne indiquant le niveau de risque détecté, ou
+	 *         "Aucun risque (Patient non trouvé)" si l'identifiant ne correspond à aucun patient
+	 */
 	public String riskEvaluation (String patientId) {
 		logger.info("Tentative de récupération de l'alerte santé pour le patient : {}", patientId);
-		Patient patient = patientService.getPatientById(patientId);
 		
+		Patient patient = patientService.getPatientById(patientId);
+	    logger.debug("Patient récupéré avec l'Id {}: {}", patientId, patient);
+	    
 	    if (patient == null) {
 	    	logger.warn("Patient non trouvé avec l'ID : {}. Impossible d'évaluer le risque.", patientId);
 	    	return "Aucun risque (Patient non trouvé)"; // Ou un autre statut d'erreur/inconnu si plus approprié.
 	    }
-	    logger.debug("Patient récupéré avec l'Id {}: {}", patientId, patient);
 
 	    List<Transmission> listTransmission = patient.getTransmissionsList();
 	    logger.debug("Transmissions récupérées pour le patient {} {}. Nombre de transmissions {}", patient.getNom(), patient.getPrenom(), listTransmission.size());
 
+	    int agePatient = patientService.agePatient(patient.getDateNaissance());
+	    logger.debug("Le patient est âgé de : {}", agePatient);
 
+	    String genrePatient = (patient.getGenre() != null) ? patient.getGenre() : "";
+	    logger.debug("Genre du patient : {}", genrePatient);
+
+	    String riskDiabete = riskDiabete(listTransmission, agePatient, genrePatient);
+	    
+	    return riskDiabete;
+
+	}
+	
+	/**
+	 * Calcule le risque de diabète d’un patient en fonction des transmissions médicales, de l’âge et du genre.
+	 * <p>
+	 * Cette méthode compte le nombre d’occurrences de mots-clés spécifiques aux facteurs de risque
+	 * dans l’ensemble des transmissions du patient. Selon le nombre d’occurrences et les critères
+	 * d’âge/genre, elle détermine un niveau de risque parmi les valeurs :
+	 * </p>
+	 *
+	 * @param listTransmission la liste des transmissions médicales du patient
+	 * @param agePatient       l'âge du patient en années
+	 * @param genrePatient     le genre du patient
+	 * @return une chaîne indiquant le niveau de risque détecté
+	 */
+	public String riskDiabete(List<Transmission> listTransmission, int agePatient, String genrePatient) {
+	    logger.info("Calcul du risque de diabète.");
 	    List<String> keywords = listMotCle.stream()
 	    	    .map(String::toLowerCase)
 	    	    .toList();
@@ -63,26 +96,18 @@ public class AlerteServiceImpl implements IAlerteService {
     	    .count();
 
 	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les transmissions : {}", totalKeywordOccurrences);
-
-	    // 4. Récupération de l'âge et du genre du patient
-	    int agePatient = patientService.agePatient(patient.getDateNaissance());
-	    logger.debug("Le patient est âgé de : {}", agePatient);
-
-	    String genrePatient = (patient.getGenre() != null) ? patient.getGenre() : "";
-	    logger.debug("Genre du patient : {}", genrePatient);
-
-	    // 5. Évaluation du niveau de risque (du plus critique au moins critique)
-	    if (isEarlyOnset(totalKeywordOccurrences, agePatient, genrePatient)) {
-	    	logger.info("Le patient {} est classé 'Apparition précoce' (Early Onset).", patientId);
+		
+		if (isEarlyOnset(totalKeywordOccurrences, agePatient, genrePatient)) {
+	    	logger.info("Le patient est classé 'Apparition précoce' (Early Onset).");
 	    	return "Early onset";
 	    } else if (isInDanger(totalKeywordOccurrences, agePatient, genrePatient)) {
-	    	logger.info("Le patient {} est classé 'Danger' (In Danger).", patientId);
+	    	logger.info("Le patient est classé 'Danger' (In Danger).");
 	    	return "In Danger";
-	    } else if (isBordline(totalKeywordOccurrences, agePatient)) {
-	    	logger.info("Le patient {} est classé 'Risque limité' (Borderline).", patientId);
+	    } else if (isBorderline(totalKeywordOccurrences, agePatient)) {
+	    	logger.info("Le patient est classé 'Risque limité' (Borderline).");
 	    	return "Borderline";
 	    } else {
-	    	logger.info("Le patient {} ne présente aucun risque majeur (classé 'None').", patientId);
+	    	logger.info("Le patient ne présente aucun risque majeur (classé 'None').");
 	    	return "None";
 	    }
 	}
@@ -94,7 +119,7 @@ public class AlerteServiceImpl implements IAlerteService {
      * @param age l’âge du patient
      * @return true si le patient est borderline, sinon false
      */
-    public boolean isBordline(long occurence, int age) {
+    public boolean isBorderline(long occurence, int age) {
         // Le dossier du patient contient entre deux et cinq déclencheurs et le patient est âgé de plus de 30 ans.
     	if (occurence >= 2 && occurence <= 5 && age >= 30) {
     		return true;
