@@ -25,6 +25,7 @@ public class Application {
 	public static void main(String[] args) {
 		Dotenv dotenv = Dotenv.configure()
 			    .directory(".")
+			    .ignoreIfMissing()
 			    .load();
 
 			String jwtSecret = dotenv.get("JWT_SECRET");
