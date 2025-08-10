@@ -92,22 +92,20 @@ return (
           <td className="elementLignePatient">{patient.genre}</td>
           <td className="elementLignePatient">{patient.adresse}</td>
           <td className="elementLignePatient">{patient.telephone}</td>
+          <td className="elementLignePatient">{patient.rdv}</td>
            <td className="elementLignePatient elementAction">      
             <button
               className="btnTablePatient btnModify"
-              onClick={() => navigate(`/patient/update/${patient.id}`)}
-            >
-              Modifier
-            </button>
+              onClick={() => navigate(`/patient/update/${patient.id}`)}>Modifier</button>
             <button
               className="btnTablePatient btnDelete"
-              onClick={() => handleDelete(patient.id)}
-            >
-              Supprimer
-            </button>
+              onClick={() => handleDelete(patient.id)}>Supprimer</button>
             <button 
               className='btnTablePatient-infos btnInfos' 
               onClick={() => navigate(`/patient/infos/${patient.id}`)}>Informations</button>
+            <button 
+              className='btnTablePatient-infos btnRdv' 
+              onClick={() => navigate(`/patient/rdv/${patient.id}`)}>Redez-vous</button>
           </td>
         </tr>
       ))}
