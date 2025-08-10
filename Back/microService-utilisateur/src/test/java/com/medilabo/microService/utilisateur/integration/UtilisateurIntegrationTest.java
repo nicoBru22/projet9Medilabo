@@ -52,13 +52,29 @@ public class UtilisateurIntegrationTest {
     
     @BeforeAll
     static void setup1() {
-        Dotenv dotenv = Dotenv.load();
-        String jwtSecret = dotenv.get("JWT_SECRET");
+        boolean isCI = "true".equals(System.getenv("CI"));
+        if (!isCI) {
+            Dotenv dotenv = Dotenv.configure()
+                    .directory(".")
+                    .ignoreIfMissing()
+                    .load();
 
-        if (jwtSecret != null) {
-            System.setProperty("JWT_SECRET", jwtSecret);
+            String jwtSecret = dotenv.get("JWT_SECRET");
+
+            if (jwtSecret != null && !jwtSecret.isEmpty()) {
+                System.setProperty("JWT_SECRET", jwtSecret);
+                logger.info("✅ JWT_SECRET chargé depuis .env dans test integration");
+            } else {
+                logger.error("❌ JWT_SECRET n'a pas été trouvé dans le fichier .env.");
+            }
         } else {
-            logger.error("Avertissement : JWT_SECRET n'a pas été trouvé dans le fichier .env.");
+            String jwtSecret = System.getenv("JWT_SECRET");
+            if (jwtSecret != null && !jwtSecret.isEmpty()) {
+                System.setProperty("JWT_SECRET", jwtSecret);
+                logger.info("✅ JWT_SECRET chargé depuis System.getenv dans test integration");
+            } else {
+                logger.error("❌ JWT_SECRET n'est PAS défini dans les variables d'environnement CI !");
+            }
         }
     }
 

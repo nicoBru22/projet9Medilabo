@@ -15,17 +15,33 @@ class ApplicationTests {
 	
 	private static Logger logger = LogManager.getLogger();
 	
-    @BeforeAll
-    static void setup() {
-        Dotenv dotenv = Dotenv.load();
-        String jwtSecret = dotenv.get("JWT_SECRET");
+	@BeforeAll
+	static void setup() {
+	    boolean isCI = "true".equals(System.getenv("CI"));
+	    if (!isCI) {
+	        Dotenv dotenv = Dotenv.configure()
+	                .directory(".")
+	                .ignoreIfMissing()
+	                .load();
 
-        if (jwtSecret != null) {
-            System.setProperty("JWT_SECRET", jwtSecret);
-        } else {
-            logger.error("Avertissement : JWT_SECRET n'a pas été trouvé dans le fichier .env.");
-        }
-    }
+	        String jwtSecret = dotenv.get("JWT_SECRET");
+
+	        if (jwtSecret != null && !jwtSecret.isEmpty()) {
+	            System.setProperty("JWT_SECRET", jwtSecret);
+	            logger.info("✅ JWT_SECRET chargé depuis .env dans ApplicationTests");
+	        } else {
+	            logger.error("❌ JWT_SECRET n'a pas été trouvé dans le fichier .env.");
+	        }
+	    } else {
+	        String jwtSecret = System.getenv("JWT_SECRET");
+	        if (jwtSecret != null && !jwtSecret.isEmpty()) {
+	            System.setProperty("JWT_SECRET", jwtSecret);
+	            logger.info("✅ JWT_SECRET chargé depuis System.getenv dans ApplicationTests");
+	        } else {
+	            logger.error("❌ JWT_SECRET n'est PAS défini dans les variables d'environnement CI !");
+	        }
+	    }
+	}
 
 	@Test
 	void contextLoads() {

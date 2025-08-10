@@ -25,8 +25,6 @@ public class Application {
      * @param args arguments de la ligne de commande (non utilisés)
      */
 	public static void main(String[] args) {
-		
-		if(!isCI) {
 			Dotenv dotenv = Dotenv.configure()
 				    .directory(".")
 				    .ignoreIfMissing()
@@ -41,9 +39,7 @@ public class Application {
 
 				dotenv.entries()
 				    .forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-		}
 
-        
 		SpringApplication.run(Application.class, args);
 	}
 
