@@ -8,6 +8,9 @@ import java.io.UnsupportedEncodingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +26,15 @@ import com.medilabo.microService.utilisateur.model.User;
 import com.medilabo.microService.utilisateur.model.UserDto;
 import com.medilabo.microService.utilisateur.repository.IUserRepository;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class UtilisateurIntegrationTest {
+	
+	private static Logger logger = LogManager.getLogger();
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,6 +49,18 @@ public class UtilisateurIntegrationTest {
     private ObjectMapper objectMapper;
 
     private String token;
+    
+    @BeforeAll
+    static void setup1() {
+        Dotenv dotenv = Dotenv.load();
+        String jwtSecret = dotenv.get("JWT_SECRET");
+
+        if (jwtSecret != null) {
+            System.setProperty("JWT_SECRET", jwtSecret);
+        } else {
+            logger.error("Avertissement : JWT_SECRET n'a pas été trouvé dans le fichier .env.");
+        }
+    }
 
     @BeforeEach
     public void setup() throws UnsupportedEncodingException, Exception {
