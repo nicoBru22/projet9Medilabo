@@ -18,8 +18,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class MedilaboGatewayApplication {
 	
 	private static Logger logger = LogManager.getLogger();
-	
-	static boolean isCI = "true".equals(System.getenv("CI"));
 
     /**
      * Méthode main qui lance l'application Spring Boot Gateway.
@@ -27,23 +25,20 @@ public class MedilaboGatewayApplication {
      * @param args arguments de la ligne de commande (non utilisés)
      */
 	public static void main(String[] args) {
-		
-		if(!isCI) {
-			Dotenv dotenv = Dotenv.configure()
-				    .directory(".")
-				    .ignoreIfMissing()
-				    .load();
+		Dotenv dotenv = Dotenv.configure()
+			    .directory(".")
+			    .ignoreIfMissing()
+			    .load();
 
-				String jwtSecret = dotenv.get("JWT_SECRET");
-				if (jwtSecret != null && !jwtSecret.isEmpty()) {
-				    logger.info("JWT_SECRET est bien chargé (longueur : {} caractères)", jwtSecret.length());
-				} else {
-				    logger.error("JWT_SECRET n'est PAS chargé !");
-				}
+			String jwtSecret = dotenv.get("JWT_SECRET");
+			if (jwtSecret != null && !jwtSecret.isEmpty()) {
+			    logger.info("JWT_SECRET est bien chargé (longueur : {} caractères)", jwtSecret.length());
+			} else {
+			    logger.error("JWT_SECRET n'est PAS chargé !");
+			}
 
-				dotenv.entries()
-				    .forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-		}
+			dotenv.entries()
+			    .forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
 		SpringApplication.run(MedilaboGatewayApplication.class, args);
 	}

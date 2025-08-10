@@ -28,17 +28,17 @@ class ApplicationTests {
 
 	        if (jwtSecret != null && !jwtSecret.isEmpty()) {
 	            System.setProperty("JWT_SECRET", jwtSecret);
-	            logger.info("✅ JWT_SECRET chargé depuis .env dans ApplicationTests");
+	            logger.info("JWT_SECRET chargé depuis .env dans ApplicationTests");
 	        } else {
-	            logger.error("❌ JWT_SECRET n'a pas été trouvé dans le fichier .env.");
+	            logger.error("JWT_SECRET n'a pas été trouvé dans le fichier .env.");
 	        }
 	    } else {
 	        String jwtSecret = System.getenv("JWT_SECRET");
 	        if (jwtSecret != null && !jwtSecret.isEmpty()) {
 	            System.setProperty("JWT_SECRET", jwtSecret);
-	            logger.info("✅ JWT_SECRET chargé depuis System.getenv dans ApplicationTests");
+	            logger.info("JWT_SECRET chargé depuis System.getenv dans ApplicationTests");
 	        } else {
-	            logger.error("❌ JWT_SECRET n'est PAS défini dans les variables d'environnement CI !");
+	            logger.error("JWT_SECRET n'est PAS défini dans les variables d'environnement CI !");
 	        }
 	    }
 	}

@@ -16,8 +16,6 @@ import io.github.cdimascio.dotenv.Dotenv;
  */
 @SpringBootApplication
 public class MedilaboApplication {
-	
-	static boolean isCI = "true".equals(System.getenv("CI"));
 
     /**
      * Point d'entrée principal de l'application.
@@ -29,16 +27,13 @@ public class MedilaboApplication {
      * @param args arguments de la ligne de commande (non utilisés ici)
      */
 	public static void main(String[] args) {
-		
-		if(!isCI) {
-			Dotenv dotenv = Dotenv.configure()
-				    .directory(".")
-				    .ignoreIfMissing()
-				    .load();
+		Dotenv dotenv = Dotenv.configure()
+			    .directory(".")
+			    .ignoreIfMissing()
+			    .load();
 
-				dotenv.entries()
-				    .forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-		}
+			dotenv.entries()
+			    .forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
 		SpringApplication.run(MedilaboApplication.class, args);
 	}

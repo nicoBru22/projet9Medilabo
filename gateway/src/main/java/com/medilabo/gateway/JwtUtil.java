@@ -19,7 +19,7 @@ import jakarta.annotation.PostConstruct;
  * </p>
  * <p>
  * Elle utilise la même clé secrète que celle définie dans le microservice utilisateur
- * afin d'assurer la cohérence lors de la validation des tokens générés.
+ * afin d'assurer la cohérence Capture d’écran du 2025-08-10 19-51-44lors de la validation des tokens générés.
  * </p>
  */
 @Component
