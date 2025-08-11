@@ -80,6 +80,7 @@ return (
         <th className="enTeteTableauElement">Genre</th>
         <th className="enTeteTableauElement">Adresse</th>
         <th className="enTeteTableauElement">Téléphone</th>
+        <th className="enTeteTableauElement">Rendez-vous</th>
         <th className="enTeteTableauElement actions-column">Action</th>        
       </tr>
     </thead>
@@ -92,7 +93,13 @@ return (
           <td className="elementLignePatient">{patient.genre}</td>
           <td className="elementLignePatient">{patient.adresse}</td>
           <td className="elementLignePatient">{patient.telephone}</td>
-          <td className="elementLignePatient">{patient.rdv}</td>
+          <td className="elementLignePatient">
+              <ul>
+                {patient.rdvList?.map(rdv => (
+                  <li key={rdv.id}>{rdv.jourRdv} - {rdv.heureRdv}</li>
+                ))}
+              </ul>
+          </td>
            <td className="elementLignePatient elementAction">      
             <button
               className="btnTablePatient btnModify"

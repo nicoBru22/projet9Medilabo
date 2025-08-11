@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.medilabo.model.Patient;
+import com.medilabo.model.Rdv;
 import com.medilabo.model.Transmission;
 import com.medilabo.service.IAlerteService;
 import com.medilabo.service.IPatientService;
@@ -37,6 +39,7 @@ public class AlerteServiceTest {
 	private static List<Transmission> listTransmissionTest;
 	private static List<Transmission> listTransmissionTest2;
 	private static List<Transmission> listTransmissionTest3;
+	private static List<Rdv> rdvList = new ArrayList<>();
 	private static Patient pEarlyOnset;
 	private static Patient pNone;
 	private static Patient pBorderline;
@@ -71,10 +74,10 @@ public class AlerteServiceTest {
 		listTransmissionTest = List.of(transmissionTest1, transmissionTest2);
 		listTransmissionTest2 = List.of(transmissionTest3);	
 		listTransmissionTest3 = List.of(transmissionTest1);
-        pEarlyOnset = new Patient("1", "Jean", "Dupont", LocalDate.of(1980, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest);
-        pNone = new Patient("2", "Jeanne", "Dupuit", LocalDate.of(2000, 1, 1), "feminin", "1 rue A", "0102030405", null, null, listTransmissionTest2);
-        pInDanger = new Patient("3", "Jeanne", "Dupuit", LocalDate.of(2000, 1, 1), "feminin", "1 rue A", "0102030405", null, null, listTransmissionTest3);
-        pBorderline = new Patient("4", "Jeanne", "Dupuit", LocalDate.of(1980, 1, 1), "feminin", "1 rue A", "0102030405", null, null, listTransmissionTest3);
+        pEarlyOnset = new Patient("1", "Jean", "Dupont", LocalDate.of(1980, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest, rdvList);
+        pNone = new Patient("2", "Jeanne", "Dupuit", LocalDate.of(2000, 1, 1), "feminin", "1 rue A", "0102030405", null, null, listTransmissionTest2, rdvList);
+        pInDanger = new Patient("3", "Jeanne", "Dupuit", LocalDate.of(2000, 1, 1), "feminin", "1 rue A", "0102030405", null, null, listTransmissionTest3, rdvList);
+        pBorderline = new Patient("4", "Jeanne", "Dupuit", LocalDate.of(1980, 1, 1), "feminin", "1 rue A", "0102030405", null, null, listTransmissionTest3, rdvList);
 	}
 	
 	@Test

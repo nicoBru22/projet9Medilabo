@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.medilabo.model.Patient;
+import com.medilabo.model.Rdv;
 import com.medilabo.model.Transmission;
 import com.medilabo.repository.IPatientRepository;
 import com.medilabo.service.IPatientService;
@@ -40,6 +41,8 @@ public class PatientServiceTest {
 	private static Transmission transmissionTest2;
 	private static List<Transmission> listTransmissionTest;
 	private static List<Transmission> listTransmissionEmpty;
+	private static List<Rdv> rdvList = new ArrayList<>();
+
 	public static Patient p1;
 	public static Patient p2;
 	public static Patient p3;
@@ -64,9 +67,9 @@ public class PatientServiceTest {
 				"une transmission avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal");
 		listTransmissionTest = List.of(transmissionTest1, transmissionTest2);
 		listTransmissionEmpty = new ArrayList<>();
-		p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest);
-        p2 = new Patient("2", "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionTest);
-        p3 = new Patient("3", "nico", "Dupuit", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionEmpty);
+		p1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, listTransmissionTest, rdvList);
+        p2 = new Patient("2", "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionTest, rdvList);
+        p3 = new Patient("3", "nico", "Dupuit", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionEmpty, rdvList);
 
 	}
 	
@@ -113,7 +116,7 @@ public class PatientServiceTest {
 	
 	@Test
 	public void updatePatientTest() {
-        Patient newPatient = new Patient("3", "sarah", "piet", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionEmpty);
+        Patient newPatient = new Patient("3", "sarah", "piet", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, listTransmissionEmpty, rdvList);
 
 	    when(patientRepository.findById("3")).thenReturn(Optional.of(p3));
 	    when(patientRepository.save(any(Patient.class))).thenAnswer(invocation -> invocation.getArgument(0));

@@ -99,5 +99,10 @@ public class Patient {
      * Liste des transmissions médicales associées au patient.
      */
 	List<Transmission> transmissionsList = new ArrayList<>();
+	
+    /**
+     * Liste des rendez-vous médicaux associés au patient.
+     */
+	List<Rdv> rdvList = new ArrayList<>();
 
 }

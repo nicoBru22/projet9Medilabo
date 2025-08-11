@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Menu from "../../components/Menu";
 
 function UpdatePatientPage() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ function UpdatePatientPage() {
   const [genre, setGenre] = useState("");
   const [adresse, setAdresse] = useState("");
   const [telephone, setTelephone] = useState("");
+    const [error, setError] = useState(null);
 
   const token = localStorage.getItem('jwtToken');
 
@@ -84,6 +86,7 @@ function UpdatePatientPage() {
 
   return (
     <div>
+      <Menu />
       <h1>Modifier un patient</h1>
 
       <form onSubmit={handleSubmit}>

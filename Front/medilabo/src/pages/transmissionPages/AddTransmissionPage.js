@@ -10,6 +10,7 @@ function AddTransmissionPage() {
   const [patient, setPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -46,43 +47,55 @@ function AddTransmissionPage() {
       });
   }, [id]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({ nomMedecin, prenomMedecin, transmission });
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrors(null); // réinitialise les erreurs
+
+  try {
+    if (!token) {
+      navigate("/connexion");
+      return;
+    }
 
     const transmissionData = {
-        nomMedecin: nomMedecin,
-        prenomMedecin: prenomMedecin,
-        transmission: transmission,
+      nomMedecin,
+      prenomMedecin,
+      transmission,
     };
 
-  fetch(`http://localhost:8080/patient/transmission/add?patientId=${id}`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    credentials: "include",
-    body: JSON.stringify(transmissionData), // <-- bonne indentation ici
-  })
+    const response = await fetch(`http://localhost:8080/patient/transmission/add?patientId=${id}`, {
+      method: "POST",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(transmissionData),
+    });
 
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi de la transmission");
+    if (response.ok) {
+      alert("Transmission ajoutée avec succès !");
+      navigate(`/patient/infos/${id}`);
+    } else {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = null;
+      }
+
+      if (response.status === 400 && typeof errorData === "object") {
+        setErrors(errorData);
+        console.log("Erreur backend reçue :", errorData);
+      } else {
+        alert("Erreur lors de l'envoi de la transmission.");
+      }
     }
-    return response.text(); // on prend le texte brut
-  })
-  .then((text) => {
-    const data = text ? JSON.parse(text) : {}; // on parse que s'il y a du contenu
-    console.log("Transmission ajoutée :", data);
-    alert("Transmission ajoutée avec succès !");
-    navigate(`/patient/infos/${id}`);
-  })
-  .catch((error) => {
-    console.error("Erreur:", error);
-  });
-
-  };
+  } catch (error) {
+    console.error("Erreur fetch :", error);
+    alert("Erreur réseau ou serveur.");
+  }
+};
 
   if (isLoading) return <p>Chargement du patient...</p>;
   if (error) return <p>Erreur : {error}</p>;
@@ -104,6 +117,7 @@ function AddTransmissionPage() {
               value={nomMedecin}
               onChange={(e) => setNomMedecin(e.target.value)}
             />
+            {errors?.nomMedecin && <p style={{ color: "red" }}>{errors.nomMedecin}</p>}
 
             <label className="labelFormTransmission" htmlFor="prenomMedecin">
               Prénom du Médecin :
@@ -115,6 +129,7 @@ function AddTransmissionPage() {
               onChange={(e) => setPrenomMedecin(e.target.value)}
             />
           </div>
+          {errors?.prenomMedecin && <p style={{ color: "red" }}>{errors.prenomMedecin}</p>}
 
           <label className="labelFormTransmission" htmlFor="transmission">
             Transmission :
@@ -124,6 +139,7 @@ function AddTransmissionPage() {
             value={transmission}
             onChange={(e) => setTransmission(e.target.value)}
           />
+          {errors?.transmission && <p style={{ color: "red" }}>{errors.transmission}</p>}
 
           <button type="submit">Ajouter la transmission</button>
         </form>

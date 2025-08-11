@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.medilabo.model.Patient;
+import com.medilabo.model.Rdv;
 import com.medilabo.model.Transmission;
 import com.medilabo.service.IPatientService;
 
@@ -156,8 +157,12 @@ public class PatientController {
 	        BindingResult result) {
 
 	    if (result.hasErrors()) {
-	        logger.error("Erreur lors de la mise à jour du patient : {}", result.getAllErrors());
-	        return ResponseEntity.badRequest().body(result.getAllErrors());
+	        Map<String, String> errors = new HashMap<>();
+	        result.getFieldErrors().forEach(error -> {
+	            errors.put(error.getField(), error.getDefaultMessage());
+	            logger.error("Erreur sur le champ {} : {}", error.getField(), error.getDefaultMessage());
+	        });
+	        return ResponseEntity.badRequest().body(errors);
 	    }
 
 	    Optional<Patient> updatedPatientOpt = patientService.updatePatient(patient);
@@ -180,9 +185,17 @@ public class PatientController {
      * @return la transmission créée
      */
 	@PostMapping("/transmission/add")
-	public ResponseEntity<Transmission> addTransmission(@Valid @RequestBody Transmission newTransmission, 
+	public ResponseEntity<?> addTransmission(@Valid @RequestBody Transmission newTransmission, BindingResult result,
 																@RequestParam String patientId) {
 	    logger.info("Requête reçue pour ajouter une transmission : {}", newTransmission);
+	    if (result.hasErrors()) {
+	        Map<String, String> errors = new HashMap<>();
+	        result.getFieldErrors().forEach(error -> {
+	            errors.put(error.getField(), error.getDefaultMessage());
+	            logger.error("Erreur sur le champ {} : {}", error.getField(), error.getDefaultMessage());
+	        });
+	        return ResponseEntity.badRequest().body(errors);
+	    }
 	    Transmission transmission = patientService.addTransmission(newTransmission, patientId);
 	    logger.info("Transmission ajoutée avec succès : {}", transmission);
 	    return ResponseEntity.status(HttpStatus.CREATED).body(transmission);
@@ -202,7 +215,27 @@ public class PatientController {
 	    logger.info("Liste de transmission récupérée avec succès.");
 	    return ResponseEntity.ok(transmissionList);
 	}
+	
+	
+	@PostMapping("/rdv/add")
+	public ResponseEntity<?> addRdvPatient(@Valid @RequestBody Rdv newRdv, BindingResult result ) {
+		logger.info("Requête reçue pour ajouter un rendez vous au patient. {}", newRdv);
+		
+	    if (result.hasErrors()) {
+	        Map<String, String> errors = new HashMap<>();
+	        result.getFieldErrors().forEach(error -> {
+	            errors.put(error.getField(), error.getDefaultMessage());
+	            logger.error("Erreur sur le champ {} : {}", error.getField(), error.getDefaultMessage());
+	        });
+	        return ResponseEntity.badRequest().body(errors);
+	    }
+	    
+		Rdv rdvAdded = patientService.addRdv(newRdv);
+	    logger.info("Ajout du rendez-vous réalisé avec succès.");
 
-
+	    return ResponseEntity.status(HttpStatus.CREATED).body(rdvAdded);
+		
+	}
+	
 
 }

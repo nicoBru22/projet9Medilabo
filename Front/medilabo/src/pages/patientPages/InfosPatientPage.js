@@ -71,7 +71,21 @@ function InfosPatientPage() {
               <p className="adresse"><strong>Adresse :</strong> {patient.adresse}</p>
               <p className="telephone"><strong>Téléphone :</strong> {patient.telephone}</p>
               <p className="dateCréation"><strong>Dossier créé le :</strong> {patient.dateCreation}</p>
-              <p className="dateModification"><strong>Dossier modifié le :</strong> {patient.dateModification}</p>    
+              <p className="dateModification"><strong>Dossier modifié le :</strong> {patient.dateModification}</p>
+              <p className="listeRdv"><strong>Liste des rendez-vous :</strong>
+                <ul>
+                  {patient.rdvList
+                    ?.slice() // on copie pour éviter de modifier l’original
+                    .sort((a, b) => {
+                      const dateA = new Date(`${a.jourRdv}T${a.heureRdv}`);
+                      const dateB = new Date(`${b.jourRdv}T${b.heureRdv}`);
+                      return dateA - dateB;
+                    })
+                    .map(rdv => (
+                      <li key={rdv.id}>{rdv.jourRdv} - {rdv.heureRdv}</li>
+                    ))}
+                </ul>
+              </p>    
             </div>
             <div>
               <AlertSante patientId={id} />

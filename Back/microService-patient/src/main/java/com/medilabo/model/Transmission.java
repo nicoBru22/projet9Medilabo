@@ -2,6 +2,7 @@ package com.medilabo.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,21 +49,21 @@ public class Transmission {
      * Nom du médecin ayant réalisé la transmission.
      * Ce champ est obligatoire.
      */
-    @NotNull(message = "Le nom du médecin est obligatoire.")
+    @NotBlank(message = "Le nom du médecin est obligatoire.")
     private String nomMedecin;
 
     /**
      * Prénom du médecin ayant réalisé la transmission.
      * Ce champ est obligatoire.
      */
-    @NotNull(message = "Le prenom du médecin est obligatoire.")
+    @NotBlank(message = "Le prenom du médecin est obligatoire.")
     String prenomMedecin;
 
     /**
      * Contenu textuel de la transmission.
      * Ce champ est obligatoire et ne peut pas être vide.
      */
-    @NotNull(message = "La transmission ne peut pas être vide")
+    @NotBlank(message = "La transmission ne peut pas être vide")
     private String transmission;
 
 }

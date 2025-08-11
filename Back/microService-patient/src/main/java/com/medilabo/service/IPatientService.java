@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.medilabo.model.Patient;
+import com.medilabo.model.Rdv;
 import com.medilabo.model.Transmission;
 
 /**
@@ -87,4 +88,6 @@ public interface IPatientService {
      * @throws java.util.NoSuchElementException si le patient n'existe pas
      */
 	List<Transmission> getAllTransmissionOfPatient(String patientId);
+	
+	Rdv addRdv(Rdv newRdv);
 }

@@ -17,7 +17,7 @@ function AddPatientPage() {
   const token = localStorage.getItem('jwtToken');
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page
+    e.preventDefault();
     console.log("handleSubmit envoyé")
 
     const patient = {
@@ -116,7 +116,7 @@ function AddPatientPage() {
               <option value="feminin">Féminin</option>
             </select>
           </div>
-          {errors.prenom && <div className="errorPatient">{errors.prenom}</div>}
+          {errors.genre && <div className="errorPatient">{errors.genre}</div>}
 
           <div className="elementForm">
           <label htmlFor="adresse" className="labelForm">Adresse :</label>

@@ -25,4 +25,5 @@
 
 .transmissionEcrite {
   width: 600px;
+  white-space: pre-line;
 }

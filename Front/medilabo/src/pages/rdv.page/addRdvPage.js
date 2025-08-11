@@ -17,7 +17,7 @@ function AddRdvPage() {
     console.log("handleSubmit envoyé");
 
     const rdv = {
-      id,
+      patientId: id,
       nomMedecin,
       jourRdv,
       heureRdv,
@@ -29,7 +29,7 @@ function AddRdvPage() {
         return;
       }
 
-      const response = await fetch("http://localhost:8080/patient/addRdv", {
+      const response = await fetch("http://localhost:8080/patient/rdv/add", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

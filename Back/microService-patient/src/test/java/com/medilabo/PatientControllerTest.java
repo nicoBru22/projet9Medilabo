@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
+import com.medilabo.model.Rdv;
 import com.medilabo.model.Transmission;
 import com.medilabo.service.IPatientService;
 
@@ -50,6 +52,8 @@ public class PatientControllerTest {
 	private static Transmission transmissionTest1;
 	private static Transmission transmissionTest2;
 	private static List<Transmission> listTransmissionTest;
+	private static List<Rdv> rdvList = new ArrayList<>();
+
 
 	@BeforeAll
 	public static void setup() {
@@ -80,7 +84,8 @@ public class PatientControllerTest {
                 "0123456789",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                listTransmissionTest
+                listTransmissionTest,
+                rdvList
             );
         patientTest2 = new Patient(
                 "2",
@@ -92,7 +97,8 @@ public class PatientControllerTest {
                 "0123456789",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                listTransmissionTest
+                listTransmissionTest,
+                rdvList
             );
 	}
 
