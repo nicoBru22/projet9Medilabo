@@ -12,7 +12,7 @@ function UpdatePatientPage() {
   const [genre, setGenre] = useState("");
   const [adresse, setAdresse] = useState("");
   const [telephone, setTelephone] = useState("");
-    const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
   const token = localStorage.getItem('jwtToken');
 
