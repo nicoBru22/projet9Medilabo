@@ -59,8 +59,6 @@ function AddNotePage() {
 
     const transmissionData = {
       patientId: id,
-      nomMedecin,
-      prenomMedecin,
       note,
     };
 

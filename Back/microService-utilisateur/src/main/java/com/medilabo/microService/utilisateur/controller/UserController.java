@@ -146,7 +146,7 @@ public class UserController {
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 	        
 	        User user = userService.getUserByUsername(userDto.getUsername());
-	        String jwt = jwtUtil.generateToken(user.getUsername(), user.getRole(), user.getPrenom(), user.getNom());
+	        String jwt = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getPrenom(), user.getNom());
 	        
 	        logger.info("Utilisateur authentifié: " + user.getUsername());
 	        logger.info("Token JWT généré: " + jwt);

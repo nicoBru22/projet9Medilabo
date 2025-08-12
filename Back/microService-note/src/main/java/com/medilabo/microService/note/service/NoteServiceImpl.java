@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.medilabo.microService.note.config.JwtUtil;
 import com.medilabo.microService.note.model.Note;
 import com.medilabo.microService.note.repository.INoteRepository;
 
@@ -21,14 +22,17 @@ public class NoteServiceImpl implements INoteService {
 	@Autowired
 	private INoteRepository noteRepository;
 	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
 	public List<Note> getAllNotes() {
-		logger.info("Tentative de récupération de toutes les transmissions.");
-		List<Note> transmissionList = noteRepository.findAll();
-		if (transmissionList.isEmpty()) {
-			logger.warn("Attention, la liste est vide : {}", transmissionList);
+		logger.info("Tentative de récupération de toutes les notes.");
+		List<Note> noteList = noteRepository.findAll();
+		if (noteList.isEmpty()) {
+			logger.warn("Attention, la liste est vide : {}", noteList);
 		}
-		logger.info("Transmissions récupérée : {}", transmissionList);
-		return transmissionList;
+		logger.info("Notes récupérées : {}", noteList);
+		return noteList;
 	}
 	
 	public Note getNote(String id) {
@@ -46,26 +50,34 @@ public class NoteServiceImpl implements INoteService {
 		return transmission;
 	}
 	
-	public Note addNote(Note newNote) {
+	public Note addNote(Note newNote, String token) {
 	    logger.info("Tentative d'ajout d'une nouvelle note.");
 	    if (newNote == null) {
 	        logger.error("La note à ajouter ne peut pas être null.");
 	        throw new IllegalArgumentException("La note à ajouter ne peut pas être null.");
 	    }
-
-	    if (newNote.getNomMedecin() == null || newNote.getNomMedecin().isBlank()
-	            || newNote.getPrenomMedecin() == null || newNote.getPrenomMedecin().isBlank()
-	            || newNote.getNote() == null || newNote.getNote().isBlank()) {
-	        logger.error("Le nom et prénom du médecin ainsi que la note écrite sont obligatoires. La note : {}", newNote);
-	        throw new IllegalArgumentException("Le nom et prénom du médecin ainsi que la note écrite sont obligatoires.");
+	    
+	    logger.info("le token non nettoyé : {}", token);
+	    
+	    if (token.startsWith("Bearer ")) {
+	        token = token.substring(7);
+		    logger.info("le token nettoyé : {}", token);
 	    }
+	    
+
+	    
+	    Long medecinId = jwtUtil.extractUserId(token);
+	    
+	    logger.info("Id du medecin : {}", medecinId);
 
 	    Note note = new Note();
 	    note.setDateNote(LocalDateTime.now());
-	    note.setNomMedecin(newNote.getNomMedecin());
-	    note.setPrenomMedecin(newNote.getPrenomMedecin());
+	    note.setMedecinId(medecinId);
 	    note.setPatientId(newNote.getPatientId());
 	    note.setNote(newNote.getNote());
+	    
+	    logger.info("Note complète avant sauvegarde : {}", note);
+
 
 	    Note noteAdded = noteRepository.save(note);
 

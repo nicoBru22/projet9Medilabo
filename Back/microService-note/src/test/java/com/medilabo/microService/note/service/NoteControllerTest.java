@@ -47,20 +47,16 @@ public class NoteControllerTest {
         objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
         noteTest1 = new Note(
                 "1",
-                "1",
-                "1",
+                1L,
+                1L,
                 LocalDateTime.now(),
-                "Brunet",
-                "Nicolas",
                 "une note sans probleme"
         );
         noteTest2 = new Note(
                 "2",
-                "1",
-                "1",
+                1L,
+                1L,
                 LocalDateTime.now(),
-                "Piet",
-                "Sarah",
                 "une note avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal"
         );
         listNoteTest = List.of(noteTest1, noteTest2);
@@ -69,8 +65,10 @@ public class NoteControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     public void testAddNote() throws Exception {
-        when(noteService.addNote(org.mockito.ArgumentMatchers.any(Note.class)))
-            .thenReturn(noteTest1);
+    	when(noteService.addNote(
+    	        org.mockito.ArgumentMatchers.any(Note.class),
+    	        org.mockito.ArgumentMatchers.any(String.class)
+    	)).thenReturn(noteTest1);
 	    objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
         mockMvc.perform(post("/note/add")

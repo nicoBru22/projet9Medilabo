@@ -137,7 +137,7 @@ public class UserControllerTest {
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
         when(userService.getUserByUsername("nicolasb")).thenReturn(user);
-        when(jwtUtil.generateToken(user.getUsername(), user.getRole(), user.getPrenom(), user.getNom())).thenReturn(tokenMock);
+        when(jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getPrenom(), user.getNom())).thenReturn(tokenMock);
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(userDto);
@@ -151,7 +151,7 @@ public class UserControllerTest {
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(userService, times(1)).getUserByUsername("nicolasb");
-        verify(jwtUtil, times(1)).generateToken(user.getUsername(), user.getRole(), user.getPrenom(), user.getNom());
+        verify(jwtUtil, times(1)).generateToken(user.getId(), user.getUsername(), user.getRole(), user.getPrenom(), user.getNom());
     }
 
 

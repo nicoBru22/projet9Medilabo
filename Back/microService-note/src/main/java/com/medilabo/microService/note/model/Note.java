@@ -15,23 +15,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "transmission")
+@Document(collection = "note")
 public class Note {
 
 	@Id
 	String id;
 	
-	String patientId;
+	Long patientId;
 	
-	String medecinId;
+	Long medecinId;
 	
 	LocalDateTime dateNote;
-	
-	@NotBlank(message = "Le nom du médecin est obligatoire.")
-	private String nomMedecin;
-
-	@NotBlank(message = "Le prenom du médecin est obligatoire.")
-	String prenomMedecin;
 
 	@NotBlank(message = "La transmission ne peut pas être vide")
 	private String note;

@@ -33,7 +33,12 @@ public class NoteController {
 										@RequestHeader("Authorization") String token) {
 	    logger.info("Requête reçue pour ajouter une note : {}", newNote);
 	    
-	    Note noteAdded = noteService.addNote(newNote);
+	    if(token.isEmpty()) {
+	    	logger.error("Le token ne peut pas être vide");
+	    	return ResponseEntity.badRequest().body(newNote);
+	    }
+	    
+	    Note noteAdded = noteService.addNote(newNote, token);
 	    
 	    logger.info("Transmission ajoutée avec succès : {}", noteAdded);
 	    return ResponseEntity.status(HttpStatus.CREATED).body(noteAdded);

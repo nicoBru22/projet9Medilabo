@@ -72,9 +72,10 @@ public class JwtUtil {
      * @param nom le nom de famille de l'utilisateur (claim personnalisé)
      * @return un token JWT signé et compacté sous forme de chaîne
      */
-    public String generateToken(String username, String role, String prenom, String nom) {
+    public String generateToken(Long userId, String username, String role, String prenom, String nom) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)
                 .claim("username", username)
                 .claim("role", role)
                 .claim("prenom", prenom)
