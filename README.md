@@ -1,18 +1,18 @@
-#Nom du projet
+#**Nom du projet**
 Medilabo
 
-#Langage
+##**Langage**
 Les langages utilisés :
 - Backend : Java avec Springboot 
 - Frontend : Javascript avec React
 
-#Installation du projet
+##**Installation du projet**
 Pour installer le projet, il est nécessaire d'installer les packages de chaque API et de la gateway. Dans chaque élément, vous pouvez utiliser le terminal avec la commance :  mvn clean package.
 
-#Lancer le projet
+##**Lancer le projet**
 Ensuite, pour démarrer le projet, il faut aller à la racine du projet medilabo, où se trouve le Docker-compose, lancer le terminal avec la commande : docker compose up --build.
 
-#Architecture du projet
+#**Architecture du projet**
 Le projet est composé de 5 micro services : 
 - patient, 
 - utilisateur, 
@@ -21,7 +21,7 @@ Le projet est composé de 5 micro services :
 - gateway, 
 Ainsi que d'un front.
 
-#Microservice Patient
+#**Microservice Patient**
 Le microservice patient permet de faire les opérations CRUD sur l'objet Patient. 
 
 Objet Patient : 
@@ -45,7 +45,7 @@ Architecture :
 - repository
 - model
 
-#Microservice Utilisateur
+#**Microservice Utilisateur**
 Le microservice utilisateur permet les opérations CRUD sur l'objet Utilisateur, ainsi que la gestion de l'authentification.
 
 Objet User : 
@@ -73,7 +73,7 @@ Sécurité :
 - Le JWT contient : id, username, nom, prenom, role.
 - Le token est nécessaire pour toutes les requêtes venant du front vers la gateway.
 
-#Microservice Note
+#**Microservice Note**
 Le microservice note permet les opérations CRUD sur l'objet Note.
 
 Objet Note : 
@@ -98,7 +98,7 @@ Sécurité :
 - le Jwt est mise en place afin de pouvoir extraire l'id, le nom et le prénom de l'utilisateur afin de les voir s'afficher dans le front pour une transmission donnée.
 - Ajout de note est accessible à partir de la page information du patient.
 
-#Microservice Alerte
+#**Microservice Alerte**
 Le microservice alerte permet d’analyser les données d’un patient et ses notes pour détecter un risque de diabète.
 
 Architecture : 
@@ -119,7 +119,7 @@ Fonctionnement :
 
 Pour réaliser ce traitement, ce service nécessite l'utilisation de feign pour faire des appels sur les microservices patient et notes.
 
-#Gateway
+#**Gateway**
 La gateway est le point d'entrée de l'application. 
 
 Fonctionnalité : 
@@ -127,10 +127,10 @@ Fonctionnalité :
 - Filtre et distribue vers le microservice concerné
 - Filtrage via Spring Security et JWT
 
-#CI/CD
+#**CI/CD**
 
 
-#Contenerisation 
+#**Contenerisation** 
 Utilisation de Dockerfiles sur chaque microservice et d un docker compose à la racine
 
 
