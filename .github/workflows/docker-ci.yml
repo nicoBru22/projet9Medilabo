@@ -32,6 +32,10 @@ jobs:
         cd Back/microService-utilisateur && ./mvnw package -DskipTests && cd -
         echo "Build du microservice patient..."
         cd Back/microService-patient && ./mvnw package -DskipTests && cd -
+        echo "Build du microservice note..."
+        cd Back/microService-note && ./mvnw package -DskipTests && cd -
+        echo "Build du microservice alerte..."
+        cd Back/microService-alerte && ./mvnw package -DskipTests && cd -
         echo "Build du microservice gateway..."
         cd gateway && ./mvnw package -DskipTests && cd -
 
@@ -41,6 +45,10 @@ jobs:
         cd Back/microService-utilisateur && ./mvnw test && cd -
         echo "Exécution des tests unitaires du microservice patient..."
         cd Back/microService-patient && ./mvnw test && cd -
+        echo "Exécution des tests unitaires du microservice note..."
+        cd Back/microService-note && ./mvnw test && cd -
+        echo "Exécution des tests unitaires du microservice alerte..."
+        cd Back/microService-alerte && ./mvnw test && cd -
         echo "Exécution des tests unitaires de la gateway..."
         cd gateway && ./mvnw test && cd -
 
@@ -60,6 +68,12 @@ jobs:
 
         echo "Exécution des tests d'intégration du microservice patient..."
         cd Back/microService-patient && ./mvnw verify && cd -
+        
+        echo "Exécution des tests d'intégration du microservice note..."
+        cd Back/microService-note && ./mvnw verify && cd -
+        
+        echo "Exécution des tests d'intégration du microservice alerte..."
+        cd Back/microService-alerte && ./mvnw verify && cd -
 
         echo "Exécution des tests d'intégration de la gateway..."
         cd gateway && ./mvnw verify && cd -
