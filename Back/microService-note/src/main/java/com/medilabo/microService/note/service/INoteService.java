@@ -10,6 +10,5 @@ public interface INoteService {
 	Note addNote(Note newNote, String token);
 	public void deleteNote(String id);
 	Note updateNote(String id, Note updatedNote);
-	List<Note> getAllNotesByPatientId(String patientId);
-	String riskEvaluation(List<Note> transmissions, String patientId);
+	List<Note> getAllNotesByPatientId(Long patientId);
 }

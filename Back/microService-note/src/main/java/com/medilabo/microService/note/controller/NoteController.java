@@ -45,7 +45,7 @@ public class NoteController {
 	}
 
 	@GetMapping("/getNotesPatient")
-	public ResponseEntity<List<Note>> getAllNotesPatient(@RequestParam String patientId) {
+	public ResponseEntity<List<Note>> getAllNotesPatient(@RequestParam Long patientId) {
 	    logger.info("Requête reçue pour récupérer les notes du patient avec l'ID : {}", patientId);
 	    List<Note> noteList = noteService.getAllNotesByPatientId(patientId);
 	    if (noteList.isEmpty()) {

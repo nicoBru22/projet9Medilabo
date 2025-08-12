@@ -9,5 +9,5 @@ import com.medilabo.microService.note.model.Note;
 
 @Repository
 public interface INoteRepository extends MongoRepository<Note, String> {
-	List<Note> findAllByPatientId(String patientId);
+	List<Note> findAllByPatientId(Long patientId);
 }

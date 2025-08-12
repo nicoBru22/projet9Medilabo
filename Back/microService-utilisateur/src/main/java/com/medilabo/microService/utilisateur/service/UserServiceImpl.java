@@ -1,6 +1,8 @@
 package com.medilabo.microService.utilisateur.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -201,6 +203,17 @@ public class UserServiceImpl implements IUserService {
 
 	    return updatedUser;
 		
+	}
+	
+	public Map<Long, Map<String, String>> getUsersByIds(Iterable<Long> ids) {
+	    return userRepository.findAllById(ids).stream()
+	        .collect(Collectors.toMap(
+	            User::getId,
+	            user -> Map.of(
+	                "prenom", user.getPrenom(),
+	                "nom", user.getNom()
+	            )
+	        ));
 	}
 		
 }

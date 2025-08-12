@@ -3,8 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import Menu from "../../components/Menu";
 
 function AddNotePage() {
-  const [nomMedecin, setNomMedecin] = useState("");
-  const [prenomMedecin, setPrenomMedecin] = useState("");
   const [note, setNote] = useState("");
 
   const [patient, setPatient] = useState(null);
@@ -106,29 +104,6 @@ function AddNotePage() {
 
       <div className="containerForm">
         <form onSubmit={handleSubmit}>
-          <div>
-            <label className="labelFormNote" htmlFor="nomMedecin">
-              Nom du Médecin :
-            </label>
-            <input
-              id="nomMedecin"
-              type="text"
-              value={nomMedecin}
-              onChange={(e) => setNomMedecin(e.target.value)}
-            />
-            {errors?.nomMedecin && <p style={{ color: "red" }}>{errors.nomMedecin}</p>}
-
-            <label className="labelFormNote" htmlFor="prenomMedecin">
-              Prénom du Médecin :
-            </label>
-            <input
-              id="prenomMedecin"
-              type="text"
-              value={prenomMedecin}
-              onChange={(e) => setPrenomMedecin(e.target.value)}
-            />
-          </div>
-          {errors?.prenomMedecin && <p style={{ color: "red" }}>{errors.prenomMedecin}</p>}
 
           <label className="labelFormNote" htmlFor="note">
             Note :

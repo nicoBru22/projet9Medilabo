@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.medilabo.microService.utilisateur.config.JwtUtil;
@@ -68,6 +69,25 @@ public class UserController {
 		logger.info("Récupération de la liste avec succès.");
 		return ResponseEntity.ok(userList);
 	}
+	
+	@GetMapping("/get")
+	public ResponseEntity<User> getUserById(@RequestParam Long userId) {
+		logger.info("Requête reçu sur le controller getUserById()");
+		User user = userService.getUserById(userId);
+		logger.info("Utilisateur trouvé avec succès.");
+		return ResponseEntity.ok(user);
+	}
+	
+	@GetMapping("/getUsersByIds")
+	public ResponseEntity<Map<Long, Map<String, String>>> getUsersByIds(@RequestParam List<Long> ids) {
+	    logger.info("Requête reçue sur le controller getUsersByIds()");
+	    
+	    Map<Long, Map<String, String>> listMedecin = userService.getUsersByIds(ids);
+	    
+	    logger.info("Récupération des nom et prénom des utilisateurs avec succès.");
+	    return ResponseEntity.ok(listMedecin);
+	}
+
 	
     /**
      * Ajoute un nouvel utilisateur.

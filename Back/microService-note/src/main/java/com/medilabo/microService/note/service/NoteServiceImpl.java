@@ -133,10 +133,10 @@ public class NoteServiceImpl implements INoteService {
 	    return saved;
 	}
 	
-	public List<Note> getAllNotesByPatientId(String patientId) {
+	public List<Note> getAllNotesByPatientId(Long patientId) {
 	    logger.info("Tentative de récupération des notes du patient avec l'id : {}", patientId);
 
-	    if (patientId == null || patientId.isBlank()) {
+	    if (patientId == null) {
 	        logger.error("L'id du patient ne peut pas être null ou vide : {}", patientId);
 	        throw new IllegalArgumentException("L'id du patient ne peut pas être null ou vide : " + patientId);
 	    }
@@ -149,49 +149,6 @@ public class NoteServiceImpl implements INoteService {
 	        logger.info("Notes trouvées pour le patient avec l'id {} : {}", patientId, listNotePatient);
 	    }
 		return listNotePatient;
-	}
-	
-	public String riskEvaluation(List<Note> transmissions, String patientId) {
-	    logger.info("Début de l'évaluation du risque pour le patient avec l'id : {}", patientId);
-
-	    if (patientId == null || patientId.isBlank()) {
-	        logger.error("L'id du patient ne peut pas être null ou vide : {}", patientId);
-	        throw new IllegalArgumentException("L'id du patient ne peut pas être null ou vide : " + patientId);
-	    }
-
-	    List<Note> listTransmission = getAllNotesByPatientId(patientId);
-
-	    if (listTransmission == null || listTransmission.isEmpty()) {
-	        logger.warn("Aucune note disponible pour le patient avec l'id : {}", patientId);
-	        return "none";
-	    }
-
-	    List<String> keywords = Arrays.asList(
-	        "hémoglobine", "microalbumine", "réaction", "fumeur", "anormal",
-	        "vertiges", "gain de poids", "habitué", "crise", "chute", "hors de vue",
-	        "déclencheur", "rechute", "aggravé", "éprouver", "peur", "troublé"
-	    );
-
-	    long matchingTransmissionsCount = listTransmission.stream()
-	        .filter(transmission -> {
-	            String content = transmission.getNote();
-	            if (content == null) {
-	                return false;
-	            }
-	            String contentLower = content.toLowerCase();
-	            return keywords.stream().anyMatch(keyword -> contentLower.contains(keyword.toLowerCase()));
-	        })
-	        .count();
-
-	    logger.info("Nombre de transmissions correspondant aux mots-clés pour le patient {} : {}", patientId, matchingTransmissionsCount);
-
-	    if (matchingTransmissionsCount >= 5) {
-	        logger.warn("Risque détecté : DANGER pour le patient {}", patientId);
-	        return "danger";
-	    } else {
-	        logger.info("Aucun risque détecté pour le patient {}", patientId);
-	        return "none";
-	    }
 	}
 
 }

@@ -135,42 +135,16 @@ public class TransmissionServiceTest {
 	
 	@Test
 	public void getAllNotesByPatientIdServiceTest() {
-		when(noteRepository.findAllByPatientId("1")).thenReturn(listNoteTest);
+		when(noteRepository.findAllByPatientId(1L)).thenReturn(listNoteTest);
 		
-		List<Note> result = noteService.getAllNotesByPatientId("1");
+		List<Note> result = noteService.getAllNotesByPatientId(1L);
 		
 		assertThat(result).isNotNull();
 		assertThat(result).contains(noteTest1, noteTest2);
 		
-        verify(noteRepository, times(1)).findAllByPatientId("1");
+        verify(noteRepository, times(1)).findAllByPatientId(1L);
 		
 	}
-	
-	@Test
-	public void riskEvaluationNoneServiceTest() {
-		List<Note> listNone = List.of(noteTest1);
-		
-		when(noteRepository.findAllByPatientId("1")).thenReturn(listNone);
-		
-		String result = noteService.riskEvaluation(listNone, "1");
-		
-		assertThat(result).isEqualTo("none");
-		
-		verify(noteRepository, times(1)).findAllByPatientId("1");
-	}
-	
-	@Test
-	public void riskEvaluationDangerServiceTest() {
-	    List<Note> listDanger = List.of(noteTest2);
-	    
-	    when(noteRepository.findAllByPatientId("2")).thenReturn(listDanger);
 
-	    String result = noteService.riskEvaluation(listDanger, "2");
-
-	    assertThat(result).isEqualTo("none");
-	}
-
-
-	
 	
 }

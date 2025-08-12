@@ -85,7 +85,7 @@ public class NoteControllerTest {
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     public void testGetAllNotesPatient() throws Exception {
-        when(noteService.getAllNotesByPatientId("1")).thenReturn(listNoteTest);
+        when(noteService.getAllNotesByPatientId(1L)).thenReturn(listNoteTest);
 
         mockMvc.perform(get("/note/getNotesPatient")
                 .param("patientId", "1"))

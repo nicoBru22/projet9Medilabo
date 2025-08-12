@@ -1,6 +1,7 @@
 package com.medilabo.microService.utilisateur.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.medilabo.microService.utilisateur.model.User;
 
@@ -20,7 +21,7 @@ public interface IUserService {
      */
 	List<User> getAllUser();
 	
-    /**
+    /**Map<String, String> getUsersByIds(Iterable<Long> ids)
      * Récupère un utilisateur par son identifiant unique.
      * 
      * @param id l'identifiant unique de l'utilisateur
@@ -76,4 +77,5 @@ public interface IUserService {
      *         si le nouveau nom d'utilisateur est déjà utilisé par un autre utilisateur
      */
 	User updateUser(User userUpdated, Long id);
+	Map<Long, Map<String, String>> getUsersByIds(Iterable<Long> ids);
 }
