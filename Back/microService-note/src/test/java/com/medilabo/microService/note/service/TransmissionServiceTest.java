@@ -13,23 +13,24 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
+import org.mockito.junit.jupiter.MockitoExtension; // <-- Ajout de MockitoExtension
 
 import com.medilabo.microService.note.model.Note;
 import com.medilabo.microService.note.repository.INoteRepository;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 public class TransmissionServiceTest {
 	
-	@MockBean
+	@Mock
 	private INoteRepository noteRepository;
 
-	@Autowired
-	private INoteService noteService;
+	@InjectMocks
+	private NoteServiceImpl noteService;
 	
 	private static Note noteTest1;
 	private static Note noteTest2;

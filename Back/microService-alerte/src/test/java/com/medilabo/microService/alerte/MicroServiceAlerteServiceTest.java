@@ -76,14 +76,14 @@ public class MicroServiceAlerteServiceTest {
 				"Julien",
 				"Le patient a HbA1C, Microalbumine, Fumeur, Anormal, Réaction, Anticorps, Vertiges, Rechute"
 			);
-		patientTest1 = new Patient("1", "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
-		patientTest2 = new Patient("1", "Jeanne", "Dupont", LocalDate.of(1990, 1, 1), "feminin", "1 rue A", "0102030405", null, null);
+		patientTest1 = new Patient(1L, "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
+		patientTest2 = new Patient(1L, "Jeanne", "Dupont", LocalDate.of(1990, 1, 1), "feminin", "1 rue A", "0102030405", null, null);
 
 	}
 	
 	@Test
 	public void riskEvaluationNoneTest() {
-		String patientId = "1L";
+		Long patientId = 1L;
 		int age = 25;
 		when(noteClient.getAllNotesPatient(patientId)).thenReturn(List.of(noteTest1));
 		when(patientClient.getPatientById(patientId)).thenReturn(patientTest1);
@@ -100,7 +100,7 @@ public class MicroServiceAlerteServiceTest {
 	
 	@Test
 	public void riskEvaluationBorderlineTest() {
-		String patientId = "1L";
+		Long patientId = 1L;
 		int age = 30;
 		when(noteClient.getAllNotesPatient(patientId)).thenReturn(List.of(noteTestBorderline));
 		when(patientClient.getPatientById(patientId)).thenReturn(patientTest1);
@@ -117,7 +117,7 @@ public class MicroServiceAlerteServiceTest {
 	
 	@Test
 	public void riskEvaluationInDangerTest() {
-		String patientId = "1";
+		Long patientId = 1L;
 		int age = 25;
 
 		when(noteClient.getAllNotesPatient(patientId)).thenReturn(List.of(noteInDanger));
@@ -135,7 +135,7 @@ public class MicroServiceAlerteServiceTest {
 	
 	@Test
 	public void riskEvaluationEarlyOnsetTest() {
-		String patientId = "1";
+		Long patientId = 1L;
 		int age = 28;
 
 		when(noteClient.getAllNotesPatient(patientId)).thenReturn(List.of(noteEarlyOnset));

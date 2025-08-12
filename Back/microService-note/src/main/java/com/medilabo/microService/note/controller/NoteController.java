@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,12 @@ public class NoteController {
 	private INoteService noteService;
 
 	@PostMapping("/add")
-	public ResponseEntity<Note> addNote(@Valid @RequestBody Note newNote) {
+	public ResponseEntity<Note> addNote(@Valid @RequestBody Note newNote, 
+										@RequestHeader("Authorization") String token) {
 	    logger.info("Requête reçue pour ajouter une note : {}", newNote);
+	    
 	    Note noteAdded = noteService.addNote(newNote);
+	    
 	    logger.info("Transmission ajoutée avec succès : {}", noteAdded);
 	    return ResponseEntity.status(HttpStatus.CREATED).body(noteAdded);
 	}

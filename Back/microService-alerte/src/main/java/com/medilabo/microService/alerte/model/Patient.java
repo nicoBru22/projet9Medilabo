@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Patient {
 	
-	String id;
+	Long id;
 	String prenom;
 	String nom;
 	LocalDate dateNaissance;

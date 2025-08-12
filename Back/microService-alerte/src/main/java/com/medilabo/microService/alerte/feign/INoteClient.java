@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.medilabo.microService.alerte.model.Note;
 
-@FeignClient(name = "note-service", url = "http://api-notes:8081")
+@FeignClient(name = "note-service", url = "http://api-note:8081")
 public interface INoteClient {
     
 	@GetMapping("/note/getNotesPatient")
-	List<Note> getAllNotesPatient(@RequestParam String patientId);
-    
+	List<Note> getAllNotesPatient(@RequestParam Long patientId);
     
 }

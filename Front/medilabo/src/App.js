@@ -8,7 +8,7 @@ import UpdatePatientPage from './pages/patientPages/UpdatePatientPage.js';
 import ListUserPage from './pages/userPages/ListUserPage.js';
 import AddUserPage from './pages/userPages/AddUserPage.js';
 import InfosPatientPage from './pages/patientPages/InfosPatientPage.js';
-import AddTransmissionPage from './pages/transmissionPages/AddTransmissionPage.js';
+import AddNotePage from './pages/notePages/AddNotePage.js';
 import AddRdvPage from './pages/rdv.page/addRdvPage.js';
 import LoginPage from './pages/LoginPage.js';
 import ErreurPage from './pages/Erreur.js';
@@ -27,7 +27,7 @@ function App() {
         <Route path="/user/add" element={<PrivateRoute><AddUserPage /></PrivateRoute>} />
         <Route path="/patient/infos/:id" element={<PrivateRoute><InfosPatientPage /></PrivateRoute>} />
         <Route path="/patient/rdv/:id" element={<PrivateRoute><AddRdvPage /></PrivateRoute>} />
-        <Route path="/patient/infos/:id/transmission" element={<PrivateRoute><AddTransmissionPage /></PrivateRoute>} />
+        <Route path="/patient/infos/:id/note" element={<PrivateRoute><AddNotePage /></PrivateRoute>} />
         <Route path="/connexion" element={<LoginPage />} />
         <Route path="/erreur" element={<ErreurPage />} />
       </Routes>

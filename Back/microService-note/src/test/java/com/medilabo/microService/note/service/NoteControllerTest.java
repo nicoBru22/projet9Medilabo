@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.medilabo.microService.note.controller.NoteController;
 import com.medilabo.microService.note.model.Note;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -24,8 +24,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(NoteController.class)
 @ActiveProfiles("test")
 public class NoteControllerTest {
 
@@ -62,19 +61,20 @@ public class NoteControllerTest {
                 LocalDateTime.now(),
                 "Piet",
                 "Sarah",
-                "une transmission avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal"
+                "une note avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal"
         );
         listNoteTest = List.of(noteTest1, noteTest2);
     }
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
-    public void testAddTransmission() throws Exception {
+    public void testAddNote() throws Exception {
         when(noteService.addNote(org.mockito.ArgumentMatchers.any(Note.class)))
             .thenReturn(noteTest1);
 	    objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
         mockMvc.perform(post("/note/add")
+        		.header("Authorization", "Bearer mock-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(noteTest1)))
             .andExpect(status().isCreated())

@@ -7,13 +7,13 @@
   justify-content: space-evenly;
 }
 
-.transmissionList {
+.noteList {
   display: flex;
   width: 100%;
   margin-bottom: 20px;
 }
 
-.infosTransmission {
+.infosNote {
     margin-right: 50px;
   width: 300px;
 }
@@ -23,7 +23,7 @@
   flex-direction: row;
 }
 
-.transmissionEcrite {
+.noteEcrite {
   width: 600px;
   white-space: pre-line;
 }

@@ -22,7 +22,7 @@ public class AlertController {
 
 
     @GetMapping("/detecte")
-    public ResponseEntity<String> getAlert(@RequestParam String patientId) {
+    public ResponseEntity<String> getAlert(@RequestParam Long patientId) {
     	logger.info("Entrée dans le controller alerte/detecte avec le patientId {}", patientId);
     	String alert = alertService.riskEvaluation(patientId);
     	logger.info("Récupération avec succès de l'alerte santé.");

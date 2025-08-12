@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
 function AlertSante({ patientId }) {
-  // 1. Déclarer un état pour stocker le résultat de l'API
   const [riskLevel, setRiskLevel] = useState('Chargement du risque...');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. Utiliser useEffect pour appeler l'API quand le composant est monté ou que patientId change
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
     const fetchRiskLevel = async () => {
       try {
 
-        const response = await fetch(`http://localhost:8080/patient/diabete?patientId=${patientId}`, {
+        const response = await fetch(`http://localhost:8080/alerte/detecte?patientId=${patientId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

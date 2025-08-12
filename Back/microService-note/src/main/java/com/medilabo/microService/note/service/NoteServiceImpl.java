@@ -61,7 +61,7 @@ public class NoteServiceImpl implements INoteService {
 	    }
 
 	    Note note = new Note();
-	    note.setDateTransmission(LocalDateTime.now());
+	    note.setDateNote(LocalDateTime.now());
 	    note.setNomMedecin(newNote.getNomMedecin());
 	    note.setPrenomMedecin(newNote.getPrenomMedecin());
 	    note.setPatientId(newNote.getPatientId());
@@ -112,7 +112,7 @@ public class NoteServiceImpl implements INoteService {
 	    
 	    logger.debug("La note existante : {}", existing);
 
-	    updatedNote.setDateTransmission(LocalDateTime.now());
+	    updatedNote.setDateNote(LocalDateTime.now());
 
 	    Note saved = noteRepository.save(updatedNote);
 

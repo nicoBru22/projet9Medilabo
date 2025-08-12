@@ -132,24 +132,24 @@ function InfosPatientPage() {
             </div>
           </div>
 
-          <div className="containerTransmission">
-            <p className="transmission"><strong>Transmissions :</strong></p> 
+          <div className="containerNote">
+            <p className="note"><strong>Notes :</strong></p> 
             <ul>
               {notes.length > 0 ? (
                 notes.map((note) => (
-                  <li className="transmissionList" key={note.id}>
-                    <div className="infosTransmission">
-                      <div className="dateTransmission">Date : {note.dateTransmission}</div>
+                  <li className="noteList" key={note.id}>
+                    <div className="infosNote">
+                      <div className="dateNote">Date : {note.dateNote}</div>
                       <div className="nomPrenomMedecin">Dr {note.nomMedecin} {note.prenomMedecin}</div>
                     </div>
-                    <div className="transmissionEcrite">{note.note}</div>
+                    <div className="notenEcrite">{note.note}</div>
                   </li>
                 ))
               ) : (
-                <li className="aucuneTransmission">Aucune transmission</li>
+                <li className="aucuneNote">Aucune note</li>
               )}
             </ul>
-            <button className="btnAjouterTransmission" onClick={() => navigate(`/patient/infos/${patient.id}/transmission`)}>Ajouter une transmission</button>
+            <button className="btnAjouterNote" onClick={() => navigate(`/patient/infos/${patient.id}/note`)}>Ajouter une note</button>
           </div>
 
         </div>

@@ -11,8 +11,8 @@ import com.medilabo.microService.alerte.model.Patient;
 public interface IPatientClient {
 	
 	@GetMapping("/patient/infos/{id}")
-	Patient getPatientById(@PathVariable String id);
+	Patient getPatientById(@PathVariable Long id);
 
     @GetMapping("/patient/infos/{id}/age")
-    int getAgePatient(@PathVariable String id);
+    int getAgePatient(@PathVariable Long id);
 }

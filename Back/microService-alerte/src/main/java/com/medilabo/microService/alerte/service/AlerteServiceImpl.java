@@ -39,7 +39,7 @@ public class AlerteServiceImpl implements IAlerteService {
 	 * @param patientId L'identifiant unique du patient.
 	 * @return Le niveau de risque sous forme de chaîne de caractères (None, Borderline, In Danger, Early Onset).
 	 */
-	public String riskEvaluation (String patientId) {
+	public String riskEvaluation (Long patientId) {
 		logger.info("Tentative de récupération de l'alerte santé pour le patient : {}", patientId);
 
 	    List<Note> listNotes = noteClient.getAllNotesPatient(patientId);

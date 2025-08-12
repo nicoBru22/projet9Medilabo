@@ -25,7 +25,7 @@ public class Note {
 	
 	String medecinId;
 	
-	LocalDateTime dateTransmission;
+	LocalDateTime dateNote;
 	
 	@NotBlank(message = "Le nom du médecin est obligatoire.")
 	private String nomMedecin;

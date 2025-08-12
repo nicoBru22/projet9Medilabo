@@ -17,7 +17,8 @@ public class Note {
 	
 	String medecinId;
 	
-	LocalDateTime dateTransmission;
+	LocalDateTime dateNote;
+	
 	private String nomMedecin;
 
 	String prenomMedecin;
