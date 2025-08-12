@@ -1,9 +1,10 @@
 package com.medilabo.model;
 
-import org.springframework.data.annotation.Id;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,18 +14,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Rdv {
 	
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    private String patientId;
+    private Long patientId;
     
     private String medecinId;
-
-    @NotNull(message ="le nom du médecin ne peut pas être null.")
-    @NotBlank(message = "Le nom du médecin ne peut pas être vide.")
-    private String nomMedecin;
     
     private String jourRdv;
     

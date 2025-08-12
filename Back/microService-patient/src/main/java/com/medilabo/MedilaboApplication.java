@@ -16,6 +16,8 @@ import io.github.cdimascio.dotenv.Dotenv;
  */
 @SpringBootApplication
 public class MedilaboApplication {
+	
+	static boolean isCI = "true".equals(System.getenv("CI"));
 
     /**
      * Point d'entrée principal de l'application.

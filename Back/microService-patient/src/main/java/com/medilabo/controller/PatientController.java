@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.medilabo.model.Patient;
 import com.medilabo.model.Rdv;
-import com.medilabo.model.Transmission;
 import com.medilabo.service.IPatientService;
 
 import jakarta.validation.Valid;
@@ -65,7 +63,7 @@ public class PatientController {
      * @throws ResponseStatusException si le patient est introuvable ou que sa date de naissance est absente
      */
     @GetMapping("/infos/{id}/age")
-    public int getAgePatient(@PathVariable String id) {
+    public int getAgePatient(@PathVariable Long id) {
         logger.info("Tentative de récupération de l'âge pour le patient avec l'ID : {}", id);
         Patient patient = patientService.getPatientById(id);
 
@@ -99,7 +97,7 @@ public class PatientController {
      * @return le patient correspondant
      */
 	@GetMapping("/infos/{id}")
-	public Patient getPatientById(@PathVariable String id) {
+	public Patient getPatientById(@PathVariable Long id) {
 	    Patient patient = patientService.getPatientById(id);
         return patient;
 	}
@@ -136,7 +134,7 @@ public class PatientController {
      * @return réponse HTTP 204 si la suppression est réussie
      */
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deletePatient(@PathVariable("id") String id) {
+	public ResponseEntity<Void> deletePatient(@PathVariable("id") Long id) {
 	    logger.info("Entrée dans DELETE /delete/{} ", id);
 	    patientService.deletePatient(id);
 	    return ResponseEntity.noContent().build(); // 204 No Content
@@ -176,46 +174,6 @@ public class PatientController {
 	                .body("Patient non trouvé avec id " + id);
 	    }
 	} 
-	
-    /**
-     * Ajoute une nouvelle transmission médicale à un patient existant.
-     *
-     * @param newTransmission transmission à ajouter
-     * @param patientId identifiant du patient concerné
-     * @return la transmission créée
-     */
-	@PostMapping("/transmission/add")
-	public ResponseEntity<?> addTransmission(@Valid @RequestBody Transmission newTransmission, BindingResult result,
-																@RequestParam String patientId) {
-	    logger.info("Requête reçue pour ajouter une transmission : {}", newTransmission);
-	    if (result.hasErrors()) {
-	        Map<String, String> errors = new HashMap<>();
-	        result.getFieldErrors().forEach(error -> {
-	            errors.put(error.getField(), error.getDefaultMessage());
-	            logger.error("Erreur sur le champ {} : {}", error.getField(), error.getDefaultMessage());
-	        });
-	        return ResponseEntity.badRequest().body(errors);
-	    }
-	    Transmission transmission = patientService.addTransmission(newTransmission, patientId);
-	    logger.info("Transmission ajoutée avec succès : {}", transmission);
-	    return ResponseEntity.status(HttpStatus.CREATED).body(transmission);
-	}
-	
-    /**
-     * Récupère toutes les transmissions associées à un patient donné.
-     *
-     * @param patientId identifiant du patient
-     * @return la liste des transmissions médicales
-     */
-	@GetMapping("/transmission/liste")
-	public ResponseEntity<List<Transmission>> getAllTransmissionOfPatient(@RequestParam String patientId) {
-	    logger.info("Requête reçue pour récupérer la liste des transmissions du patient avec l'Id : {}", patientId);
-	    List<Transmission> transmissionList = patientService.getAllTransmissionOfPatient(patientId);
-	    logger.info("la liste de transmission récupérée : {}", transmissionList);
-	    logger.info("Liste de transmission récupérée avec succès.");
-	    return ResponseEntity.ok(transmissionList);
-	}
-	
 	
 	@PostMapping("/rdv/add")
 	public ResponseEntity<?> addRdvPatient(@Valid @RequestBody Rdv newRdv, BindingResult result ) {

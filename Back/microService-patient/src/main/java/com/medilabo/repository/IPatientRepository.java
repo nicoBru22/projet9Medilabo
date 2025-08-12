@@ -1,6 +1,6 @@
 package com.medilabo.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.medilabo.model.Patient;
@@ -14,5 +14,5 @@ import com.medilabo.model.Patient;
  * Le type de l'entité est {@code Patient}, et le type de sa clé primaire est {@code String}.
  */
 @Repository
-public interface IPatientRepository extends MongoRepository<Patient, String> {
+public interface IPatientRepository extends JpaRepository<Patient, Long> {
 }

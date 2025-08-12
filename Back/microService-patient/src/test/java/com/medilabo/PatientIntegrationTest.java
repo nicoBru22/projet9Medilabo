@@ -19,17 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
 import com.medilabo.repository.IPatientRepository;
 
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@Testcontainers
 public class PatientIntegrationTest  {
 
 	@Autowired
@@ -42,18 +34,7 @@ public class PatientIntegrationTest  {
 	private ObjectMapper objectMapper;
 
 
-	private String patientTestId;
-
-
-    @Container
-    public static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")
-                                                        .withExposedPorts(27017);
-
-    @DynamicPropertySource
-    static void setMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-        registry.add("spring.data.mongodb.database", () -> "medilabo_patient_test_db");
-    }
+	private Long patientTestId;
 
 	@BeforeEach
 	void setupPatientData() {

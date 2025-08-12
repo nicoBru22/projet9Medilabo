@@ -26,7 +26,39 @@ services:
     networks:
       - medilabo-net
     environment:
+      - SPRING_DATA_POSTGRE_URI=${SPRING_DATA_POSTGRE_URI}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  api-note:
+    build:
+      context: ./Back/microService-note
+    container_name: api-note
+    ports:
+      - "8082:8081"
+    networks:
+      - medilabo-net
+    environment:
       - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+      
+  api-alerte:
+    build:
+      context: ./Back/microService-alerte
+    container_name: api-alerte
+    ports:
+      - "8084:8081"
+    networks:
+      - medilabo-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 10s
@@ -40,15 +72,26 @@ services:
     container_name: api-gateway
     ports:
       - "8080:8080"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
       api-patient:
         condition: service_healthy
       api-utilisateur:
         condition: service_healthy
+      api-note:
+        condition: service_healthy
+      api-alerte:
+        condition: service_healthy
     networks:
       - medilabo-net
-    environment:
-      - JWT_SECRET=${JWT_SECRET}
+
 
   frontend:
     build:

@@ -5,9 +5,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -32,19 +36,22 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "patient")
+@Entity
+@Table(name="patient")
 public class Patient {
 	
     /**
      * Identifiant unique du patient (généré par MongoDB).
      */
 	@Id
-	String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
 	
     /**
      * Nom du patient.
      * Ce champ est obligatoire.
      */
+    @Column(nullable = false)
 	@NotNull(message = "Le prénom est obligatoire.")
 	@NotBlank(message = "Le prénom est obligatoire.")
 	@Size(min = 3, message = "Le nom d'utilisateur doit contenir au moins 3 caractères.")
@@ -55,6 +62,7 @@ public class Patient {
      * Prenom du patient.
      * Ce champ est obligatoire.
      */
+    @Column(nullable = false)
 	@NotNull(message = "Le nom du patient est obligatoire.")
 	@NotBlank(message = "Le nom du patient est obligatoire.")
 	@Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$", message = "Le nom ne doit contenir que des lettres.")
@@ -64,6 +72,7 @@ public class Patient {
      * Date de naissance du patient.
      * Ce champ est obligatoire.
      */
+    @Column(nullable = false)
 	@NotNull(message = "La date de naissance est obligatoire.")
 	LocalDate dateNaissance;
 	
@@ -71,6 +80,7 @@ public class Patient {
      * Genre du patient (ex : "M", "F").
      * Ce champ est obligatoire.
      */
+    @Column(nullable = false)
 	@NotNull(message = "Le genre est obligatoire.")
 	@NotBlank(message = "Le genre est obligatoire.")
 	String genre;
@@ -78,31 +88,31 @@ public class Patient {
     /**
      * Adresse postale du patient (facultative).
      */
+	@Column
 	String adresse;
 	
     /**
      * Numéro de téléphone du patient (facultatif).
      */
+	@Column
 	String telephone;
 	
     /**
      * Date de création de l’enregistrement du patient.
      */
+	@Column
 	LocalDateTime dateCreation;
 	
     /**
      * Date de la dernière modification des données du patient.
      */
+	@Column
 	LocalDateTime dateModification;
-	
-    /**
-     * Liste des transmissions médicales associées au patient.
-     */
-	List<Transmission> transmissionsList = new ArrayList<>();
 	
     /**
      * Liste des rendez-vous médicaux associés au patient.
      */
+	@OneToMany
 	List<Rdv> rdvList = new ArrayList<>();
 
 }

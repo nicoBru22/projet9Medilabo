@@ -62,6 +62,8 @@ public class SecurityConfig {
                 .pathMatchers("/utilisateur/add").permitAll()
                 .pathMatchers("/patient/health").permitAll()
                 .pathMatchers("/utilisateur/health").permitAll()
+                .pathMatchers("/note/health").permitAll()
+                .pathMatchers("/alerte/health").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
                 .anyExchange().authenticated()
             )

@@ -5,7 +5,7 @@ import Menu from "../../components/Menu";
 function AddTransmissionPage() {
   const [nomMedecin, setNomMedecin] = useState("");
   const [prenomMedecin, setPrenomMedecin] = useState("");
-  const [transmission, setTransmission] = useState("");
+  const [note, setNote] = useState("");
 
   const [patient, setPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +49,7 @@ function AddTransmissionPage() {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-  setErrors(null); // réinitialise les erreurs
+  setErrors(null);
 
   try {
     if (!token) {
@@ -58,12 +58,13 @@ function AddTransmissionPage() {
     }
 
     const transmissionData = {
+      patientId: id,
       nomMedecin,
       prenomMedecin,
-      transmission,
+      note,
     };
 
-    const response = await fetch(`http://localhost:8080/patient/transmission/add?patientId=${id}`, {
+    const response = await fetch(`http://localhost:8080/note/add`, {
       method: "POST",
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -103,7 +104,7 @@ function AddTransmissionPage() {
   return (
     <div>
         <Menu />
-      <h1>Page pour ajouter une transmission au patient : {patient.nom} {patient.prenom}</h1>
+      <h1>Page pour ajouter une note au patient : {patient.nom} {patient.prenom}</h1>
 
       <div className="containerForm">
         <form onSubmit={handleSubmit}>
@@ -132,16 +133,16 @@ function AddTransmissionPage() {
           {errors?.prenomMedecin && <p style={{ color: "red" }}>{errors.prenomMedecin}</p>}
 
           <label className="labelFormTransmission" htmlFor="transmission">
-            Transmission :
+            Note :
           </label>
           <textarea
             id="transmission"
-            value={transmission}
-            onChange={(e) => setTransmission(e.target.value)}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
           />
-          {errors?.transmission && <p style={{ color: "red" }}>{errors.transmission}</p>}
+          {errors?.note && <p style={{ color: "red" }}>{errors.note}</p>}
 
-          <button type="submit">Ajouter la transmission</button>
+          <button type="submit">Ajouter la note</button>
         </form>
       </div>
     </div>

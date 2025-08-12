@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transmission {
+public class Note {
 
     /**
      * Identifiant unique de la transmission.
@@ -32,17 +32,14 @@ public class Transmission {
     /**
      * Identifiant du patient concerné par la transmission.
      */
-    String patientId;
+    Long patientId;
+    
+    Long medecinId;
 
     /**
      * Date et heure de la transmission.
      */
     LocalDateTime dateTransmission;
-
-    /**
-     * Profession de la personne ayant réalisé la transmission (ex : médecin, infirmier).
-     */
-    private String profession;
 
     /**
      * Nom du médecin ayant réalisé la transmission.

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.medilabo.model.Patient;
 import com.medilabo.model.Rdv;
-import com.medilabo.model.Transmission;
 
 /**
  * Interface définissant les opérations disponibles pour la gestion des patients
@@ -29,7 +28,7 @@ public interface IPatientService {
      * @throws IllegalArgumentException si l'identifiant est null ou vide
      * @throws java.util.NoSuchElementException si aucun patient n'est trouvé avec cet identifiant
      */
-	Patient getPatientById(String id);
+	Patient getPatientById(Long id);
 	
 	   /**
      * Supprime un patient à partir de son identifiant.
@@ -38,7 +37,7 @@ public interface IPatientService {
      * @throws IllegalArgumentException si l'identifiant est null ou vide
      * @throws java.util.NoSuchElementException si le patient n'existe pas
      */
-	void deletePatient(String id);
+	void deletePatient(Long id);
 	
     /**
      * Ajoute un nouveau patient à la base de données.
@@ -67,27 +66,6 @@ public interface IPatientService {
      * @throws IllegalArgumentException si la date de naissance est null
      */
 	int agePatient(LocalDate dateNaissance);
-	
-    /**
-     * Ajoute une nouvelle transmission pour un patient existant.
-     *
-     * @param newTransmission la transmission à ajouter
-     * @param patientid l'identifiant du patient concerné
-     * @return la transmission ajoutée avec son identifiant généré
-     * @throws IllegalArgumentException si les champs obligatoires sont manquants ou si l'id est null
-     * @throws java.util.NoSuchElementException si le patient n'existe pas
-     */
-	Transmission addTransmission(Transmission newTransmission, String patientid);
-	
-    /**
-     * Récupère toutes les transmissions associées à un patient.
-     *
-     * @param patientId l'identifiant du patient
-     * @return la liste des transmissions, vide si aucune n'existe
-     * @throws IllegalArgumentException si l'identifiant est null ou vide
-     * @throws java.util.NoSuchElementException si le patient n'existe pas
-     */
-	List<Transmission> getAllTransmissionOfPatient(String patientId);
 	
 	Rdv addRdv(Rdv newRdv);
 }

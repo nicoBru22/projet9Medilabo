@@ -12,6 +12,7 @@ function InfosPatientPage() {
   const [medecins, setMedecins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
@@ -51,6 +52,31 @@ function InfosPatientPage() {
         .catch((error) => console.error(error));
     }
   }, [patient]);
+
+  useEffect(() => {
+  const token = localStorage.getItem('jwtToken');
+  if (!token) {
+    navigate("/connexion");
+    return;
+  }
+
+  fetch(`http://localhost:8080/note/getNotesPatient?patientId=${id}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: "include",
+  })
+  .then(async (response) => {
+    if (!response.ok) throw new Error("Erreur lors du chargement des notes");
+    const data = await response.json();
+    setNotes(data);
+  })
+  .catch((err) => {
+    console.error("Erreur lors du chargement des notes:", err);
+  });
+}, [id, navigate]);
 
   if (isLoading) return <p>Chargement...</p>;
   if (error) return <p>Erreur : {error}</p>;
@@ -109,21 +135,20 @@ function InfosPatientPage() {
           <div className="containerTransmission">
             <p className="transmission"><strong>Transmissions :</strong></p> 
             <ul>
-              {Array.isArray(patient.transmissionsList) && patient.transmissionsList.length > 0 ? (
-                patient.transmissionsList.map((transmission) => (
-                  <li className="transmissionList" key={transmission.id}>
+              {notes.length > 0 ? (
+                notes.map((note) => (
+                  <li className="transmissionList" key={note.id}>
                     <div className="infosTransmission">
-                      <div className="dateTransmission">Date : {transmission.dateTransmission}</div>
-                      <div className="nomPrenomMedecin">Dr {transmission.nomMedecin} {transmission.prenomMedecin}</div>
+                      <div className="dateTransmission">Date : {note.dateTransmission}</div>
+                      <div className="nomPrenomMedecin">Dr {note.nomMedecin} {note.prenomMedecin}</div>
                     </div>
-                    <div className="transmissionEcrite">{transmission.transmission}</div>
+                    <div className="transmissionEcrite">{note.note}</div>
                   </li>
                 ))
               ) : (
                 <li className="aucuneTransmission">Aucune transmission</li>
               )}
             </ul>
-
             <button className="btnAjouterTransmission" onClick={() => navigate(`/patient/infos/${patient.id}/transmission`)}>Ajouter une transmission</button>
           </div>
 

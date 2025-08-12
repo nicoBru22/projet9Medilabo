@@ -51,35 +51,62 @@ public class AlerteServiceImpl implements IAlerteService {
 	    	return "Aucun risque (Patient non trouvé)";
 	    }
 	    logger.debug("Patient récupéré avec l'Id {}: {}", patientId, patient);
-
-	    long totalKeywordOccurrences = 0;
-	    for (Note note : listNotes) {
-	        String noteContent = note.getNote().toLowerCase();
-	        for (String motCle : listMotCle) {
-	            if (noteContent.contains(motCle.toLowerCase())) {
-	                totalKeywordOccurrences++;
-	            }
-	        }
-	    }
-	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les transmissions : {}", totalKeywordOccurrences);
-
+	    
 	    int agePatient = patientClient.getAgePatient(patientId);
 	    logger.debug("Le patient est âgé de : {}", agePatient);
 
 	    String genrePatient = (patient.getGenre() != null) ? patient.getGenre() : "";
 	    logger.debug("Genre du patient : {}", genrePatient);
+	    
+	    String riskDiabete = riskDiabete(listNotes, agePatient, genrePatient);
+	    
+		return riskDiabete;
+	    
 
-	    if (isEarlyOnset(totalKeywordOccurrences, agePatient, genrePatient)) {
-	    	logger.info("Le patient {} est classé 'Apparition précoce' (Early Onset).", patientId);
+	}
+	
+	/**
+	 * Calcule le risque de diabète d’un patient en fonction des transmissions médicales, de l’âge et du genre.
+	 * <p>
+	 * Cette méthode compte le nombre d’occurrences de mots-clés spécifiques aux facteurs de risque
+	 * dans l’ensemble des transmissions du patient. Selon le nombre d’occurrences et les critères
+	 * d’âge/genre, elle détermine un niveau de risque parmi les valeurs :
+	 * </p>
+	 *
+	 * @param listTransmission la liste des transmissions médicales du patient
+	 * @param agePatient       l'âge du patient en années
+	 * @param genrePatient     le genre du patient
+	 * @return une chaîne indiquant le niveau de risque détecté
+	 */
+	public String riskDiabete(List<Note> listNotes, int agePatient, String genrePatient) {
+	    logger.info("Calcul du risque de diabète.");
+	    List<String> keywords = listMotCle.stream()
+	    	    .map(String::toLowerCase)
+	    	    .toList();
+
+    	long totalKeywordOccurrences = listNotes.stream()
+    	    .map(Note::getNote)
+    	    .map(String::toLowerCase)
+    	    .flatMap(noteContent ->
+    	        keywords.stream()
+    	            .filter(noteContent::contains)
+    	    )
+    	    .count();
+
+	    logger.debug("Nombre TOTAL de mots-clés déclencheurs trouvés dans toutes les "
+	    		+ "transmissions : {}", totalKeywordOccurrences);
+		
+		if (isEarlyOnset(totalKeywordOccurrences, agePatient, genrePatient)) {
+	    	logger.info("Le patient est classé 'Apparition précoce' (Early Onset).");
 	    	return "Early onset";
 	    } else if (isInDanger(totalKeywordOccurrences, agePatient, genrePatient)) {
-	    	logger.info("Le patient {} est classé 'Danger' (In Danger).", patientId);
+	    	logger.info("Le patient est classé 'Danger' (In Danger).");
 	    	return "In Danger";
-	    } else if (isBordline(totalKeywordOccurrences, agePatient)) {
-	    	logger.info("Le patient {} est classé 'Risque limité' (Borderline).", patientId);
+	    } else if (isBorderline(totalKeywordOccurrences, agePatient)) {
+	    	logger.info("Le patient est classé 'Risque limité' (Borderline).");
 	    	return "Borderline";
 	    } else {
-	    	logger.info("Le patient {} ne présente aucun risque majeur (classé 'None').", patientId);
+	    	logger.info("Le patient ne présente aucun risque majeur (classé 'None').");
 	    	return "None";
 	    }
 	}
@@ -90,7 +117,7 @@ public class AlerteServiceImpl implements IAlerteService {
      * @param age L'âge du patient.
      * @return true si le risque est Borderline, false sinon.
      */
-    public boolean isBordline(long occurence, int age) {
+    public boolean isBorderline(long occurence, int age) {
         // Le dossier du patient contient entre deux et cinq déclencheurs et le patient est âgé de plus de 30 ans.
     	if (occurence >= 2 && occurence <= 5 && age >= 30) {
     		return true;

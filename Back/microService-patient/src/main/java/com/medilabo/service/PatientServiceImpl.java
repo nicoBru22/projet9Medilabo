@@ -3,10 +3,8 @@ package com.medilabo.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +14,6 @@ import java.util.NoSuchElementException;
 
 import com.medilabo.model.Patient;
 import com.medilabo.model.Rdv;
-import com.medilabo.model.Transmission;
 import com.medilabo.repository.IPatientRepository;
 
 /**
@@ -51,9 +48,9 @@ public class PatientServiceImpl implements IPatientService{
      * @throws IllegalArgumentException si l'id est nul ou vide.
      * @throws NoSuchElementException si aucun patient n'est trouvé.
      */
-	public Patient getPatientById(String id) {
+	public Patient getPatientById(Long id) {
 	    logger.info("Récupération du patient avec l'id : {}", id);
-	    if (id == null || id.isBlank()) {
+	    if (id == null) {
 	        logger.error("L'id ne peut pas être null ou vide : {}", id);
 	        throw new IllegalArgumentException("L'id ne peut pas être null ou vide");
 	    }
@@ -75,9 +72,9 @@ public class PatientServiceImpl implements IPatientService{
      * @throws IllegalArgumentException si l'id est nul ou vide.
      * @throws NoSuchElementException si aucun patient n'est trouvé.
      */
-	public void deletePatient(String id) {
+	public void deletePatient(Long id) {
 	    logger.info("Appel à deletePatient avec id = {}", id);
-	    if (id == null || id.isBlank()) {
+	    if (id == null) {
 	        logger.error("L'id ne peut pas être null ou vide : {}", id);
 	        throw new IllegalArgumentException("L'id ne peut pas être null ou vide");
 	    }
@@ -107,7 +104,6 @@ public class PatientServiceImpl implements IPatientService{
             throw new IllegalArgumentException("Le patient à ajouter ne peut pas être null");
         }
 
-        // Par exemple on pourrait aussi vérifier que les champs obligatoires ne sont pas vides
         if (newPatient.getNom() == null || newPatient.getNom().isBlank()) {
             logger.error("Le nom du patient est obligatoire");
             throw new IllegalArgumentException("Le nom du patient est obligatoire");
@@ -133,7 +129,7 @@ public class PatientServiceImpl implements IPatientService{
     public Optional<Patient> updatePatient(Patient patient) {
         logger.info("Tentative de mise à jour du patient avec l'id : {}", patient.getId());
 
-        if (patient == null || patient.getId() == null || patient.getId().isBlank()) {
+        if (patient == null || patient.getId() == null) {
             logger.error("Patient ou id du patient est null ou vide");
             throw new IllegalArgumentException("Le patient ou son id ne peut pas être null ou vide");
         }
@@ -160,7 +156,6 @@ public class PatientServiceImpl implements IPatientService{
         }
     }
 
-
     /**
      * Calcule l'âge d’un patient à partir de sa date de naissance.
      *
@@ -180,85 +175,7 @@ public class PatientServiceImpl implements IPatientService{
         logger.debug("Calcul de l'âge : dateNaissance = {}, age = {}", dateNaissance, age);
         return age;
     }
-    
-    /**
-     * Ajoute une nouvelle transmission médicale pour un patient donné.
-     *
-     * @param newTransmission les informations de la transmission.
-     * @param patientid l'identifiant du patient.
-     * @return la transmission ajoutée.
-     * @throws IllegalArgumentException si la transmission est invalide ou l'id du patient est vide.
-     * @throws NoSuchElementException si le patient n'existe pas.
-     */
-    public Transmission addTransmission(Transmission newTransmission, String patientid) {
-	    logger.info("Tentative d'ajout d'une nouvelle transmission.");
-	    if (newTransmission == null) {
-	        logger.error("La transmission à ajouter ne peut pas être null.");
-	        throw new IllegalArgumentException("La transmission à ajouter ne peut pas être null.");
-	    }
 
-	    if (newTransmission.getNomMedecin() == null || newTransmission.getNomMedecin().isBlank()
-	            || newTransmission.getPrenomMedecin() == null || newTransmission.getPrenomMedecin().isBlank()
-	            || newTransmission.getTransmission() == null || newTransmission.getTransmission().isBlank()) {
-	        logger.error("Le nom et prénom du médecin ainsi que la transmission écrite sont obligatoires. La transmission : {}", newTransmission);
-	        throw new IllegalArgumentException("Le nom et prénom du médecin ainsi que la transmission écrite sont obligatoires.");
-	    }
-	    
-	    if (patientid == null || patientid.isBlank()) {
-	        logger.error("L'id ne peut pas être null ou vide : {}", patientid);
-	        throw new IllegalArgumentException("L'id ne peut pas être null ou vide");
-	    }
-	    
-	    if (!patientRepository.existsById(patientid)) {
-	        logger.warn("Suppression impossible : patient non trouvé avec l'id : {}", patientid);
-	        throw new NoSuchElementException("Patient non trouvé avec l'id : " + patientid);
-	    }
-	    
-    	Patient patient = patientRepository.findById(patientid).get();
-    	List<Transmission> transmissionsList = patient.getTransmissionsList();
-
-	    Transmission transmission = new Transmission();
-	    transmission.setId(UUID.randomUUID().toString());
-	    transmission.setDateTransmission(LocalDateTime.now());
-	    transmission.setNomMedecin(newTransmission.getNomMedecin());
-	    transmission.setPrenomMedecin(newTransmission.getPrenomMedecin());
-	    transmission.setPatientId(patientid);
-	    transmission.setTransmission(newTransmission.getTransmission());
-	    
-    	transmissionsList.add(transmission);
-    	patientRepository.save(patient);
-
-		return transmission;
-    	
-    }
-    
-    /**
-     * Récupère toutes les transmissions médicales d’un patient donné.
-     *
-     * @param patientId l'identifiant du patient.
-     * @return la liste des transmissions associées.
-     * @throws IllegalArgumentException si l'id est nul ou vide.
-     * @throws NoSuchElementException si le patient n'existe pas.
-     */
-    public List<Transmission> getAllTransmissionOfPatient(String patientId) {
-	    if (patientId == null || patientId.isBlank()) {
-	        logger.error("L'id ne peut pas être null ou vide : {}", patientId);
-	        throw new IllegalArgumentException("L'id ne peut pas être null ou vide");
-	    }
-	    
-	    if (!patientRepository.existsById(patientId)) {
-	        logger.warn("Suppression impossible : patient non trouvé avec l'id : {}", patientId);
-	        throw new NoSuchElementException("Patient non trouvé avec l'id : " + patientId);
-	    }
-    	Patient patient = patientRepository.findById(patientId).get();
-    	List<Transmission> transmissionList = patient.getTransmissionsList();
-    	if(transmissionList.isEmpty()) {
-    		return new ArrayList<>();
-    	}
-    	
-		return transmissionList;
-    	
-    }
     
     public Rdv addRdv(Rdv newRdv) {
 	    logger.info("Tentative d'ajout d'une nouveau rendez-vous.");	

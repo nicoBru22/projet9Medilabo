@@ -33,7 +33,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
 import com.medilabo.model.Rdv;
-import com.medilabo.model.Transmission;
 import com.medilabo.service.IPatientService;
 
 @ActiveProfiles("test")
@@ -49,33 +48,13 @@ public class PatientControllerTest {
 	
 	private static Patient patientTest1;
 	private static Patient patientTest2;
-	private static Transmission transmissionTest1;
-	private static Transmission transmissionTest2;
-	private static List<Transmission> listTransmissionTest;
 	private static List<Rdv> rdvList = new ArrayList<>();
 
 
 	@BeforeAll
 	public static void setup() {
-		transmissionTest1 = new Transmission(
-				"1",
-				"1",
-				LocalDateTime.now(),
-				"docteur",
-				"Brunet",
-				"Nicolas",
-				"une transmission sans probleme");
-		transmissionTest2 = new Transmission(
-				"2",
-				"1",
-				LocalDateTime.now(),
-				"docteur",
-				"Piet",
-				"Sarah",
-				"une transmission avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal");
-		listTransmissionTest = List.of(transmissionTest1, transmissionTest2);
         patientTest1 = new Patient(
-                "1",
+                1L,
                 "Nicolas",
                 "Brunet",
                 LocalDate.of(1990, 5, 20),
@@ -84,11 +63,10 @@ public class PatientControllerTest {
                 "0123456789",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                listTransmissionTest,
                 rdvList
             );
         patientTest2 = new Patient(
-                "2",
+                2L,
                 "Sarah",
                 "Piet",
                 LocalDate.of(1990, 5, 20),
@@ -97,13 +75,10 @@ public class PatientControllerTest {
                 "0123456789",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                listTransmissionTest,
                 rdvList
             );
 	}
 
-
-	
 	@Test
     @WithMockUser(username = "testuser", roles = {"USER"})
 	public void getAllPatientTest() throws Exception {
@@ -123,7 +98,7 @@ public class PatientControllerTest {
 	@Test
     @WithMockUser(username = "testuser", roles = {"USER"})
 	public void getPatientByIdControllerTest() throws Exception {
-		when(patientService.getPatientById("1")).thenReturn(patientTest1);
+		when(patientService.getPatientById(1L)).thenReturn(patientTest1);
 		
 	    mockMvc.perform(get("/patient/infos/{id}", "1"))
         .andExpect(status().isOk())
@@ -131,7 +106,7 @@ public class PatientControllerTest {
         .andExpect(jsonPath("$.prenom").value("Nicolas"))
         .andExpect(jsonPath("$.nom").value("Brunet"));
 
-	    verify(patientService, times(1)).getPatientById("1");
+	    verify(patientService, times(1)).getPatientById(1L);
 	}
 	
 	@Test
@@ -155,12 +130,12 @@ public class PatientControllerTest {
 	@Test
 	@WithMockUser(username = "testuser", roles = {"USER"})
 	public void deletePatientControllerTest() throws Exception {
-		doNothing().when(patientService).deletePatient("1");
+		doNothing().when(patientService).deletePatient(1L);
 	    
-	    mockMvc.perform(delete("/patient/delete/{id}", "1"))
+	    mockMvc.perform(delete("/patient/delete/{id}", 1L))
 	        .andExpect(status().isNoContent());
 
-	    verify(patientService, times(1)).deletePatient("1");
+	    verify(patientService, times(1)).deletePatient(1L);
 	}
 	
 	@Test
@@ -172,7 +147,7 @@ public class PatientControllerTest {
 	    
 	    when(patientService.updatePatient(any(Patient.class))).thenReturn(Optional.of(patientTest2));
 	    
-	    mockMvc.perform(put("/patient/update/{id}", "1")
+	    mockMvc.perform(put("/patient/update/{id}", 1L)
 	            .contentType("application/json")
 	            .content(patientJson))
 	        .andExpect(status().isOk())
@@ -191,7 +166,7 @@ public class PatientControllerTest {
 	    
 	    when(patientService.updatePatient(any(Patient.class))).thenReturn(Optional.of(patientTest2));
 	    
-	    mockMvc.perform(put("/patient/update/{id}", "1")
+	    mockMvc.perform(put("/patient/update/{id}", 1L)
 	            .contentType("application/json")
 	            .content(patientJson))
 	        .andExpect(status().isOk())
@@ -199,52 +174,6 @@ public class PatientControllerTest {
 	        .andExpect(jsonPath("$.nom").value("Piet"));
 
 	    verify(patientService, times(1)).updatePatient(any(Patient.class));
-	}
-	
-	@Test
-	@WithMockUser(username = "testuser", roles = {"USER"})
-	public void addTransmissionTest() throws Exception {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    objectMapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-	    String transmissionJson = objectMapper.writeValueAsString(transmissionTest1);
-	    String patientId = "1";
-
-	    when(patientService.addTransmission(any(Transmission.class), any(String.class))).thenReturn(transmissionTest1);
-
-	    mockMvc.perform(post("/patient/transmission/add")
-	            .param("patientId", patientId)
-	            .contentType("application/json")
-	            .content(transmissionJson))
-	            .andExpect(status().isCreated())
-	            .andExpect(jsonPath("$.id").value("1"))
-	            .andExpect(jsonPath("$.patientId").value("1"));
-
-	    verify(patientService, times(1)).addTransmission(any(Transmission.class), any(String.class));
-	}
-	
-	@Test
-	@WithMockUser(username = "testuser", roles = {"USER"})
-	public void getTransmissionListTest() throws Exception {
-	    String patientId = "1";
-	    
-	    when(patientService.getAllTransmissionOfPatient(patientId)).thenReturn(listTransmissionTest);
-
-	    mockMvc.perform(get("/patient/transmission/liste")
-	            .param("patientId", patientId))
-	            .andExpect(status().isOk())
-	            .andExpect(content().contentType("application/json"))
-	            .andExpect(jsonPath("$.length()").value(2))
-	            .andExpect(jsonPath("$[0].id").value("1"))
-	            .andExpect(jsonPath("$[1].id").value("2"));
-
-	    verify(patientService, times(1)).getAllTransmissionOfPatient(patientId);
-	}
-	
-	
-	
-	
-	
-	
-	
+	}	
 
 }
