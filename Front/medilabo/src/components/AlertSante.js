@@ -24,23 +24,22 @@ function AlertSante({ patientId }) {
           throw new Error(`Erreur HTTP: ${response.status} - ${errorData}`);
         }
 
-        const data = await response.text(); // Votre API renvoie une chaîne simple, donc use .text()
-        setRiskLevel(data); // Mettre à jour l'état avec la réponse
+        const data = await response.text();
+        setRiskLevel(data);
       } catch (err) {
         console.error("Erreur lors de la récupération du niveau de risque:", err);
         setError(err.message); // Stocker le message d'erreur
-        setRiskLevel('Erreur lors du chargement'); // Afficher un message d'erreur à l'utilisateur
+        setRiskLevel('Erreur lors du chargement');
       } finally {
-        setIsLoading(false); // Indiquer que le chargement est terminé
+        setIsLoading(false);
       }
     };
 
-    if (patientId) { // S'assurer qu'un patientId est disponible avant l'appel
+    if (patientId) {
       fetchRiskLevel();
     }
-  }, [patientId]); // Le tableau de dépendances : re-déclenche l'effet si patientId change
+  }, [patientId]);
 
-  // 3. Rendu du composant
   if (isLoading) {
     return (
       <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
@@ -58,40 +57,38 @@ function AlertSante({ patientId }) {
     );
   }
 
-  // Si tout s'est bien passé, afficher le niveau de risque
   let displayStyle = {};
   let message = `Risque de diabète : `;
 
-  // Personnalisation de l'affichage en fonction du niveau de risque
   switch (riskLevel) {
     case 'Borderline':
-      displayStyle = { color: '#ff8c00', fontWeight: 'bold' }; // Orange
+      displayStyle = { color: '#ff8c00', fontWeight: 'bold' };
       message += "Attention, il est en zone limite.";
       break;
     case 'In Danger':
-      displayStyle = { color: '#dc3545', fontWeight: 'bold' }; // Rouge
+      displayStyle = { color: '#dc3545', fontWeight: 'bold' };
       message += "URGENT : Le patient est en danger !";
       break;
     case 'Early Onset':
-      displayStyle = { color: '#8b0000', fontWeight: 'bold' }; // Rouge foncé
+      displayStyle = { color: '#8b0000', fontWeight: 'bold' };
       message += "TRÈS URGENT : Début précoce de pathologie détectée !";
       break;
     case 'none':
-      displayStyle = { color: '#28a745' }; // Vert
+      displayStyle = { color: '#28a745' };
       message += "Aucune alerte détectée, tout va bien.";
       break;
     case 'Patient Not Found':
-      displayStyle = { color: '#6c757d' }; // Gris
+      displayStyle = { color: '#6c757d' };
       message = `Patient ${patientId} non trouvé dans le système.`;
       break;
     case 'Error retrieving transmissions':
     case 'Error retrieving patient data':
     case 'Error retrieving patient age':
-      displayStyle = { color: '#dc3545', fontStyle: 'italic' }; // Rouge
+      displayStyle = { color: '#dc3545', fontStyle: 'italic' };
       message = `Erreur système lors de la récupération des données pour le patient ${patientId}.`;
       break;
     default:
-      displayStyle = { color: '#6c757d' }; // Gris par défaut
+      displayStyle = { color: '#6c757d' };
       break;
   }
 

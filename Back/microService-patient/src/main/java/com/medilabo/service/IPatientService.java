@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.medilabo.model.Patient;
-import com.medilabo.model.Rdv;
 
 /**
  * Interface définissant les opérations disponibles pour la gestion des patients
@@ -66,6 +65,4 @@ public interface IPatientService {
      * @throws IllegalArgumentException si la date de naissance est null
      */
 	int agePatient(LocalDate dateNaissance);
-	
-	Rdv addRdv(Rdv newRdv);
 }

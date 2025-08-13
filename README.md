@@ -1,12 +1,31 @@
-#**Nom du projet**
+#Nom du projet
 
 Medilabo
 
-##**Langage**
+##Résumé de l'application
+
+Medilabo est le projet 9 de la formation Développeur Java d'OpenClassrooms. Cette application est destinée aux professionnels de santé et permet de gérer efficacement les patients. L’utilisateur peut accéder à la liste complète de ses patients, consulter leurs informations personnelles et les transmissions (notes) associées. Il peut également ajouter de nouveaux patients, modifier ou supprimer des patients existants, et rédiger des notes pour suivre l’évolution de chaque patient au fil du temps.
+
+
+##Technologies
+
+La sécurité : 
+- JsonWebToken
+- SpringSecurity
 
 Les langages utilisés :
 - Backend : Java avec Springboot 
 - Frontend : Javascript avec React
+
+Les bases de données : 
+- Dev/Prod : NoSql avec MongoDB et Sql avec PostgreSql
+- Test : TestContainer et H2 Database
+
+Outils et environnement :
+- Java 21 (Temurin)
+- Maven
+- Docker & Docker Compose
+- GitHub Actions
 
 ##**Installation du projet**
 
@@ -87,10 +106,16 @@ Le microservice note permet les opérations CRUD sur l'objet Note.
 Objet Note : 
 - id : String
 - patientId : Long
-- userId : Long
+- medecin: Medecin
 - note : String
 
-Le patientId est une clé étrangère en direction de la table Patient. Le userId est une clé étrangère en direction de la table Utilisateur.
+Objet Medecin : 
+- id : String
+- userId : Long
+- nomMedecin: String
+- prenomMedecin: String
+
+Le patientId est une clé étrangère en direction de la table Patient. La base de donnée étant en NoSql, le 3NF ne s'applique pas. L'objet Medecin est contenu dans l'objet note afin de permettre une meilleure scalabilité des notes. 
 
 Base de donnée : 
 - MongoDB (NoSql)
@@ -128,7 +153,7 @@ Fonctionnement :
 
 Pour réaliser ce traitement, ce service nécessite l'utilisation de feign pour faire des appels sur les microservices patient et notes.
 
-#**Gateway**
+##Gateway
 
 La gateway est le point d'entrée de l'application. 
 
@@ -137,11 +162,90 @@ Fonctionnalité :
 - Filtre et distribue vers le microservice concerné
 - Filtrage via Spring Security et JWT
 
-#**CI/CD**
+##CI/CD
+
+GitHub Actions est utilisé pour l’intégration continue (CI) des microservices. Le pipeline CI se déclenche automatiquement lors des push ou des pull requests sur la branche main.
+Il n'est pas prévu encore de déploiement réel de l'application.
+
+Le fichier docker-ci.yml se situe à la racine du projet dans le dossier .github/workflows.
+
+Étapes principales du pipeline :
+- Checkout du code : récupération de la dernière version du dépôt.
+- Configuration de Java 21 : installation et mise en cache des dépendances Maven.
+- Build des microservices : compilation de chaque microservice sans exécuter les tests.
+- Tests unitaires : exécution des tests unitaires de tous les microservices et de la gateway.
+- Docker Compose : build et démarrage des conteneurs pour les tests d’intégration.
+- Tests d’intégration : exécution des tests d’intégration de tous les microservices et de la gateway.
+- Arrêt des conteneurs Docker : nettoyage des ressources après les tests.
+
+Variables d’environnement utilisées (secrets dans github) :
+- JWT_SECRET : clé secrète pour l’authentification JWT.
+- SPRING_DATA_MONGODB_URI : URI de connexion à la base MongoDB.
+- SPRING_DATA_POSTGRE_URI : URI de connexion à la base PostgreSQL.
+
+##Contenerisation
+
+Chaque microservice de l’application est conteneurisé avec Docker pour assurer un déploiement homogène et reproductible. Tous les microservices suivent une structure similaire pour leur Dockerfile.
+Exemple : 
+- Utilisation d'une base légère contenant Java 21 pour exécuter nos microservices.
+- Installation de curl dans le conteneur (utile pour des tests ou vérifications réseau. La suppression du cache apt permet de garder l’image légère.
+- Copie le fichier JAR généré par Maven dans le conteneur (mvn clean package à faire en amont sur le microservice)
+- Commande à exécutée au démarrage du conteneur : lancement du microservice.
+Tous les microservices suivent cette même logique, chacun avec son propre JAR.
+
+Conteneurisation avec Docker et Docker Compose
+
+Le projet utilise Docker pour containeriser les microservices et le front, et Docker Compose pour les orchestrer facilement.
+Docker Compose
+
+Le fichier docker-compose.yml définit tous les services du projet et se situe à la racine du projet :
+- api-utilisateur, api-patient, api-note, api-alerte : microservices Java Spring Boot.
+- gateway : passerelle API qui centralise les requêtes vers les microservices.
+- frontend : application React pour l’interface utilisateur.
+
+Chaque service contient :
+- build : le chemin vers le Dockerfile du microservice.
+- container_name : nom du conteneur Docker pour faciliter les commandes.
+- ports : redirection des ports du conteneur vers le poste local.
+- networks : tous les conteneurs sont connectés au réseau medilabo-net.
+- environment : variables d’environnement (ex. URI des bases de données, secrets JWT).
+- healthcheck : vérification automatique de la santé du service via l’endpoint /actuator/health.
+
+Dépendances entre services :
+- Le gateway ne démarre que lorsque tous les microservices sont sains (depends_on avec service_healthy).
+- Le frontend dépend du gateway pour fonctionner (depends_on avec service_started).
+
+Réseau :
+- Tous les conteneurs utilisent un réseau bridge nommé medilabo-net.
+- Cela permet aux microservices et au front de communiquer entre eux facilement.
 
 
-#**Contenerisation** 
+#Documentation
 
-Utilisation de Dockerfiles sur chaque microservice et d un docker compose à la racine
+La documentation est réalisé avec : 
+- swagger
+- javadoc
 
 
+##Green Code
+
+
+
+Au niveau du front : 
+- mettre en cache
+- minifier le css
+
+Au niveau back
+- nettoyer le code : commentaire non utile, dépendance non utilisée
+- refactoriser les méthodes : éviter les redondances
+
+##En cours de développement
+
+Est en cours de développement la possibilité de créer des rendez-vous
+
+##Idée de développement
+
+Mettre en place des rôles :
+- Secrétaire pour accéder au information administratives du patient et de lui proposer un rendez-vous
+- Administrateur pour ajout de nouveau utilisateur
+- Medecin ou autre profesionnel pouvant accéder aux informations du patient et faire une note

@@ -1,7 +1,6 @@
 package com.medilabo.microService.note.service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.medilabo.microService.note.config.JwtUtil;
+import com.medilabo.microService.note.model.Medecin;
 import com.medilabo.microService.note.model.Note;
 import com.medilabo.microService.note.repository.INoteRepository;
 
@@ -56,25 +56,17 @@ public class NoteServiceImpl implements INoteService {
 	        logger.error("La note à ajouter ne peut pas être null.");
 	        throw new IllegalArgumentException("La note à ajouter ne peut pas être null.");
 	    }
-	    
-	    logger.info("le token non nettoyé : {}", token);
-	    
-	    if (token.startsWith("Bearer ")) {
-	        token = token.substring(7);
-		    logger.info("le token nettoyé : {}", token);
+	    if (token == null || token.isBlank()) {
+	        throw new IllegalArgumentException("Le token ne peut pas être null ou vide.");
 	    }
-	    
-
-	    
-	    Long medecinId = jwtUtil.extractUserId(token);
-	    
-	    logger.info("Id du medecin : {}", medecinId);
+	   	    
+	    Medecin medecin = getMedecin(token);
 
 	    Note note = new Note();
 	    note.setDateNote(LocalDateTime.now());
-	    note.setMedecinId(medecinId);
 	    note.setPatientId(newNote.getPatientId());
 	    note.setNote(newNote.getNote());
+	    note.setMedecin(medecin);
 	    
 	    logger.info("Note complète avant sauvegarde : {}", note);
 
@@ -84,6 +76,23 @@ public class NoteServiceImpl implements INoteService {
 	    logger.info("La note ajouté : {}", noteAdded);
 
 	    return noteAdded;
+	}
+	
+	public Medecin getMedecin(String token) {
+	    if (token.startsWith("Bearer ")) {
+	        token = token.substring(7);
+		    logger.info("le token nettoyé : {}", token);
+	    }		
+		
+		Medecin medecin = new Medecin();
+		Long userId = jwtUtil.extractUserId(token);
+		String nomMedecin = jwtUtil.extractNom(token);
+		String prenomMedecin = jwtUtil.extractPrenom(token);
+		medecin.setId(userId);
+		medecin.setNomMedecin(nomMedecin);
+		medecin.setPrenomMedecin(prenomMedecin);
+		
+		return medecin;
 	}
 	
 	public void deleteNote(String id) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Menu from "../../components/Menu";
+import "../../styles/AddNotePage.css";
 
 function AddNotePage() {
   const [note, setNote] = useState("");
@@ -103,7 +104,7 @@ function AddNotePage() {
       <h1>Page pour ajouter une note au patient : {patient.nom} {patient.prenom}</h1>
 
       <div className="containerForm">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="formAddNote">
 
           <label className="labelFormNote" htmlFor="note">
             Note :
@@ -115,7 +116,7 @@ function AddNotePage() {
           />
           {errors?.note && <p style={{ color: "red" }}>{errors.note}</p>}
 
-          <button type="submit">Ajouter la note</button>
+          <button type="submit" className="buttonFormAddNote">Ajouter la note</button>
         </form>
       </div>
     </div>

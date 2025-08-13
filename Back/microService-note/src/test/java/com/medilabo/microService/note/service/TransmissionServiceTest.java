@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.mockito.junit.jupiter.MockitoExtension; // <-- Ajout de MockitoExtension
 
 import com.medilabo.microService.note.config.JwtUtil;
+import com.medilabo.microService.note.model.Medecin;
 import com.medilabo.microService.note.model.Note;
 import com.medilabo.microService.note.repository.INoteRepository;
 
@@ -39,19 +40,24 @@ public class TransmissionServiceTest {
 	private static Note noteTest1;
 	private static Note noteTest2;
 	private static List<Note> listNoteTest;
+	private static Medecin medecin;
 	
 	@BeforeAll
 	public static void setup() {
+		medecin = new Medecin(
+				1L,
+				"nico",
+				"brunet");
 		noteTest1 = new Note(
 				"1",
 				1L,
-				1L,
+				medecin,
 				LocalDateTime.now(),
 				"une note sans probleme");
 		noteTest2 = new Note(
 				"2",
 				1L,
-				1L,
+				medecin,
 				LocalDateTime.now(),
 				"une note avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal");
 		listNoteTest = List.of(noteTest1, noteTest2);
@@ -84,11 +90,15 @@ public class TransmissionServiceTest {
 	@Test
 	public void addNoteServiceTest() {
 	    when(jwtUtil.extractUserId("mock-token")).thenReturn(99L);
+	    when(jwtUtil.extractNom("mock-token")).thenReturn("nico");
+	    when(jwtUtil.extractPrenom("mock-token")).thenReturn("brunet");
+
 	    when(noteRepository.save(any(Note.class))).thenAnswer(invocation -> {
 	        Note savedNote = invocation.getArgument(0);
 	        savedNote.setId("1");
 	        return savedNote;
 	    });
+
 	    Note newNote = new Note();
 	    newNote.setPatientId(1L);
 	    newNote.setNote("une note sans probleme");
@@ -97,13 +107,20 @@ public class TransmissionServiceTest {
 
 	    assertThat(result).isNotNull();
 	    assertThat(result.getId()).isEqualTo("1");
-	    assertThat(result.getMedecinId()).isEqualTo(99L);
+
+	    assertThat(result.getMedecin().getId()).isEqualTo(99L);
+	    assertThat(result.getMedecin().getNomMedecin()).isEqualTo("nico");
+	    assertThat(result.getMedecin().getPrenomMedecin()).isEqualTo("brunet");
+
 	    assertThat(result.getPatientId()).isEqualTo(1L);
 	    assertThat(result.getNote()).isEqualTo("une note sans probleme");
 	    
 	    verify(jwtUtil, times(1)).extractUserId("mock-token");
+	    verify(jwtUtil, times(1)).extractNom("mock-token");
+	    verify(jwtUtil, times(1)).extractPrenom("mock-token");
 	    verify(noteRepository, times(1)).save(any(Note.class));
 	}
+
 
 	
 	@Test

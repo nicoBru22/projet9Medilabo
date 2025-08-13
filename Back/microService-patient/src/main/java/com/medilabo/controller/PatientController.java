@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.medilabo.model.Patient;
-import com.medilabo.model.Rdv;
 import com.medilabo.service.IPatientService;
 
 import jakarta.validation.Valid;
@@ -174,26 +173,6 @@ public class PatientController {
 	                .body("Patient non trouvé avec id " + id);
 	    }
 	} 
-	
-	@PostMapping("/rdv/add")
-	public ResponseEntity<?> addRdvPatient(@Valid @RequestBody Rdv newRdv, BindingResult result ) {
-		logger.info("Requête reçue pour ajouter un rendez vous au patient. {}", newRdv);
-		
-	    if (result.hasErrors()) {
-	        Map<String, String> errors = new HashMap<>();
-	        result.getFieldErrors().forEach(error -> {
-	            errors.put(error.getField(), error.getDefaultMessage());
-	            logger.error("Erreur sur le champ {} : {}", error.getField(), error.getDefaultMessage());
-	        });
-	        return ResponseEntity.badRequest().body(errors);
-	    }
-	    
-		Rdv rdvAdded = patientService.addRdv(newRdv);
-	    logger.info("Ajout du rendez-vous réalisé avec succès.");
-
-	    return ResponseEntity.status(HttpStatus.CREATED).body(rdvAdded);
-		
-	}
 	
 
 }

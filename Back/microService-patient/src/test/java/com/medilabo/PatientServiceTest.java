@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.medilabo.model.Patient;
-import com.medilabo.model.Rdv;
 import com.medilabo.repository.IPatientRepository;
 import com.medilabo.service.IPatientService;
 
@@ -34,7 +32,6 @@ public class PatientServiceTest {
 	
 	@MockBean
 	private IPatientRepository patientRepository;
-	private static List<Rdv> rdvList = new ArrayList<>();
 
 	public static Patient p1;
 	public static Patient p2;
@@ -42,9 +39,9 @@ public class PatientServiceTest {
 	
 	@BeforeAll
 	public static void setup() {
-		p1 = new Patient(1L, "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null, rdvList);
-        p2 = new Patient(2L, "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, rdvList);
-        p3 = new Patient(3L, "nico", "Dupuit", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null,  rdvList);
+		p1 = new Patient(1L, "Jean", "Dupont", LocalDate.of(1990, 1, 1), "masculin", "1 rue A", "0102030405", null, null);
+        p2 = new Patient(2L, "Marie", "Durand", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null);
+        p3 = new Patient(3L, "nico", "Dupuit", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null);
 
 	}
 	
@@ -91,7 +88,7 @@ public class PatientServiceTest {
 	
 	@Test
 	public void updatePatientTest() {
-        Patient newPatient = new Patient(3L, "sarah", "piet", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null, rdvList);
+        Patient newPatient = new Patient(3L, "sarah", "piet", LocalDate.of(1985, 5, 10), "feminin", "2 rue B", "0607080910", null, null);
 
 	    when(patientRepository.findById(3L)).thenReturn(Optional.of(p3));
 	    when(patientRepository.save(any(Patient.class))).thenAnswer(invocation -> invocation.getArgument(0));

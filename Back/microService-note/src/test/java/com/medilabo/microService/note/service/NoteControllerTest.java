@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.microService.note.controller.NoteController;
+import com.medilabo.microService.note.model.Medecin;
 import com.medilabo.microService.note.model.Note;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -40,6 +41,7 @@ public class NoteControllerTest {
     private static Note noteTest1;
     private static Note noteTest2;
     private static List<Note> listNoteTest;
+    private static Medecin medecin;
 
     @BeforeAll
     public static void setup() {
@@ -48,14 +50,14 @@ public class NoteControllerTest {
         noteTest1 = new Note(
                 "1",
                 1L,
-                1L,
+                medecin,
                 LocalDateTime.now(),
                 "une note sans probleme"
         );
         noteTest2 = new Note(
                 "2",
                 1L,
-                1L,
+                medecin,
                 LocalDateTime.now(),
                 "une note avec 5 problemes : hémoglobine, microalbumine, réaction, fumeur, anormal"
         );

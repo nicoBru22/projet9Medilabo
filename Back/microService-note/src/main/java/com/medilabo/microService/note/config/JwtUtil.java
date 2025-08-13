@@ -47,6 +47,10 @@ public class JwtUtil {
     public String extractNom(String token) {
         return extractAllClaims(token).get("nom", String.class);
     }
+    
+    public String extractPrenom(String token) {
+        return extractAllClaims(token).get("prenom", String.class);
+    }
 
 
     public boolean validateToken(String token, String username) {

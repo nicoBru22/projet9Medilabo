@@ -23,7 +23,7 @@ public class Note {
 	
 	Long patientId;
 	
-	Long medecinId;
+	Medecin medecin;
 	
 	LocalDateTime dateNote;
 

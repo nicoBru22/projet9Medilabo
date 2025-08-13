@@ -9,8 +9,6 @@ function InfosPatientPage() {
   const navigate = useNavigate();
 
   const [patient, setPatient] = useState(null);
-const [medecinsMap, setMedecinsMap] = useState({});
-  const [medecinIds, setMedecin] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [notes, setNotes] = useState([]);
@@ -57,36 +55,20 @@ useEffect(() => {
     },
     credentials: "include",
   })
-    .then(async (response) => {
-      if (!response.ok) throw new Error("Erreur lors du chargement des notes");
-      const notesData = await response.json();
-      setNotes(notesData);
-
-      const medecinIds = [...new Set(notesData.map(note => note.medecinId))];
-
-      if (medecinIds.length > 0) {
-        return fetch(`http://localhost:8080/utilisateur/getUsersByIds?ids=${medecinIds.join(",")}`, {
-          method: "GET",
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          credentials: "include",
-        });
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Erreur lors du chargement des notes");
       }
-      return null;
+      return response.json();
     })
-    .then(async (res) => {
-      if (res && !res.ok) throw new Error("Erreur lors du chargement des médecins");
-      if (res) {
-        const medecinsData = await res.json();
-        setMedecinsMap(medecinsData);
-      }
+    .then((notesData) => {
+      setNotes(notesData);
     })
     .catch((err) => {
       console.error("Erreur lors du chargement des notes ou médecins:", err);
     });
 }, [id, navigate]);
+
 
   if (isLoading) return <p>Chargement...</p>;
   if (error) return <p>Erreur : {error}</p>;
@@ -109,7 +91,7 @@ useEffect(() => {
               <p className="dateCréation"><strong>Dossier créé le :</strong> {patient.dateCreation}</p>
               <p className="dateModification"><strong>Dossier modifié le :</strong> {patient.dateModification}</p>
               <p className="listeRdv"><strong>Liste des rendez-vous :</strong>
-                <ul>
+                <ul className="ulPatient">
                   {patient.rdvList
                     ?.slice()
                     .sort((a, b) => {
@@ -130,22 +112,21 @@ useEffect(() => {
 
           <div className="containerNote">
             <p className="note"><strong>Notes :</strong></p> 
-            <ul>
+            <ul className="ulNote">
               {notes.length > 0 ? (
-                notes.map((note) => {
-                  const medecin = medecinsMap[note.medecinId];
-                  return (
-                    <li className="noteList" key={note.id}>
-                      <div className="infosNote">
-                        <div className="dateNote">Date : {note.dateNote}</div>
-                        <div className="nomPrenomMedecin">
-                          Dr {medecin ? `${medecin.prenom} ${medecin.nom}` : "Chargement..."}
-                        </div>
+                notes.map((note) => (
+                  <li key={note.id} className="listeNote">
+                    <div className="infosNote">
+                      <div className="dateNote elementNote">
+                        Date : {new Date(note.dateNote).toLocaleString("fr-FR")}
                       </div>
-                      <div className="notenEcrite">{note.note}</div>
-                    </li>
-                  )
-                })
+                      <div className="nomPrenomMedecin elementNote">
+                        Dr {note.medecin ? `${note.medecin.prenomMedecin} ${note.medecin.nomMedecin}` : "Inconnu"}
+                      </div>
+                    </div>
+                    <div className="notenEcrite">{note.note}</div>
+                  </li>
+                ))
               ) : (
                 <li className="aucuneNote">Aucune note</li>
               )}

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 import com.medilabo.model.Patient;
-import com.medilabo.model.Rdv;
 import com.medilabo.repository.IPatientRepository;
 
 /**
@@ -177,17 +176,6 @@ public class PatientServiceImpl implements IPatientService{
     }
 
     
-    public Rdv addRdv(Rdv newRdv) {
-	    logger.info("Tentative d'ajout d'une nouveau rendez-vous.");	
-	    
-	    Rdv rdvAdded = newRdv;
-	    
-	    Patient patient = getPatientById(newRdv.getPatientId());
-	    patient.getRdvList().add(newRdv);
-    	
-	    patientRepository.save(patient);
-    	
-    	return rdvAdded;
-	}
+
 
 }

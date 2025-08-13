@@ -88,6 +88,7 @@ function AddPatientPage() {
               name="nom"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
+              className="inputFormAddPatient"
             />
           </div>{errors.nom && <div className="errorPatient">{errors.nom}</div>}
 
@@ -99,6 +100,7 @@ function AddPatientPage() {
               name="dateNaissance"
               value={dateNaissance}
               onChange={(e) => setDateNaissance(e.target.value)}
+              className="inputFormAddPatient"
             />
           </div>
           {errors.dateNaissance && <div className="errorPatient">{errors.dateNaissance}</div>}
@@ -110,6 +112,7 @@ function AddPatientPage() {
               name="genre"
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
+              className="inputFormAddPatient"
             >
               <option value="">-- Sélectionner --</option>
               <option value="masculin">Masculin</option>
@@ -126,6 +129,7 @@ function AddPatientPage() {
             name="adresse"
             value={adresse}
             onChange={(e) => setAdresse(e.target.value)}
+            className="inputFormAddPatient"
           />
           </div>
 
@@ -137,6 +141,7 @@ function AddPatientPage() {
             name="telephone"
             value={telephone}
             onChange={(e) => setTelephone(e.target.value)}
+            className="inputFormAddPatient"
           />
           </div>
 

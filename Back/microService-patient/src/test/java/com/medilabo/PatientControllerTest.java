@@ -16,7 +16,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilabo.model.Patient;
-import com.medilabo.model.Rdv;
 import com.medilabo.service.IPatientService;
 
 @ActiveProfiles("test")
@@ -48,7 +46,6 @@ public class PatientControllerTest {
 	
 	private static Patient patientTest1;
 	private static Patient patientTest2;
-	private static List<Rdv> rdvList = new ArrayList<>();
 
 
 	@BeforeAll
@@ -62,8 +59,7 @@ public class PatientControllerTest {
                 "10 rue des Lilas",
                 "0123456789",
                 LocalDateTime.now(),
-                LocalDateTime.now(),
-                rdvList
+                LocalDateTime.now()
             );
         patientTest2 = new Patient(
                 2L,
@@ -74,8 +70,7 @@ public class PatientControllerTest {
                 "10 rue des Lilas",
                 "0123456789",
                 LocalDateTime.now(),
-                LocalDateTime.now(),
-                rdvList
+                LocalDateTime.now()
             );
 	}
 

@@ -1,5 +1,4 @@
-package com.medilabo.model;
-
+package com.medilabo.microservice_rdv.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,3 +29,4 @@ public class Rdv {
     private String heureRdv;
 
 }
+

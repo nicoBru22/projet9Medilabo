@@ -1,0 +1,19 @@
+
+.formAddNote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.labelFormNote {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+#note {
+  width: 400px;
+  height: 300px;
+}
+
