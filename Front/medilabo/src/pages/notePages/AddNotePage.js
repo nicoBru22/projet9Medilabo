@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Menu from "../../components/Menu";
-import "../../styles/AddNotePage.css";
+import "../../styles/addNotePage.css";
 
 function AddNotePage() {
   const [note, setNote] = useState("");
@@ -47,8 +47,8 @@ function AddNotePage() {
   }, [id]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setErrors(null);
+    e.preventDefault();
+    setErrors(null);
 
   try {
     if (!token) {
