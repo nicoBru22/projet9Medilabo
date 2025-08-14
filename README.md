@@ -2,6 +2,27 @@
 
 Medilabo
 
+# Sommaire
+
+1. [Nom du projet](#nom-du-projet)
+2. [Résumé de l'application](#résumé-de-lapplication)
+3. [Technologies](#technologies)
+4. [Installation de l'application](#installation-de-lapplication)
+5. [Lancer l'application](#lancer-lapplication)
+6. [Architecture du projet](#architecture-du-projet)
+7. [Microservice Patient](#microservice-patient)
+8. [Microservice Utilisateur](#microservice-utilisateur)
+9. [Microservice Note](#microservice-note)
+10. [Microservice Alerte](#microservice-alerte)
+11. [Gateway](#gateway)
+12. [Frontend](#frontend)
+13. [CI/CD](#cicd)
+14. [Conteneurisation](#conteneurisation)
+15. [Documentation](#documentation)
+16. [Green Code](#green-code)
+17. [En cours de développement](#en-cours-de-développement)
+18. [Idée de développement](#idée-de-développement)
+
 ## Résumé de l'application
 
 Medilabo est le projet 9 de la formation Développeur Java d’OpenClassrooms.
@@ -318,7 +339,62 @@ Le projet Medilabo a aussi pour vocation, à long terme, d'être vertueux sur le
 - GreenFrame
 
 L'objectif est de faire de Medilabo un projet qui allie performance, responsabilité et respect de l'environnement.
+# Sommaire
 
+1. [Nom du projet](#nom-du-projet)  
+2. [Résumé de l'application](#résumé-de-lapplication)  
+   1. [Fonctionnalités principales](#fonctionnalités-principales)  
+3. [Technologies](#technologies)  
+   1. [Langages et frameworks principaux](#1-langages-et-frameworks-principaux)  
+   2. [Bases de données](#2-les-bases-de-données)  
+   3. [Sécurité](#3-la-sécurité)  
+   4. [Documentation & outils développeur](#4-documentation--outils-développeur)  
+   5. [Tests](#5-tests)  
+   6. [Intégration & déploiement](#6-intégration--déploiement)  
+   7. [Logging & monitoring](#7-logging--monitoring)  
+4. [Installation de l'application](#installation-de-lapplication)  
+5. [Lancer l'application](#lancer-lapplication)  
+6. [Architecture du projet](#architecture-du-projet)  
+   1. [Les microservices](#les-microservices)  
+7. [Microservice Patient](#microservice-patient)  
+   1. [Objet Patient](#objet-patient)  
+   2. [Base de donnée](#base-de-donnée)  
+   3. [Architecture](#architecture)  
+8. [Microservice Utilisateur](#microservice-utilisateur)  
+   1. [Objet User](#objet-user)  
+   2. [Base de donnée](#base-de-donnée-1)  
+   3. [Architecture](#architecture-1)  
+   4. [Sécurité](#sécurité)  
+9. [Microservice Note](#microservice-note)  
+   1. [Objet Note](#objet-note)  
+   2. [Objet Medecin](#objet-medecin)  
+   3. [Base de donnée](#base-de-donnée-2)  
+   4. [Architecture](#architecture-2)  
+   5. [Sécurité](#sécurité-1)  
+10. [Microservice Alerte](#microservice-alerte)  
+    1. [Architecture](#architecture-3)  
+    2. [Risque de diabète](#risque-de-diabète)  
+    3. [Appel API](#appel-api)  
+    4. [Fonctionnement](#fonctionnement)  
+11. [Gateway](#gateway)  
+12. [Frontend](#frontend)  
+13. [CI/CD](#cicd)  
+    1. [Étapes principales du pipeline](#étapes-principales-du-pipeline)  
+    2. [Variables d’environnement utilisées](#variables-denvironnement-utilisées-secrets-dans-github)  
+14. [Conteneurisation](#conteneurisation)  
+    1. [Exemple de Dockerfile](#exemple)  
+    2. [Docker Compose](#le-fichier-docker-composeyml)  
+    3. [Dépendances entre services](#dépendances-entre-services)  
+    4. [Réseau](#réseau)  
+15. [Documentation](#documentation)  
+16. [Green Code](#green-code)  
+    1. [Objectifs](#lobjectif-du-green-code-est-de)  
+    2. [Optimisation du frontend](#optimisation-du-frontend)  
+    3. [Optimisation du backend](#optimisation-du-backend)  
+    4. [Architectures et infrastructures](#architectures-et-infrastructures)  
+    5. [Outils possibles](#outils-possible)  
+17. [En cours de développement](#en-cours-de-développement)  
+18. [Idée de développement](#idée-de-développement)  
 ## En cours de développement
 
 Est en cours de développement la possibilité de créer des rendez-vous. Le microservice-rdv a été créé et a commencé à être implémenté. L'objectif étant de permettre au médecin ou à la secrétaire de mettre un rendez-vous médical pour le patient. L'objet rendez-vous pourrait être composé d'une date, une heure, un professionnel, des remarques, des documents si besoin. Aussi, il pourrait être imaginé un service d'alerte et une récupération des rendez-vous dans une liste pour chaque professionnel. C'est à dire la mise en place d'un planning de rendez-vous intégrer directement dans l application.
