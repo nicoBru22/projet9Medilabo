@@ -61,11 +61,11 @@ L’application est conçue pour les professionnels de santé afin de faciliter 
 - Log4j
 - Spring Actuator
 
-## Installation du projet
+## Installation de l'application
 
 Pour installer le projet, il est nécessaire d'installer les packages de chaque API et de la gateway. Dans chaque microservice, vous pouvez utiliser le terminal avec la commande :  mvn clean package. Cela génèrera un fichier .jar dans chacun des microservices. Le microservice Front n'a pas besoin de mvn clean package car utilisation de React (javascript).
 
-## Lancer le projet
+## Lancer l'application
 
 Ensuite, pour démarrer le projet, il faut aller à la racine du projet medilabo, où se trouve le Docker-compose, lancer le terminal avec la commande : docker compose up --build. Cela suivra les instruction du fichier docker compose, décrit plus loin dans le README, section Conteneurisation.
 
@@ -250,7 +250,13 @@ Chaque microservice de l’application est conteneurisé avec Docker pour assure
 - Commande à exécutée au démarrage du conteneur : lancement du microservice.
 Tous les microservices suivent cette même logique, chacun avec son propre JAR.
 
-Conteneurisation avec Docker et Docker Compose
+Chaque microservice peut être lancé indépendamment en lançant à la racine de chaque microservice :
+- docker build -t nom-du-projet . => -t pour donner un nom + . signifie dans ce dossier
+- docker run --env-file .env -p 8080:8080 --name nom-du-container nom-du-projet => se lance en injectant les variables d'environnement + map les ports (à modifier selon le application.properties) + donne un nom au container du projet
+- docker rm nom-du-container => supprime le container
+- docker rmi nom-du-projet => supprime le projet
+
+Mais il est privilégié de lancer l'application avec le Docker Compose
 
 Le projet utilise Docker pour containeriser les microservices et le front, et Docker Compose pour les orchestrer facilement.
 Docker Compose
