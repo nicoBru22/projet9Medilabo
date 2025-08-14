@@ -35,7 +35,7 @@ L’application est conçue pour les professionnels de santé afin de faciliter 
 - Rédaction de notes pour suivre l’évolution médicale.
 - Détection et alerte en cas de risque de diabète.
 
-##Technologies
+## Technologies
 
 ### 1. Langages et frameworks principaux
 
@@ -84,7 +84,8 @@ L’application est conçue pour les professionnels de santé afin de faciliter 
 
 ## Installation de l'application
 
-Pour installer le projet, il est nécessaire d'installer les packages de chaque API et de la gateway. Dans chaque microservice, vous pouvez utiliser le terminal avec la commande :  mvn clean package. Cela génèrera un fichier .jar dans chacun des microservices. Le microservice Front n'a pas besoin de mvn clean package car utilisation de React (javascript).
+Pour démarrer le projet, il est nécessaire d'installer les packages de chaque microservice. Dans chaque microservice, vous pouvez utiliser le terminal avec la commande :  `mvn clean package`. Cela génèrera un fichier .jar dans chacun des microservices. Les .jar sont les fichiers qui seront utilisé pour démarrer l'application.
+A noter que le microservice Front n'a pas besoin de mvn clean package car utilisation de React (javascript).
 
 ## Lancer l'application
 
@@ -130,7 +131,7 @@ Le microservice patient permet de faire les opérations CRUD sur l'objet Patient
 
 La sécurité est gérée à partir de la gateway.
 
-#**Microservice Utilisateur**
+## Microservice Utilisateur
 
 Le microservice utilisateur permet les opérations CRUD sur l'objet Utilisateur, ainsi que la gestion de l'authentification.
 
@@ -161,7 +162,7 @@ La normalisation en 3NF est mise en place.
 - Le JWT contient : id, username, nom, prenom, role.
 - Le token est nécessaire pour toutes les requêtes venant du front vers la gateway.
 
-#**Microservice Note**
+## Microservice Note
 
 Le microservice note permet les opérations CRUD sur l'objet Note.
 
@@ -247,6 +248,11 @@ Il n'est pas prévu encore de déploiement réel de l'application.
 
 Le fichier docker-ci.yml se situe à la racine du projet dans le dossier .github/workflows.
 
+**Déploiement**
+Deux solutions sont en cours de réflexion.
+- Différencier le Back du Front. Le Front peut être déployer sur Github et le Back sur 
+- Déployer directement le Docker Compose sur un serveur distant (Ex : OVH, Azure VM...) ou sur un serveur spécialisé Docker (Ex : Render, Fly.io...)
+
 ### Étapes principales du pipeline :
 - Checkout du code : récupération de la dernière version du dépôt.
 - Configuration de Java 21 : installation et mise en cache des dépendances Maven.
@@ -272,10 +278,10 @@ Chaque microservice de l’application est conteneurisé avec Docker pour assure
 Tous les microservices suivent cette même logique, chacun avec son propre JAR.
 
 Chaque microservice peut être lancé indépendamment en lançant à la racine de chaque microservice :
-- docker build -t nom-du-projet . => -t pour donner un nom + . signifie dans ce dossier
-- docker run --env-file .env -p 8080:8080 --name nom-du-container nom-du-projet => se lance en injectant les variables d'environnement + map les ports (à modifier selon le application.properties) + donne un nom au container du projet
-- docker rm nom-du-container => supprime le container
-- docker rmi nom-du-projet => supprime le projet
+- `docker build -t nom-du-projet . ` => -t pour donner un nom + . signifie dans ce dossier
+- `docker run --env-file .env -p 8080:8080 --name nom-du-container nom-du-projet` => se lance en injectant les variables d'environnement + map les ports (à modifier selon le application.properties) + donne un nom au container du projet
+- `docker rm nom-du-container` => supprime le container
+- `docker rmi nom-du-projet` => supprime le projet
 
 Mais il est privilégié de lancer l'application avec le Docker Compose
 
@@ -332,6 +338,7 @@ Le projet Medilabo a aussi pour vocation, à long terme, d'être vertueux sur le
 **Architectures et infrastructures** :
 - Images Docker légères : Utiliser des images de base minimales comme openjdk:21-jre-slim pour réduire la taille des conteneurs.
 - Scalabilité à la demande (mise en veille) : À plus long terme, nous pourrions explorer des solutions comme la "mise à l'échelle à zéro" pour des microservices peu sollicités, comme le service alerte. Cette pratique permettrait d'arrêter un conteneur lorsqu'il n'est pas utilisé et de le relancer uniquement en cas de besoin.
+- Mettre à jour les versions des dépendance : La nouvelle version a un code souvent plus optimisé que l'ancien.
 
 ### Outils possible
 - Docker stats
@@ -339,70 +346,15 @@ Le projet Medilabo a aussi pour vocation, à long terme, d'être vertueux sur le
 - GreenFrame
 
 L'objectif est de faire de Medilabo un projet qui allie performance, responsabilité et respect de l'environnement.
-# Sommaire
 
-1. [Nom du projet](#nom-du-projet)  
-2. [Résumé de l'application](#résumé-de-lapplication)  
-   1. [Fonctionnalités principales](#fonctionnalités-principales)  
-3. [Technologies](#technologies)  
-   1. [Langages et frameworks principaux](#1-langages-et-frameworks-principaux)  
-   2. [Bases de données](#2-les-bases-de-données)  
-   3. [Sécurité](#3-la-sécurité)  
-   4. [Documentation & outils développeur](#4-documentation--outils-développeur)  
-   5. [Tests](#5-tests)  
-   6. [Intégration & déploiement](#6-intégration--déploiement)  
-   7. [Logging & monitoring](#7-logging--monitoring)  
-4. [Installation de l'application](#installation-de-lapplication)  
-5. [Lancer l'application](#lancer-lapplication)  
-6. [Architecture du projet](#architecture-du-projet)  
-   1. [Les microservices](#les-microservices)  
-7. [Microservice Patient](#microservice-patient)  
-   1. [Objet Patient](#objet-patient)  
-   2. [Base de donnée](#base-de-donnée)  
-   3. [Architecture](#architecture)  
-8. [Microservice Utilisateur](#microservice-utilisateur)  
-   1. [Objet User](#objet-user)  
-   2. [Base de donnée](#base-de-donnée-1)  
-   3. [Architecture](#architecture-1)  
-   4. [Sécurité](#sécurité)  
-9. [Microservice Note](#microservice-note)  
-   1. [Objet Note](#objet-note)  
-   2. [Objet Medecin](#objet-medecin)  
-   3. [Base de donnée](#base-de-donnée-2)  
-   4. [Architecture](#architecture-2)  
-   5. [Sécurité](#sécurité-1)  
-10. [Microservice Alerte](#microservice-alerte)  
-    1. [Architecture](#architecture-3)  
-    2. [Risque de diabète](#risque-de-diabète)  
-    3. [Appel API](#appel-api)  
-    4. [Fonctionnement](#fonctionnement)  
-11. [Gateway](#gateway)  
-12. [Frontend](#frontend)  
-13. [CI/CD](#cicd)  
-    1. [Étapes principales du pipeline](#étapes-principales-du-pipeline)  
-    2. [Variables d’environnement utilisées](#variables-denvironnement-utilisées-secrets-dans-github)  
-14. [Conteneurisation](#conteneurisation)  
-    1. [Exemple de Dockerfile](#exemple)  
-    2. [Docker Compose](#le-fichier-docker-composeyml)  
-    3. [Dépendances entre services](#dépendances-entre-services)  
-    4. [Réseau](#réseau)  
-15. [Documentation](#documentation)  
-16. [Green Code](#green-code)  
-    1. [Objectifs](#lobjectif-du-green-code-est-de)  
-    2. [Optimisation du frontend](#optimisation-du-frontend)  
-    3. [Optimisation du backend](#optimisation-du-backend)  
-    4. [Architectures et infrastructures](#architectures-et-infrastructures)  
-    5. [Outils possibles](#outils-possible)  
-17. [En cours de développement](#en-cours-de-développement)  
-18. [Idée de développement](#idée-de-développement)  
 ## En cours de développement
 
 Est en cours de développement la possibilité de créer des rendez-vous. Le microservice-rdv a été créé et a commencé à être implémenté. L'objectif étant de permettre au médecin ou à la secrétaire de mettre un rendez-vous médical pour le patient. L'objet rendez-vous pourrait être composé d'une date, une heure, un professionnel, des remarques, des documents si besoin. Aussi, il pourrait être imaginé un service d'alerte et une récupération des rendez-vous dans une liste pour chaque professionnel. C'est à dire la mise en place d'un planning de rendez-vous intégrer directement dans l application.
 
 ## Idée de développement
 
-### Mettre en place des rôles :
-- Secrétaire pour accéder au information administratives du patient et de lui proposer un rendez-vous
+- Mettre en place des rôles
+    - Secrétaire pour accéder au information administratives du patient et de lui proposer un rendez-vous
 - Administrateur pour ajout de nouveau utilisateur
 - Medecins ou autres profesionnels pouvant accéder aux informations du patient et faire une note
 - Ajouter des documents (scanner, ordonnance, etc...)
