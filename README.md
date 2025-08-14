@@ -1,73 +1,91 @@
-#Nom du projet
+# Nom du projet
 
 Medilabo
 
-##Résumé de l'application
+## Résumé de l'application
 
-Medilabo est le projet 9 de la formation Développeur Java d'OpenClassrooms. Cette application est destinée aux professionnels de santé et permet de gérer efficacement les patients. L’utilisateur peut accéder à la liste complète de ses patients, consulter leurs informations personnelles et les transmissions (notes) associées. Il peut également ajouter de nouveaux patients, modifier ou supprimer des patients existants, et rédiger des notes pour suivre l’évolution de chaque patient au fil du temps. Une alerte est lancée lorsque le patient a un risque de diabète.
+Medilabo est le projet 9 de la formation Développeur Java d’OpenClassrooms.
+L’application est conçue pour les professionnels de santé afin de faciliter la gestion des patients.
+
+### Fonctionnalités principales :
+- Accès à la liste complète des patients.
+- Consultation des informations personnelles et des transmissions (notes médicales).
+- Ajout, modification et suppression de patients.
+- Rédaction de notes pour suivre l’évolution médicale.
+- Détection et alerte en cas de risque de diabète.
 
 ##Technologies
 
-La sécurité : 
+### 1. Langages et frameworks principaux
+
+- Backend : Java 21 (Temurin) avec Spring Boot
+    - Spring Web
+    - Spring Data JPA
+    - Spring Data MongoDB
+    - Spring Cloud
+    - Spring Cloud Gateway
+    - Spring Cloud OpenFeign
+    - Spring DevTools
+- Frontend : JavaScript avec React
+
+### 2. Les bases de données
+- Developpement et Production : 
+    - NoSql avec MongoDB (MongoDB Atlas)
+    - Sql avec PostgreSql (Supabase)
+- Test : 
+    - TestContainer (pour le NoSql)
+    - H2 Database (pour le Sql)
+- Normalisation : Les bases de données Sql (patient et utilisateur) suivent le principe 3NF.
+
+### 3. La sécurité
 - JsonWebToken
 - SpringSecurity
 - Dotenv
 
-Les langages utilisés :
-- Backend : Java avec Springboot 
-- Frontend : Javascript avec React
+### 4. Documentation & outils développeur
+- Javadoc
+- Swagger (OpenAPI)
+- Lombok
+- Jackson
 
-Les bases de données : 
-- Dev/Prod : 
-    NoSql avec MongoDB (MongoDB Atlas)
-    Sql avec PostgreSql (Supabase)
-- Test : TestContainer et H2 Database
+### 5. Tests
+- Mockito
+- Spring Test
 
-Outils et environnement :
-- Java 21 (Temurin)
+### 6. Intégration & déploiement
 - Maven
 - Docker & Docker Compose
-- GitHub Actions
-- Spring Cloud Gateaway
-- Integration continue avec Github Action
-- Javadoc
-- Swagger
-- Lombock
-- log4j
-- jackson
-- mockito
-- Spring actuator
-- Spring Cloud
-- Spring Data Jpa
-- Spring Data MongoDB
-- Spring Web
-- Spring Test
-- Spring Cloud OpenFeign
-- Spring Devtool
+- GitHub Actions (CI/CD)
 
-##**Installation du projet**
+### 7. Logging & monitoring
+- Log4j
+- Spring Actuator
+
+## Installation du projet
 
 Pour installer le projet, il est nécessaire d'installer les packages de chaque API et de la gateway. Dans chaque microservice, vous pouvez utiliser le terminal avec la commande :  mvn clean package. Cela génèrera un fichier .jar dans chacun des microservices. Le microservice Front n'a pas besoin de mvn clean package car utilisation de React (javascript).
 
-##**Lancer le projet**
+## Lancer le projet
 
 Ensuite, pour démarrer le projet, il faut aller à la racine du projet medilabo, où se trouve le Docker-compose, lancer le terminal avec la commande : docker compose up --build. Cela suivra les instruction du fichier docker compose, décrit plus loin dans le README, section Conteneurisation.
 
-#**Architecture du projet**
+## Architecture du projet
 
-Le projet est composé de 5 micro services : 
-- patient, 
-- utilisateur, 
-- notes, 
-- alerte, 
-- gateway, 
-Ainsi que d'un front.
+Le projet se compose de 5 microservives liés ensemble grâce à la conteneurisation avec Docker.
 
-#**Microservice Patient**
+### Les microservices : 
+- patient => pour la gestion des patients (CRUD)
+- utilisateur => pour la gestion des utilisateurs (CRUD + login)
+- notes => pour la gestion des notes (CRUD)
+- alerte => pour alerter l'utilisateur sur les risques d'apparition du dabète du patient (info du patient + notes)
+- gateway => pour filtrer et redistribuer les requêtes reçues du Front vers les API 
+Ainsi que d'un front => pour la vue utilisateur (navigateur)
+
+## Microservice Patient
 
 Le microservice patient permet de faire les opérations CRUD sur l'objet Patient. 
 
-Objet Patient : 
+### Objet Patient : 
 - id : Long
 - prenom : String
 - nom : String
@@ -77,25 +95,25 @@ Objet Patient :
 - genre : String
 - dateCreation : LocalDate
 - dateModification : LocalDate
-La normalisation en 3NF est mise en place. 
 
-Base de donnée
+### Base de donnée
 - PostgreSql (SQL), mise sur le cloud Supabase
 - H2 Database, pour les tests.
+- Normalisation en 3NF
 
-Architecture :
+### Architecture :
 - controller
 - service (implementant une interface)
 - repository
 - model
 
-La normalisation en 3NF est mise en place. La sécurité est gérée à partir de la gateway.
+La sécurité est gérée à partir de la gateway.
 
 #**Microservice Utilisateur**
 
 Le microservice utilisateur permet les opérations CRUD sur l'objet Utilisateur, ainsi que la gestion de l'authentification.
 
-Objet User : 
+### Objet User : 
 - id : Long
 - username : String
 - nom : String
@@ -104,18 +122,19 @@ Objet User :
 - password : String
 La normalisation en 3NF est mise en place.
 
-Base de donnée :
+### Base de donnée :
 - postgreSql (SQL), mise en place sur le cloud Supabase.
 - H2 Database, pour les tests.
+- Normalisation en 3NF
 
-Architecture :
+### Architecture :
 - controller
 - service (implementant une interface)
 - repository
 - model
 - configuration de sécurité
 
-Sécurité : 
+### Sécurité : 
 - Utilisation de Spring Security et authentification manager. 
 - Utilisation de token avec Json Web Token
 - Le JWT contient : id, username, nom, prenom, role.
@@ -125,73 +144,89 @@ Sécurité :
 
 Le microservice note permet les opérations CRUD sur l'objet Note.
 
-Objet Note : 
+### Objet Note : 
 - id : String
 - patientId : Long
 - medecin: Medecin
 - note : String
+- Pas de normalisation en 3NF car imbrique l'objet médecin. 3NF non obligatoire en NoSql.
 
-Objet Medecin : 
+Le patientId est une clé étrangère en direction de la table Patient. La base de donnée étant en NoSql, le 3NF ne s'applique pas. L'objet Medecin est contenu dans l'objet note afin de permettre une meilleure scalabilité des notes. 
+
+### Objet Medecin : 
 - id : String
 - userId : Long
 - nomMedecin: String
 - prenomMedecin: String
+- Normalisation en 1NF car nom et prenom dépendent de userId (dépendance transitive).
 
-Le patientId est une clé étrangère en direction de la table Patient. La base de donnée étant en NoSql, le 3NF ne s'applique pas. L'objet Medecin est contenu dans l'objet note afin de permettre une meilleure scalabilité des notes. 
-
-Base de donnée : 
+### Base de donnée : 
 - MongoDB (NoSql)
 - TestContainer pour les tests
 
-Architecture :
+### Architecture :
 - controller
 - service (implementant une interface)
 - repository
 - model
 
-Sécurité : 
+### Sécurité : 
 - le Jwt est mise en place afin de pouvoir extraire l'id, le nom et le prénom de l'utilisateur afin de les voir s'afficher dans le front pour une transmission donnée.
 - Ajout de note est accessible à partir de la page information du patient.
 
-#**Microservice Alerte**
+## Microservice Alerte
 
 Le microservice alerte permet d’analyser les données d’un patient et ses notes pour détecter un risque de diabète.
 
-Architecture : 
+### Architecture : 
 - controller
 - service (implementant une interface)
 - model
 
-Ce risque de diabète peut être : 
+### Risque de diabète : 
 - none, 
 - borderline, 
 - inDanger,
 - EarlyOnset.
 
-Fonctionnement : 
+### Appel API :
+Ce microservice reprend les modèles de données des API Note et Patient afin de faire un appel avec Feign.
+
+**Méthodes** : 
+- getAllNotesPatient() de l'API Note
+- getPatientById() de l'API Patient
+- getAgePatient() de l'API Patient
+
+
+
+### Fonctionnement : 
 - Utilisation de feign pour appeler les microservices patient et notes
 - Une liste de mots clé recherché dans les notes est visible dans le service
 - Prend en compte l'age et le genre du patient
 
 Pour réaliser ce traitement, ce service nécessite l'utilisation de feign pour faire des appels sur les microservices patient et notes.
 
-##Gateway
+## Gateway
 
-La gateway est le point d'entrée de l'application. 
+La gateway est le point d'entrée de l'application.
 
-Fonctionnalité : 
+### Fonctionnalité : 
 - Reçoit les requêtes du front
 - Filtre et distribue vers le microservice concerné
 - Filtrage via Spring Security et JWT
 
-##CI/CD
+## Frontend
+
+La vue utilisateur est réalisé avec React. 
+
+## CI/CD
 
 GitHub Actions est utilisé pour l’intégration continue (CI) des microservices. Le pipeline CI se déclenche automatiquement lors des push ou des pull requests sur la branche main.
 Il n'est pas prévu encore de déploiement réel de l'application.
 
 Le fichier docker-ci.yml se situe à la racine du projet dans le dossier .github/workflows.
 
-Étapes principales du pipeline :
+### Étapes principales du pipeline :
 - Checkout du code : récupération de la dernière version du dépôt.
 - Configuration de Java 21 : installation et mise en cache des dépendances Maven.
 - Build des microservices : compilation de chaque microservice sans exécuter les tests.
@@ -200,15 +235,15 @@ Le fichier docker-ci.yml se situe à la racine du projet dans le dossier .github
 - Tests d’intégration : exécution des tests d’intégration de tous les microservices et de la gateway.
 - Arrêt des conteneurs Docker : nettoyage des ressources après les tests.
 
-Variables d’environnement utilisées (secrets dans github) :
+### Variables d’environnement utilisées (secrets dans github) :
 - JWT_SECRET : clé secrète pour l’authentification JWT.
 - SPRING_DATA_MONGODB_URI : URI de connexion à la base MongoDB.
 - SPRING_DATA_POSTGRE_URI : URI de connexion à la base PostgreSQL.
 
-##Contenerisation
+## Contenerisation
 
 Chaque microservice de l’application est conteneurisé avec Docker pour assurer un déploiement homogène et reproductible. Tous les microservices suivent une structure similaire pour leur Dockerfile.
-Exemple : 
+### Exemple : 
 - Utilisation d'une base légère contenant Java 21 pour exécuter nos microservices.
 - Installation de curl dans le conteneur (utile pour des tests ou vérifications réseau. La suppression du cache apt permet de garder l’image légère.
 - Copie le fichier JAR généré par Maven dans le conteneur (mvn clean package à faire en amont sur le microservice)
@@ -220,12 +255,12 @@ Conteneurisation avec Docker et Docker Compose
 Le projet utilise Docker pour containeriser les microservices et le front, et Docker Compose pour les orchestrer facilement.
 Docker Compose
 
-Le fichier docker-compose.yml définit tous les services du projet et se situe à la racine du projet :
+### Le fichier docker-compose.yml définit tous les services du projet et se situe à la racine du projet :
 - api-utilisateur, api-patient, api-note, api-alerte : microservices Java Spring Boot.
 - gateway : passerelle API qui centralise les requêtes vers les microservices.
 - frontend : application React pour l’interface utilisateur.
 
-Chaque service contient :
+### Chaque service contient :
 - build : le chemin vers le Dockerfile du microservice.
 - container_name : nom du conteneur Docker pour faciliter les commandes.
 - ports : redirection des ports du conteneur vers le poste local.
@@ -233,37 +268,36 @@ Chaque service contient :
 - environment : variables d’environnement (ex. URI des bases de données, secrets JWT).
 - healthcheck : vérification automatique de la santé du service via l’endpoint /actuator/health.
 
-Dépendances entre services :
+### Dépendances entre services :
 - Le gateway ne démarre que lorsque tous les microservices sont sains (depends_on avec service_healthy).
 - Le frontend dépend du gateway pour fonctionner (depends_on avec service_started).
 
-Réseau :
+### Réseau :
 - Tous les conteneurs utilisent un réseau bridge nommé medilabo-net.
 - Cela permet aux microservices et au front de communiquer entre eux facilement.
 
 
-#Documentation
+# Documentation
 
 La documentation est réalisé avec : 
 - swagger
 - javadoc
 
-
-##Green Code
+## Green Code
 Le projet Medilabo a aussi pour vocation, à long terme, d'être vertueux sur le plan environnemental. Une démarche de green code en intégrant des pratiques qui réduisent l'impact écologique de l'application sera mise en place progressivement.
 
-L'objectif du green code est de :
+### L'objectif du green code est de :
 - Réduire la consommation électrique des serveurs.
 - Minimiser l'empreinte carbone de l'application.
 - Prolonger la durée de vie des équipements informatiques des utilisateurs.
 
-Propositions pour l'évolution du projet vers le green code (amélioration continue) :
+### Propositions pour l'évolution du projet vers le green code (amélioration continue) :
 
-Optimisation du frontend :
+**Optimisation du frontend** :
 - Mise en cache : Utiliser le cache du navigateur pour les ressources statiques (CSS, JS, images) afin de réduire le nombre de requêtes et le volume de données téléchargées.
 - Minification : Minifier les fichiers CSS et JavaScript pour en réduire la taille et accélérer leur chargement.
 
-Optimisation du backend :
+**Optimisation du backend** :
 - Nettoyage du code : Supprimer les dépendances non utilisées, les commentaires inutiles et le "code mort" pour alléger l'application.
 - Refactorisation des méthodes : Éviter la redondance et les calculs inutiles pour rendre le code plus performant et moins gourmand en ressources CPU.
 Architectures et infrastructures :
@@ -278,7 +312,7 @@ Est en cours de développement la possibilité de créer des rendez-vous. Le mic
 
 ##Idée de développement
 
-Mettre en place des rôles :
+### Mettre en place des rôles :
 - Secrétaire pour accéder au information administratives du patient et de lui proposer un rendez-vous
 - Administrateur pour ajout de nouveau utilisateur
 - Medecin ou autre profesionnel pouvant accéder aux informations du patient et faire une note
