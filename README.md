@@ -255,7 +255,8 @@ Conteneurisation avec Docker et Docker Compose
 Le projet utilise Docker pour containeriser les microservices et le front, et Docker Compose pour les orchestrer facilement.
 Docker Compose
 
-### Le fichier docker-compose.yml définit tous les services du projet et se situe à la racine du projet :
+### Le fichier docker-compose.yml 
+Il définit tous les services du projet et se situe à la racine du projet. Il contient : 
 - api-utilisateur, api-patient, api-note, api-alerte : microservices Java Spring Boot.
 - gateway : passerelle API qui centralise les requêtes vers les microservices.
 - frontend : application React pour l’interface utilisateur.
@@ -265,7 +266,7 @@ Docker Compose
 - container_name : nom du conteneur Docker pour faciliter les commandes.
 - ports : redirection des ports du conteneur vers le poste local.
 - networks : tous les conteneurs sont connectés au réseau medilabo-net.
-- environment : variables d’environnement (ex. URI des bases de données, secrets JWT).
+- environment : variables d’environnement (ex. URI des bases de données, secrets JWT) stockées dans un .env à la racine du projet
 - healthcheck : vérification automatique de la santé du service via l’endpoint /actuator/health.
 
 ### Dépendances entre services :
@@ -277,43 +278,52 @@ Docker Compose
 - Cela permet aux microservices et au front de communiquer entre eux facilement.
 
 
-# Documentation
+## Documentation
 
 La documentation est réalisé avec : 
-- swagger
-- javadoc
+- swagger => accessible depuis la page d'accueil pendant le développement de l'application
+- javadoc => pour mettre à jour la javadoc 
 
 ## Green Code
+
 Le projet Medilabo a aussi pour vocation, à long terme, d'être vertueux sur le plan environnemental. Une démarche de green code en intégrant des pratiques qui réduisent l'impact écologique de l'application sera mise en place progressivement.
 
 ### L'objectif du green code est de :
-- Réduire la consommation électrique des serveurs.
+- Réduire la consommation énergétique des serveurs.
 - Minimiser l'empreinte carbone de l'application.
 - Prolonger la durée de vie des équipements informatiques des utilisateurs.
 
 ### Propositions pour l'évolution du projet vers le green code (amélioration continue) :
 
-**Optimisation du frontend** :
+**Optimisation du frontend**
 - Mise en cache : Utiliser le cache du navigateur pour les ressources statiques (CSS, JS, images) afin de réduire le nombre de requêtes et le volume de données téléchargées.
 - Minification : Minifier les fichiers CSS et JavaScript pour en réduire la taille et accélérer leur chargement.
 
-**Optimisation du backend** :
+**Optimisation du backend**
 - Nettoyage du code : Supprimer les dépendances non utilisées, les commentaires inutiles et le "code mort" pour alléger l'application.
 - Refactorisation des méthodes : Éviter la redondance et les calculs inutiles pour rendre le code plus performant et moins gourmand en ressources CPU.
-Architectures et infrastructures :
+**Architectures et infrastructures** :
 - Images Docker légères : Utiliser des images de base minimales comme openjdk:21-jre-slim pour réduire la taille des conteneurs.
 - Scalabilité à la demande (mise en veille) : À plus long terme, nous pourrions explorer des solutions comme la "mise à l'échelle à zéro" pour des microservices peu sollicités, comme le service alerte. Cette pratique permettrait d'arrêter un conteneur lorsqu'il n'est pas utilisé et de le relancer uniquement en cas de besoin.
 
+### Outils possible
+- Docker stats
+- Ligthouse (front)
+- GreenFrame
+
 L'objectif est de faire de Medilabo un projet qui allie performance, responsabilité et respect de l'environnement.
 
-##En cours de développement
+## En cours de développement
 
 Est en cours de développement la possibilité de créer des rendez-vous. Le microservice-rdv a été créé et a commencé à être implémenté. L'objectif étant de permettre au médecin ou à la secrétaire de mettre un rendez-vous médical pour le patient. L'objet rendez-vous pourrait être composé d'une date, une heure, un professionnel, des remarques, des documents si besoin. Aussi, il pourrait être imaginé un service d'alerte et une récupération des rendez-vous dans une liste pour chaque professionnel. C'est à dire la mise en place d'un planning de rendez-vous intégrer directement dans l application.
 
-##Idée de développement
+## Idée de développement
 
 ### Mettre en place des rôles :
 - Secrétaire pour accéder au information administratives du patient et de lui proposer un rendez-vous
 - Administrateur pour ajout de nouveau utilisateur
-- Medecin ou autre profesionnel pouvant accéder aux informations du patient et faire une note
+- Medecins ou autres profesionnels pouvant accéder aux informations du patient et faire une note
 - Ajouter des documents (scanner, ordonnance, etc...)
+- Ajouter une planification de rendez-vous
+- Accéder à ses patients favoris (file active)
+- Accéder à son planning
