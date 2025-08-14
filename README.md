@@ -4,21 +4,23 @@ Medilabo
 
 ##Résumé de l'application
 
-Medilabo est le projet 9 de la formation Développeur Java d'OpenClassrooms. Cette application est destinée aux professionnels de santé et permet de gérer efficacement les patients. L’utilisateur peut accéder à la liste complète de ses patients, consulter leurs informations personnelles et les transmissions (notes) associées. Il peut également ajouter de nouveaux patients, modifier ou supprimer des patients existants, et rédiger des notes pour suivre l’évolution de chaque patient au fil du temps.
-
+Medilabo est le projet 9 de la formation Développeur Java d'OpenClassrooms. Cette application est destinée aux professionnels de santé et permet de gérer efficacement les patients. L’utilisateur peut accéder à la liste complète de ses patients, consulter leurs informations personnelles et les transmissions (notes) associées. Il peut également ajouter de nouveaux patients, modifier ou supprimer des patients existants, et rédiger des notes pour suivre l’évolution de chaque patient au fil du temps. Une alerte est lancée lorsque le patient a un risque de diabète.
 
 ##Technologies
 
 La sécurité : 
 - JsonWebToken
 - SpringSecurity
+- Dotenv
 
 Les langages utilisés :
 - Backend : Java avec Springboot 
 - Frontend : Javascript avec React
 
 Les bases de données : 
-- Dev/Prod : NoSql avec MongoDB et Sql avec PostgreSql
+- Dev/Prod : 
+    NoSql avec MongoDB (MongoDB Atlas)
+    Sql avec PostgreSql (Supabase)
 - Test : TestContainer et H2 Database
 
 Outils et environnement :
@@ -26,14 +28,30 @@ Outils et environnement :
 - Maven
 - Docker & Docker Compose
 - GitHub Actions
+- Spring Cloud Gateaway
+- Integration continue avec Github Action
+- Javadoc
+- Swagger
+- Lombock
+- log4j
+- jackson
+- mockito
+- Spring actuator
+- Spring Cloud
+- Spring Data Jpa
+- Spring Data MongoDB
+- Spring Web
+- Spring Test
+- Spring Cloud OpenFeign
+- Spring Devtool
 
 ##**Installation du projet**
 
-Pour installer le projet, il est nécessaire d'installer les packages de chaque API et de la gateway. Dans chaque élément, vous pouvez utiliser le terminal avec la commance :  mvn clean package.
+Pour installer le projet, il est nécessaire d'installer les packages de chaque API et de la gateway. Dans chaque microservice, vous pouvez utiliser le terminal avec la commande :  mvn clean package. Cela génèrera un fichier .jar dans chacun des microservices. Le microservice Front n'a pas besoin de mvn clean package car utilisation de React (javascript).
 
 ##**Lancer le projet**
 
-Ensuite, pour démarrer le projet, il faut aller à la racine du projet medilabo, où se trouve le Docker-compose, lancer le terminal avec la commande : docker compose up --build.
+Ensuite, pour démarrer le projet, il faut aller à la racine du projet medilabo, où se trouve le Docker-compose, lancer le terminal avec la commande : docker compose up --build. Cela suivra les instruction du fichier docker compose, décrit plus loin dans le README, section Conteneurisation.
 
 #**Architecture du projet**
 
@@ -59,9 +77,10 @@ Objet Patient :
 - genre : String
 - dateCreation : LocalDate
 - dateModification : LocalDate
+La normalisation en 3NF est mise en place. 
 
 Base de donnée
-- PostgreSql (SQL).
+- PostgreSql (SQL), mise sur le cloud Supabase
 - H2 Database, pour les tests.
 
 Architecture :
@@ -69,6 +88,8 @@ Architecture :
 - service (implementant une interface)
 - repository
 - model
+
+La normalisation en 3NF est mise en place. La sécurité est gérée à partir de la gateway.
 
 #**Microservice Utilisateur**
 
@@ -81,9 +102,10 @@ Objet User :
 - prenom : String
 - role : String
 - password : String
+La normalisation en 3NF est mise en place.
 
 Base de donnée :
-- postgreSql (SQL)
+- postgreSql (SQL), mise en place sur le cloud Supabase.
 - H2 Database, pour les tests.
 
 Architecture :

@@ -12,25 +12,14 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>microService.utilisateur</name>
 	<description>Micro service - utilisateur pour le projet 9 développeur Java d openclassroom</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>21</java.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<springdoc.version>2.5.0</springdoc.version>
 	    <dotenv.version>5.2.2</dotenv.version>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
@@ -56,15 +45,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-log4j2</artifactId>
@@ -123,28 +103,11 @@
 		    <artifactId>h2</artifactId>
 		    <scope>test</scope>
 		</dependency>
-		<dependency>
-		    <groupId>io.github.cdimascio</groupId>
-		    <artifactId>dotenv-java</artifactId>
-		    <version>2.2.4</version>
-		</dependency>
 	</dependencies>
 
 	<build>
 	   	<finalName>medilabo-api-utilisateur</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
 			<plugin>
 			  <groupId>org.springframework.boot</groupId>
 			  <artifactId>spring-boot-maven-plugin</artifactId>

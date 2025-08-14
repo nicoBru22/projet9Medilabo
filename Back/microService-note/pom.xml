@@ -8,28 +8,17 @@
 		<version>3.3.13</version>
 		<relativePath/> </parent>
 	<groupId>com.medilabo</groupId>
-	<artifactId>microService.transmission</artifactId>
+	<artifactId>microService.note</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>microService.transmission</name>
+	<name>microService.note</name>
 	<description>Micro service - transmission pour le projet 9 développeur Java d openclassroom</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>21</java.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,8 +40,6 @@
 		    </exclusion>
 		  </exclusions>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -64,17 +51,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-log4j2</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>jakarta.validation</groupId>
-		    <artifactId>jakarta.validation-api</artifactId>
 		</dependency>
 		<dependency>
 		    <groupId>org.hibernate.validator</groupId>
@@ -104,15 +82,6 @@
 		    <artifactId>spring-security-test</artifactId>
 		    <scope>test</scope>
 		</dependency>
-		<dependency>
-		  <groupId>com.fasterxml.jackson.datatype</groupId>
-		  <artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
 		<dependency>
 		    <groupId>io.github.cdimascio</groupId>
 		    <artifactId>dotenv-java</artifactId>
@@ -152,18 +121,6 @@
 	<build>
 	   	<finalName>medilabo-api-transmission</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
