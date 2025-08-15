@@ -56,7 +56,9 @@ public class SecurityConfig {
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers(
                     "/patient/v3/api-docs",
-                    "/utilisateur/v3/api-docs"
+                    "/utilisateur/v3/api-docs",
+                    "/note/v3/api-docs",
+                    "/alerte/v3/api-docs"
                 ).permitAll()
                 .pathMatchers("/utilisateur/login").permitAll()
                 .pathMatchers("/utilisateur/add").permitAll()

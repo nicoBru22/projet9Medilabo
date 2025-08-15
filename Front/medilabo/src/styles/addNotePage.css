@@ -1,4 +1,7 @@
-
+.buttonFormAddNote {
+  width: 200px;
+  margin-top: 20px;
+}
 .formAddNote {
   display: flex;
   flex-direction: column;

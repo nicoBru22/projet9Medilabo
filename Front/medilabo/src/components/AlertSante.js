@@ -28,7 +28,7 @@ function AlertSante({ patientId }) {
         setRiskLevel(data);
       } catch (err) {
         console.error("Erreur lors de la récupération du niveau de risque:", err);
-        setError(err.message); // Stocker le message d'erreur
+        setError(err.message);
         setRiskLevel('Erreur lors du chargement');
       } finally {
         setIsLoading(false);
@@ -69,7 +69,7 @@ function AlertSante({ patientId }) {
       displayStyle = { color: '#dc3545', fontWeight: 'bold' };
       message += "URGENT : Le patient est en danger !";
       break;
-    case 'Early Onset':
+    case 'Early onset':
       displayStyle = { color: '#8b0000', fontWeight: 'bold' };
       message += "TRÈS URGENT : Début précoce de pathologie détectée !";
       break;

@@ -95,6 +95,10 @@ Ensuite, pour démarrer le projet, il faut aller à la racine du projet medilabo
 
 Le projet se compose de 5 microservives liés ensemble grâce à la conteneurisation avec Docker.
 
+Voici le schema récapitulatif : 
+
+![Architecture Medilabo](images/architecture.png)
+
 ### Les microservices : 
 - patient => pour la gestion des patients (CRUD)
 - utilisateur => pour la gestion des utilisateurs (CRUD + login)

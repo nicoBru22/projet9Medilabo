@@ -42,6 +42,11 @@ public class AlerteServiceImpl implements IAlerteService {
 	public String riskEvaluation (Long patientId) {
 		logger.info("Tentative de récupération de l'alerte santé pour le patient : {}", patientId);
 
+		if (patientId == null) {
+			logger.error("Le patientId ne peut pas être null.");
+			return "L'id du patient est null";
+		}
+		
 	    List<Note> listNotes = noteClient.getAllNotesPatient(patientId);
 	    logger.debug("Notes récupérées pour le patient {}: {}", patientId, listNotes);
 
